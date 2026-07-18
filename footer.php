@@ -224,18 +224,18 @@
             <div class="col-lg-3 col-md-6">
                 <h4 class="foot_upper">Customer Care</h4>
                 <ul class="foot_li">
-                        <li><a href="#"><i class="fa fa-shopping-cart"></i> Shipping Policy</a></li>
-                        <li><a href="#"><i class="fa-solid fa-heart-circle-plus"></i> Cart & Favorite</a></li>
-                        <li><a href="#"><i class="fa fa-question-circle"></i> FAQs</a></li>
-                    </ul>
-                
+                    <li><a href="#"><i class="fa fa-shopping-cart"></i> Shipping Policy</a></li>
+                    <li><a href="#"><i class="fa-solid fa-heart-circle-plus"></i> Cart & Favorite</a></li>
+                    <li><a href="#"><i class="fa fa-question-circle"></i> FAQs</a></li>
+                </ul>
+
             </div>
 
             <!-- Newsletter -->
             <div class="col-lg-3 col-md-6">
                 <h4 class="foot_upper">Newsletter</h4>
                 <p>Subscribe to get our latest updates, offers and more.</p>
-                
+
             </div>
 
         </div>
@@ -253,8 +253,8 @@
 <!-- Footer End -->
 
 <!-- JS Libraries -->
-<script src="asset/bootstrap-5.3.7-dist/js/jquery.min.js"></script>
 <script src="asset/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
+<script src="asset/bootstrap-5.3.7-dist/js/jquery.min.js"></script>
 </body>
 
 </html>
