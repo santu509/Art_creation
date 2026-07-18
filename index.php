@@ -6,6 +6,6 @@
     <title>art</title>
 </head>
 <body>
-    
+    <?php include_once('nav.php');?>
 </body>
 </html>
