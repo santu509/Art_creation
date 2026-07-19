@@ -91,7 +91,7 @@ if (session_status() === PHP_SESSION_NONE) {
         .navbar-brand img {
             transition: var(--transition-smooth);
             width: 100px;
-            height: 75px;
+            height: 60px;
             object-fit: contain;
         }
 
@@ -248,7 +248,9 @@ if (session_status() === PHP_SESSION_NONE) {
             border-radius: 8px;
             transition: var(--transition-smooth);
         }
-
+.dropdown-toggle::after {
+    border: none;
+}
         .navbar-toggler:focus {
             box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.2);
             border-color: var(--accent-color);
@@ -767,13 +769,19 @@ if (session_status() === PHP_SESSION_NONE) {
             cursor: pointer;
             background-color: transparent;
         }
-
-        .profile-pic {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
+.profile-pic {
+    width: 45px;
+    height: 40px;
+    object-fit: cover;
+    
+    /* Changes made below */
+    display: block;      /* Ensures vertical margin is respected */
+    margin-top: 10px;    /* Use px or rem instead of % for predictable spacing */
+    
+    border-radius: 50%;
+    border: 2px solid #b0f1f6;
+    box-shadow: 0 4px 15px rgba(176, 241, 246, 0.5);
+}
 
         .profile-dropdown-menu {
             background-color: #F5F2ED;
@@ -1016,10 +1024,10 @@ if (session_status() === PHP_SESSION_NONE) {
                             <a class="nav-link active" aria-current="page" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="aboutus.php">About</a>
+                            <a class="nav-link" href="aboutus.php">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Categories</a>
+                            <a class="nav-link" href="#">Collections</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact</a>
@@ -1032,13 +1040,13 @@ if (session_status() === PHP_SESSION_NONE) {
                     <!-- Right Side: Cart, Wishlist, Login & Create Account / Profile -->
                     <div class="d-flex align-items-lg-center flex-column flex-lg-row gap-3 mt-3 mt-lg-0">
 
-                        <!-- Cart Icon -->
-                        <a href="#" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Cart">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
-                                0
-                            </span>
-                        </a>
+                       <!-- Cart Icon -->
+<a href="#" class="icon-link position-relative text-decoration-none d-inline-flex" title="Cart">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
+        0
+    </span>
+</a>
 
                         <!-- Wishlist Icon -->
                         <a href="#" class="icon-link position-relative text-decoration-none" title="Wishlist">
