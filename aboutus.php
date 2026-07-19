@@ -6,7 +6,7 @@
     <title>About Us - Siddha Art Creation</title>
     
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     
     <!-- Google Fonts (Playfair Display for headings, Inter for body text) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -742,7 +742,7 @@
     <?php include_once('footer.php');?>
 
     <!-- Bootstrap 5 JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="asset/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- AOS Animation Library JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
