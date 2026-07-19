@@ -181,10 +181,11 @@ if (session_status() === PHP_SESSION_NONE) {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 40px;
-            height: 40px;
+            padding: 12px;
+            /* width: 70px;
+            height: 50px; */
             border-radius: 50%;
-            background-color: rgba(58, 53, 48, 0.04);
+            background-color: rgba(50, 48, 46, 0.04);
             transition: var(--transition-smooth);
         }
 
@@ -201,6 +202,14 @@ if (session_status() === PHP_SESSION_NONE) {
             background-color: var(--accent-color);
             padding: 3px 6px;
             border: 1.5px solid var(--bg-color);
+        }
+
+        /* Profile Dropdown Active State */
+        .profile-dropdown-menu .dropdown-item.active,
+        .profile-dropdown-menu .dropdown-item:active {
+            background-color: rgba(184, 134, 11, 0.1) !important;
+            color: #B8860B !important;
+            font-weight: 600;
         }
 
         /* Buttons Styling */
@@ -248,9 +257,11 @@ if (session_status() === PHP_SESSION_NONE) {
             border-radius: 8px;
             transition: var(--transition-smooth);
         }
-.dropdown-toggle::after {
-    border: none;
-}
+
+        .dropdown-toggle::after {
+            border: none;
+        }
+
         .navbar-toggler:focus {
             box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.2);
             border-color: var(--accent-color);
@@ -290,7 +301,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 width: 100%;
                 text-align: center;
                 margin-left: 0 !important;
-                margin-top: 10px;
+                margin-top: 4px;
             }
         }
 
@@ -769,19 +780,22 @@ if (session_status() === PHP_SESSION_NONE) {
             cursor: pointer;
             background-color: transparent;
         }
-.profile-pic {
-    width: 45px;
-    height: 40px;
-    object-fit: cover;
-    
-    /* Changes made below */
-    display: block;      /* Ensures vertical margin is respected */
-    margin-top: 10px;    /* Use px or rem instead of % for predictable spacing */
-    
-    border-radius: 50%;
-    border: 2px solid #b0f1f6;
-    box-shadow: 0 4px 15px rgba(176, 241, 246, 0.5);
-}
+
+        .profile-pic {
+            width: 45px;
+            height: 40px;
+            object-fit: cover;
+
+            /* Changes made below */
+            display: block;
+            /* Ensures vertical margin is respected */
+            margin-top: 10px;
+            /* Use px or rem instead of % for predictable spacing */
+
+            border-radius: 50%;
+            border: 2px solid #f0b82c;
+            box-shadow: 0 4px 15px rgba(246, 234, 176, 0.5);
+        }
 
         .profile-dropdown-menu {
             background-color: #F5F2ED;
@@ -907,7 +921,7 @@ if (session_status() === PHP_SESSION_NONE) {
             left: 0;
             right: 0;
             background-color: #FFFFFF;
-            height: 57px;
+            height: 60px;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -969,6 +983,7 @@ if (session_status() === PHP_SESSION_NONE) {
         <div class="container px-lg-4">
 
             <?php
+            $currentPage = basename($_SERVER['PHP_SELF']);
             $isLoggedIn = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
             $userName = $isLoggedIn ? $_SESSION['user_name'] : '';
             $userEmail = $isLoggedIn ? $_SESSION['user_email'] : '';
@@ -976,7 +991,7 @@ if (session_status() === PHP_SESSION_NONE) {
             ?>
 
             <!-- Left Side: Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="#">
+            <a class="navbar-brand d-flex align-items-center" href="index.php">
                 <img src="asset/image/logo.png" alt="Logo">
             </a>
 
@@ -994,7 +1009,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <li>
                             <hr class="dropdown-divider">
                         </li>
-                        <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
+                        <li><a class="dropdown-item <?php echo ($currentPage == 'profile.php') ? 'active' : ''; ?>" href="profile.php"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">
@@ -1021,35 +1036,35 @@ if (session_status() === PHP_SESSION_NONE) {
                     <!-- Middle: Navigation Links -->
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="index.php">Home</a>
+                            <a class="nav-link <?php echo ($currentPage == 'index.php' || $currentPage == '') ? 'active' : ''; ?>" href="index.php">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="aboutus.php">About Us</a>
+                            <a class="nav-link <?php echo ($currentPage == 'aboutus.php') ? 'active' : ''; ?>" href="aboutus.php">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Collections</a>
+                            <a class="nav-link <?php echo ($currentPage == 'collections.php') ? 'active' : ''; ?>" href="#">Collections</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Contact</a>
+                            <a class="nav-link <?php echo ($currentPage == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">FAQ</a>
+                            <a class="nav-link <?php echo ($currentPage == 'faq.php') ? 'active' : ''; ?>" href="#">FAQ</a>
                         </li>
                     </ul>
 
                     <!-- Right Side: Cart, Wishlist, Login & Create Account / Profile -->
                     <div class="d-flex align-items-lg-center flex-column flex-lg-row gap-3 mt-3 mt-lg-0">
 
-                       <!-- Cart Icon -->
-<a href="#" class="icon-link position-relative text-decoration-none d-inline-flex" title="Cart">
-    <i class="fa-solid fa-cart-shopping"></i>
-    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
-        0
-    </span>
-</a>
+                        <!-- Cart Icon (Desktop only) -->
+                        <a href="#" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Cart">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
+                                0
+                            </span>
+                        </a>
 
-                        <!-- Wishlist Icon -->
-                        <a href="#" class="icon-link position-relative text-decoration-none" title="Wishlist">
+                        <!-- Wishlist Icon (Desktop only) -->
+                        <a href="#" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Wishlist">
                             <i class="fa-regular fa-heart"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
                                 0
@@ -1058,7 +1073,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                         <!-- Auth Buttons (Visible when Logged Out) -->
                         <?php if (!$isLoggedIn): ?>
-                            <div class="d-flex align-items-center gap-2" id="authButtons">
+                            <div class="d-flex flex-column flex-lg-row align-items-stretch align-items-lg-center gap-2 w-100 w-lg-auto" id="authButtons">
                                 <!-- Login Button -->
                                 <button type="button" class="btn btn-login" data-bs-toggle="modal" data-bs-target="#loginModal">Login</button>
 
@@ -1081,7 +1096,7 @@ if (session_status() === PHP_SESSION_NONE) {
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
-                                    <li><a class="dropdown-item" href="#"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
+                                    <li><a class="dropdown-item <?php echo ($currentPage == 'profile.php') ? 'active' : ''; ?>" href="profile.php"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
                                     <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
@@ -1316,7 +1331,7 @@ if (session_status() === PHP_SESSION_NONE) {
         </div>
     </div>
 
- 
+
 
     <!-- Mobile Bottom Navigation Bar (Visible only on mobile screens) -->
     <div class="mobile-bottom-nav">
@@ -1326,14 +1341,24 @@ if (session_status() === PHP_SESSION_NONE) {
             <span>Home</span>
         </a>
         <!-- Shop -->
-        <a href="menu.php" class="mobile-bottom-nav-item" id="bottomNavShop">
+        <a href="category.php" class="mobile-bottom-nav-item" id="bottomNavShop">
             <i class="fa-solid fa-bag-shopping"></i>
             <span>Shop</span>
         </a>
         <!-- Cart -->
         <a href="cart.php" class="mobile-bottom-nav-item" id="bottomNavCart">
             <div class="position-relative d-inline-flex">
-                <i class="fa-solid fa-cart-shopping"></i>
+                <i class="fa-solid fa-cart-flatbed-suitcase"></i>
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
+                    0
+                </span>
+            </div>
+            <span>Cart</span>
+        </a>
+        <!-- Wishlist -->
+        <a href="wishlist.php" class="mobile-bottom-nav-item" id="bottomNavWishlist">
+            <div class="position-relative d-inline-flex">
+                <i class="fa-solid fa-heart"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
                     0
                 </span>
@@ -1356,7 +1381,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 
 
-   <!-- Custom Script for Navbar States and Modals -->
+    <!-- Custom Script for Navbar States and Modals -->
     <script>
         let otpTimerInterval = null;
 
