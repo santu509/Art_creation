@@ -219,7 +219,14 @@
                     <a class="btn_foot" href="#"><i class="fab fa-linkedin-in"></i></a>
                 </div>
             </div>
+            <!-- location -->
+            <div class="col-lg-3 col-md-6">
+                <h4 class="foot_upper">Locate Us</h4>
+                <ul class="foot_li">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29608.737075876234!2d87.67248027431641!3d21.931009200000027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90034ab0659%3A0xc1da4d48e4b096db!2sHarinabari%20Durga%20Mondir!5e0!3m2!1sen!2sin!4v1784434843070!5m2!1sen!2sin" width="250" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                </ul>
 
+            </div>
             <!-- Opening Hours -->
             <div class="col-lg-3 col-md-6">
                 <h4 class="foot_upper">Customer Care</h4>
@@ -231,12 +238,7 @@
 
             </div>
 
-            <!-- Newsletter -->
-            <div class="col-lg-3 col-md-6">
-                <h4 class="foot_upper">Newsletter</h4>
-                <p>Subscribe to get our latest updates, offers and more.</p>
 
-            </div>
 
         </div>
 
