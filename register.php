@@ -68,18 +68,15 @@ function handleSendOtp($connect)
         }
     }
 
-    // Check if email already exists
-    $stmt = mysqli_prepare($connect, "SELECT id FROM users WHERE email = ?");
-    mysqli_stmt_bind_param($stmt, "s", $email);
-    mysqli_stmt_execute($stmt);
-    mysqli_stmt_store_result($stmt);
+    // SIMPLIFIED: Check if email already exists
+    $safeEmail = mysqli_real_escape_string($connect, $email);
+    $sqlCheck = "SELECT id FROM users WHERE email = '$safeEmail'";
+    $resultCheck = mysqli_query($connect, $sqlCheck);
 
-    if (mysqli_stmt_num_rows($stmt) > 0) {
+    if ($resultCheck && mysqli_num_rows($resultCheck) > 0) {
         echo json_encode(['status' => 'error', 'message' => 'Email is already registered! Please sign in.']);
-        mysqli_stmt_close($stmt);
         exit;
     }
-    mysqli_stmt_close($stmt);
 
     // Generate 6-digit OTP
     $otp = rand(100000, 999999);
@@ -179,10 +176,8 @@ function handleRegister($connect)
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] === UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['profile_image']['tmp_name'];
         $fileName = $_FILES['profile_image']['name'];
-        $fileNameCmps = explode(".", $fileName);
-        $fileExtension = strtolower(end($fileNameCmps));
-
-        $allowedExtensions = ['jpg', 'gif', 'png', 'jpeg', 'webp'];
+        $fileExtension = strtolower(pathinfo($fileName, PATHINFO_EXTENSION));
+        $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 
         if (in_array($fileExtension, $allowedExtensions)) {
             $uploadFileDir = 'uploads/';
@@ -201,18 +196,27 @@ function handleRegister($connect)
 
     $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
 
-    $stmt = mysqli_prepare($connect, "INSERT INTO users (name, email, phone, password, image, created_at, updated_at) VALUES (?, ?, ?, ?, ?, NOW(), NOW())");
-    mysqli_stmt_bind_param($stmt, "sssss", $name, $email, $phone, $hashedPassword, $imagePath);
+    // SIMPLIFIED: Insert user data into database
+    $safeName = mysqli_real_escape_string($connect, $name);
+    $safeEmail = mysqli_real_escape_string($connect, $email);
+    $safePhone = mysqli_real_escape_string($connect, $phone);
+    $safePassword = mysqli_real_escape_string($connect, $hashedPassword);
+    $safeImagePath = mysqli_real_escape_string($connect, $imagePath);
 
-    if (mysqli_stmt_execute($stmt)) {
+    $sqlInsert = "INSERT INTO users (name, email, phone, password, image, created_at, updated_at) 
+                  VALUES ('$safeName', '$safeEmail', '$safePhone', '$safePassword', '$safeImagePath', NOW(), NOW())";
+
+    if (mysqli_query($connect, $sqlInsert)) {
+        // Clear verification sessions
         unset($_SESSION['verify_otp']);
         unset($_SESSION['verify_email']);
         unset($_SESSION['verify_name']);
         unset($_SESSION['email_verified']);
         unset($_SESSION['otp_sent_time']);
 
+        // Log the user in automatically
         $_SESSION['is_logged_in'] = true;
-        $_SESSION['user_id'] = mysqli_insert_id($connect);
+        $_SESSION['user_id'] = mysqli_insert_id($connect); // Get the newly created ID
         $_SESSION['user_name'] = $name;
         $_SESSION['user_email'] = $email;
         $_SESSION['user_image'] = $imagePath;
@@ -221,5 +225,4 @@ function handleRegister($connect)
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Database error: ' . mysqli_error($connect)]);
     }
-    mysqli_stmt_close($stmt);
 }
