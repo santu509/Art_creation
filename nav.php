@@ -1084,7 +1084,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
                         <!-- Profile Dropdown (Visible when Logged In on Desktop only) -->
                         <?php if ($isLoggedIn): ?>
-                            <div class="dropdown d-none d-lg-block" id="profileDropdown">
+                            <div class="dropdown d-none d-lg-block" id="profileDropdown" data-bs-toggle="tooltip" data-bs-placement="top" title="Profile">
                                 <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic">
                                 </button>
@@ -1816,5 +1816,13 @@ if (session_status() === PHP_SESSION_NONE) {
                     if (activeLink) setIndicator(activeLink);
                 }, 200);
             }
+        });
+
+        document.addEventListener("DOMContentLoaded", function(){
+            // Initialize all Bootstrap Tooltips
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
         });
     </script>

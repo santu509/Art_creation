@@ -314,7 +314,7 @@
             <div class="col-lg-3 col-md-6">
                 <h4 class="foot_upper">Locate Us</h4>
                 <div class="footer-map-container">
-                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29608.737075876234!2d87.67248027431641!3d21.931009200000027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90034ab0659%3A0xc1da4d48e4b096db!2sHarinabari%20Durga%20Mondir!5e0!3m2!1sen!2sin!4v1784434843070!5m2!1sen!2sin" width="100%" height="190" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29608.737075876234!2d87.67248027431641!3d21.931009200000027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90034ab0659%3A0xc1da4d48e4b096db!2sHarinabari%20Durga%20Mondir!5e0!3m2!1sen!2sin!4v1784434843070!5m2!1sen!2sin" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                 </div>
             </div>
 
@@ -344,7 +344,7 @@
 <!-- Footer End -->
 
 <!-- Floating Scroll To Top Button -->
-<button type="button" class="btn-scroll-top" id="btnScrollTop"  aria-label="Scroll to top">
+<button type="button" class="btn-scroll-top" id="btnScrollTop" aria-label="Scroll to top">
     <i class="fa-solid fa-arrow-up"></i>
 </button>
 
