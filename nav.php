@@ -1027,7 +1027,7 @@ if (session_status() === PHP_SESSION_NONE) {
                             <a class="nav-link" href="aboutus.php">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Collections</a>
+                            <a class="nav-link" href="#">Collection</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="#">Contact</a>
