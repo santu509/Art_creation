@@ -1,24 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us - Siddha Art Creation</title>
+    <!-- PHP Includes -->
+    <?php include_once('nav.php'); ?>
     
-    <!-- Bootstrap 5 CSS -->
-    <link href="asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
-    
-    <!-- Google Fonts (Playfair Display for headings, Inter for body text) -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
-    <!-- AOS Animation Library CSS -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
     <style>
         :root {
             --primary-accent: #d4af37; 
@@ -572,11 +554,7 @@
             }
         }
     </style>
-</head>
-<body>
-    <!-- PHP Includes -->
-    <?php include_once('nav.php'); ?>
- 
+
     <!-- Hero Section -->
     <header class="hero-section">
         <div class="hero-bg"></div>
@@ -741,11 +719,6 @@
     <!-- Footer Placeholder -->
     <?php include_once('footer.php');?>
 
-    <!-- Bootstrap 5 JS Bundle -->
-    <script src="asset/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
-    
-    <!-- AOS Animation Library JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         // Initialize Animate On Scroll
         AOS.init({
@@ -753,5 +726,3 @@
             offset: 50, // Offset (in px) from the original trigger point
         });
     </script>
-</body>
-</html>

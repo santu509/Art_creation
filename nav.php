@@ -5,17 +5,26 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sidda Art Creation</title>
     <!-- Bootstrap 5 CSS -->
     <link href="asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts: Outfit and Playfair Display -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    <!-- Google Fonts (Playfair Display for headings, Inter for body text) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- AOS Animation Library CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <style>
         :root {
@@ -26,11 +35,53 @@ if (session_status() === PHP_SESSION_NONE) {
             --transition-smooth: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
+        /* Prevent Navbar layout shift when Bootstrap modals open */
+        html {
+            scrollbar-gutter: stable;
+        }
+
         body {
             background-color: #fcfbfa;
             font-family: 'Outfit', sans-serif;
             padding-top: 0;
             overflow-x: hidden;
+        }
+
+        body.modal-open {
+            padding-right: 0 !important;
+            overflow: hidden !important;
+        }
+
+        body.modal-open .custom-navbar,
+        body.modal-open .fixed-top,
+        body.modal-open .sticky-top {
+            padding-right: 0 !important;
+            margin-right: auto !important;
+            right: 0 !important;
+        }
+
+        .modal {
+            padding-right: 0 !important;
+        }
+
+        /* Smooth Modal Fade-In & Scale-Up Animations */
+        .modal.fade .modal-dialog {
+            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-in-out !important;
+            transform: scale(0.92) translateY(24px) !important;
+            opacity: 0 !important;
+        }
+
+        .modal.show .modal-dialog {
+            transform: scale(1) translateY(0) !important;
+            opacity: 1 !important;
+        }
+
+        .modal-backdrop.fade {
+            transition: opacity 0.2s ease-in-out !important;
+        }
+
+        .modal-backdrop.show {
+            opacity: 0.65 !important;
         }
 
         /* Hero Section Demo */
@@ -42,6 +93,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
         /* Navbar Initial State */
         .custom-navbar {
+            font-family: 'Outfit', sans-serif;
             background-color: var(--bg-color);
             padding: 8px 0;
             width: 100%;
@@ -73,8 +125,8 @@ if (session_status() === PHP_SESSION_NONE) {
             width: 95%;
             max-width: 1300px;
             border-radius: 50px;
-            border: 1px solid rgba(58, 53, 48, 0.05);
         }
+
 
         /* Centering navbar elements vertically */
         .navbar-collapse {

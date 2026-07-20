@@ -351,6 +351,8 @@
 <!-- JS Libraries -->
 <script src="asset/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 <script src="asset/bootstrap-5.3.7-dist/js/jquery.min.js"></script>
+    <!-- AOS Animation Library JS -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
     // Initialize Bootstrap Tooltips for Social Icons and Scroll Button
