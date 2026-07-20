@@ -5,7 +5,6 @@ if (session_status() === PHP_SESSION_NONE) {
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -1048,7 +1047,7 @@ if (session_status() === PHP_SESSION_NONE) {
                             <a class="nav-link <?php echo ($currentPage == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link <?php echo ($currentPage == 'faq.php') ? 'active' : ''; ?>" href="#">FAQ</a>
+                            <a class="nav-link <?php echo ($currentPage == 'faq.php') ? 'active' : ''; ?>" href="faq.php">FAQ</a>
                         </li>
                     </ul>
 
@@ -1818,7 +1817,7 @@ if (session_status() === PHP_SESSION_NONE) {
             }
         });
 
-        document.addEventListener("DOMContentLoaded", function(){
+        document.addEventListener("DOMContentLoaded", function() {
             // Initialize all Bootstrap Tooltips
             var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
