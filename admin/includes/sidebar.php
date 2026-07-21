@@ -43,21 +43,23 @@ if (!function_exists('isTabActive')) {
         </a>
 
         <div class="menu-label">MANAGEMENT</div>
-        <a href="artworks.php" class="menu-item <?php echo isTabActive('artworks.php', $currentPage); ?>">
-            <i class="fa-solid fa-palette menu-icon"></i>
-            <span class="menu-title">Artworks</span>
-        </a>
+      
         <a href="categories.php" class="menu-item <?php echo isTabActive('categories.php', $currentPage); ?>">
             <i class="fa-solid fa-layer-group menu-icon"></i>
             <span class="menu-title">Categories</span>
         </a>
-        <a href="orders.php" class="menu-item <?php echo isTabActive('orders.php', $currentPage); ?>">
-            <i class="fa-solid fa-box-archive menu-icon"></i>
-            <span class="menu-title">Orders</span>
+          <a href="artworks.php" class="menu-item <?php echo isTabActive('artworks.php', $currentPage); ?>">
+            <i class="fa-solid fa-palette menu-icon"></i>
+            <span class="menu-title">Artworks</span>
         </a>
+      
         <a href="users.php" class="menu-item <?php echo isTabActive('users.php', $currentPage); ?>">
             <i class="fa-solid fa-users menu-icon"></i>
             <span class="menu-title">Customers</span>
+        </a>
+         <a href="faq.php" class="menu-item <?php echo isTabActive('faq.php', $currentPage); ?>">
+            <i class="fa-solid fa-question-circle menu-icon"></i>
+            <span class="menu-title">FAQ</span>
         </a>
 
         <div class="menu-label">COMMUNICATION</div>
@@ -66,11 +68,7 @@ if (!function_exists('isTabActive')) {
             <span class="menu-title">Messages</span>
         </a>
 
-        <div class="menu-label">SYSTEM</div>
-        <a href="settings.php" class="menu-item <?php echo isTabActive('settings.php', $currentPage); ?>">
-            <i class="fa-solid fa-sliders menu-icon"></i>
-            <span class="menu-title">Settings</span>
-        </a>
+        
     </nav>
 
     <!-- Sidebar User Footer -->
