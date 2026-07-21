@@ -45,11 +45,11 @@ if (!function_exists('isTabActive')) {
 
         <div class="menu-label">MANAGEMENT</div>
       
-        <a href="categories.php" class="menu-item <?php echo isTabActive('categories.php', $currentPage); ?>">
+        <a href="category.php" class="menu-item <?php echo isTabActive('category.php', $currentPage); ?>">
             <i class="fa-solid fa-layer-group menu-icon"></i>
             <span class="menu-title">Categories</span>
         </a>
-          <a href="artworks.php" class="menu-item <?php echo isTabActive('artworks.php', $currentPage); ?>">
+          <a href="collection.php" class="menu-item <?php echo isTabActive('collection.php', $currentPage); ?>">
             <i class="fa-solid fa-palette menu-icon"></i>
             <span class="menu-title">Artworks</span>
         </a>
