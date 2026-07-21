@@ -19,11 +19,7 @@ $adminUsername = isset($_SESSION['admin_username']) ? $_SESSION['admin_username'
     </div>
 
     <div class="topbar-right">
-        <!-- Search Input -->
-        <div class="topbar-search d-none d-md-flex">
-            <i class="fa-solid fa-magnifying-glass search-icon"></i>
-            <input type="text" class="search-input" placeholder="Search anything...">
-        </div>
+       
 
         <!-- View Website Link -->
         <a href="../index.php" target="_blank" class="btn-topbar-action" title="View Website">
@@ -43,7 +39,7 @@ $adminUsername = isset($_SESSION['admin_username']) ? $_SESSION['admin_username'
 
 <style>
     .admin-topbar {
-        height: var(--topbar-height, 100px);
+        height:85px;
         background-color: #FFFFFF;
         border-bottom: 1px solid rgba(212, 175, 55, 0.25);
         padding: 0 30px;
