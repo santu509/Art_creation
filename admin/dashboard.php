@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../connection.php';
+global $connect;
 
 // Check admin authentication
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -10,9 +11,33 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 
 $pageTitle = "Dashboard Overview";
 $currentPage = "dashboard.php";
+
+// Initialize Variables
+$total_product = 0;
+$total_users = 0;
+$new_messages = 0;
+
+// 1. Get Total Artworks (Active Products)
+$total_product_query = mysqli_query($connect, "SELECT COUNT(*) AS total FROM products WHERE status = 1");
+if ($total_product_query) {
+    $total_product = (int)mysqli_fetch_assoc($total_product_query)['total'];
+}
+
+// 2. Get Total Registered Users
+$users_query = mysqli_query($connect, "SELECT COUNT(*) as total_users FROM users");
+if ($users_query) {
+    $total_users = (int)mysqli_fetch_assoc($users_query)['total_users'];
+}
+
+// 4. Get New Unread Messages (From contact_messages where status = 0)
+$msg_query = mysqli_query($connect, "SELECT COUNT(*) as new_messages FROM contact_messages WHERE status = 0");
+if ($msg_query) {
+    $new_messages = (int)mysqli_fetch_assoc($msg_query)['new_messages'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -27,7 +52,7 @@ $currentPage = "dashboard.php";
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
-    
+
     <style>
         .stat-card {
             background-color: #FFFFFF;
@@ -87,6 +112,7 @@ $currentPage = "dashboard.php";
         }
     </style>
 </head>
+
 <body>
 
     <div class="admin-layout-wrapper">
@@ -100,7 +126,7 @@ $currentPage = "dashboard.php";
 
             <!-- Dashboard Inner Content -->
             <div class="container-fluid p-4">
-                
+
                 <!-- Welcome Card -->
                 <div class="welcome-card">
                     <h2 class="welcome-title">Welcome Back, <?php echo htmlspecialchars($_SESSION['admin_username']); ?>!</h2>
@@ -114,27 +140,18 @@ $currentPage = "dashboard.php";
                             <div class="stat-icon-box">
                                 <i class="fa-solid fa-palette"></i>
                             </div>
-                            <div class="stat-value">24</div>
+                            <div class="stat-value"><?php echo $total_product; ?></div>
                             <div class="stat-label">Total Artworks</div>
                         </div>
                     </div>
 
-                    <div class="col-12 col-sm-6 col-xl-3">
-                        <div class="stat-card">
-                            <div class="stat-icon-box">
-                                <i class="fa-solid fa-box-archive"></i>
-                            </div>
-                            <div class="stat-value">12</div>
-                            <div class="stat-label">Total Orders</div>
-                        </div>
-                    </div>
 
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card">
                             <div class="stat-icon-box">
                                 <i class="fa-solid fa-users"></i>
                             </div>
-                            <div class="stat-value">8</div>
+                            <div class="stat-value"><?php echo $total_users; ?></div>
                             <div class="stat-label">Registered Users</div>
                         </div>
                     </div>
@@ -144,7 +161,8 @@ $currentPage = "dashboard.php";
                             <div class="stat-icon-box">
                                 <i class="fa-solid fa-envelope-open-text"></i>
                             </div>
-                            <div class="stat-value">5</div>
+                            <!-- Dynamic New Messages -->
+                            <div class="stat-value"><?php echo $new_messages; ?></div>
                             <div class="stat-label">New Messages</div>
                         </div>
                     </div>
@@ -155,4 +173,5 @@ $currentPage = "dashboard.php";
     </div>
 
 </body>
+
 </html>
