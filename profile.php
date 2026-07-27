@@ -28,6 +28,21 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
 ?>
 
 <style>
+  /* Short Height Top Page Banner for Profile Page */
+  .profile-top-banner {
+    height: 240px;
+    position: relative;
+    overflow: hidden;
+    background: url('asset/image/contact_hero_banner.png') no-repeat center center / cover;
+    margin-top: 0;
+  }
+
+  .profile-top-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.9) 100%);
+  }
+
   /* Profile Page Styling */
   .profile-hero-card {
     background: linear-gradient(135deg, #12110F 0%, #2A241E 100%);
@@ -60,7 +75,6 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
     margin-left: auto;
     margin-right: auto;
   }
-
 
   @media (min-width: 768px) {
     .profile-avatar-wrapper {
@@ -237,10 +251,15 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
   }
 </style>
 
-<div class="container my-5 pt-4" style="max-width: 1000px;">
+<!-- Short Height Full-Width Top Page Banner -->
+<section class="profile-top-banner">
+  <div class="profile-top-overlay"></div>
+</section>
 
-  <!-- User Header Hero Card -->
-  <div class="profile-hero-card p-4 p-md-5 mb-4 mt-2 mt-lg-5">
+<div class="container mb-5" style="max-width: 1000px; margin-top: -65px;">
+
+  <!-- User Header Hero Card (Exact original layout) -->
+  <div class="profile-hero-card p-4 p-md-5 mb-4 position-relative z-2">
     <div class="row align-items-center justify-content-center text-center text-md-start flex-column flex-md-row">
 
       <div class="col-12 col-md-auto d-flex justify-content-center mb-3 mb-md-0">

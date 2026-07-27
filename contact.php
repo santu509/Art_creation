@@ -3,25 +3,21 @@ include('nav.php');
 ?>
 
 <style>
-  /* Contact Page Styling */
-  .contact-hero {
-    background: linear-gradient(135deg, #12110F 0%, #2A241E 100%);
-    border-radius: 24px;
-    color: #F5F2ED;
+  /* Hero Banner Section for Contact Page */
+  .hero-contact-section {
+    height: 52vh !important;
+    min-height: 440px;
     position: relative;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(18, 17, 15, 0.15);
+    background: url('asset/image/contact_hero_banner.png') no-repeat center center / cover;
+    margin-top: 0;
   }
 
-  .contact-hero::before {
-    content: '';
+  .hero-contact-overlay {
     position: absolute;
-    top: -40%;
-    right: -10%;
-    width: 380px;
-    height: 380px;
-    background: radial-gradient(circle, rgba(184, 134, 11, 0.18) 0%, transparent 70%);
-    pointer-events: none;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.92) 100%);
+    z-index: 1;
   }
 
   .contact-card-info {
@@ -86,9 +82,9 @@ include('nav.php');
   }
 
   .btn-contact-submit {
-    background-color: #B8860B;
-    color: #FFFFFF;
-    font-weight: 600;
+    background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
+    color: #1A1612;
+    font-weight: 700;
     padding: 14px 36px;
     border-radius: 12px;
     border: none;
@@ -98,8 +94,8 @@ include('nav.php');
   }
 
   .btn-contact-submit:hover {
-    background-color: #9A6F09;
-    color: #FFFFFF;
+    background: linear-gradient(135deg, #FFF0BD 0%, #DFBA5A 100%);
+    color: #1A1612;
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(184, 134, 11, 0.35);
   }
@@ -114,27 +110,28 @@ include('nav.php');
   }
 </style>
 
-<div class="container my-5 pt-3 pt-lg-4 " style="max-width: 1140px;">
-
-  <!-- Contact Hero Header -->
-  <div class="contact-hero p-4 p-md-5 mb-5 mt-3 mt-lg-5">
-    <div class="row align-items-center text-center text-md-start">
-      <div class="col-lg-8">
-        <span class="badge rounded-pill px-3 py-2 fw-semibold mb-3" style="background-color: rgba(184, 134, 11, 0.2); color: #C5A880; border: 1px solid rgba(184, 134, 11, 0.3);">
+<!-- Full-Width Hero Banner Section -->
+<section class="hero-contact-section">
+  <div class="hero-contact-overlay"></div>
+  <div class="container position-relative z-2 h-100 d-flex align-items-center justify-content-center text-center" style="padding-top: 75px;">
+    <div class="row justify-content-center w-100">
+      <div class="col-12 col-lg-8">
+        <span class="badge rounded-pill px-3 py-2 fw-semibold text-uppercase mb-3" style="background-color: rgba(212, 175, 55, 0.15); color: #DFBA5A; border: 1px solid rgba(212, 175, 55, 0.35); backdrop-filter: blur(8px); letter-spacing: 1px;">
           <i class="fa-regular fa-paper-plane me-1"></i> We're Here For You
         </span>
-        <h1 class="display-5 fw-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">Get In Touch With Us</h1>
-        <p class="lead text-white-50 mb-0" style="font-size: 1.1rem; max-width: 650px;">
-          Have a question about our handmade products, custom orders, or delivery? Our team is always ready to assist you.
+        <h1 class="display-4 fw-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">
+          Get In Touch With <span style="background: linear-gradient(135deg, #FFF0BD 0%, #DFBA5A 50%, #C59B27 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic;">Us</span>
+        </h1>
+        <div class="mx-auto mb-4" style="width: 70px; height: 2px; background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);"></div>
+        <p class="lead text-light mb-0" style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: #E2DDD5 !important; line-height: 1.6;">
+          Have a question about our handmade clay idols, terracotta home decor, custom hand-sculpted clay statues, or order delivery? Our art curation team is always ready to assist you.
         </p>
-      </div>
-      <div class="col-lg-4 text-center text-lg-end mt-4 mt-lg-0">
-        <div class="d-inline-flex p-3 rounded-circle" style="background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1);">
-          <i class="fa-solid fa-palette text-warning display-4" style="color: #B8860B !important;"></i>
-        </div>
       </div>
     </div>
   </div>
+</section>
+
+<div class="container my-5" style="max-width: 1140px;">
 
   <!-- Quick Info Cards (4 Columns) -->
   <div class="row g-4 mb-5">
@@ -212,7 +209,7 @@ include('nav.php');
               <label class="form-label fw-semibold text-dark">Inquiry Subject</label>
               <select class="form-select form-control-contact" name="subject">
                 <option value="General Inquiry">General Inquiry</option>
-                <option value="Custom Artwork ">Custom Artwork</option>
+                <option value="Custom Artwork">Custom Artwork</option>
                 <option value="Workshop Visit">Workshop Visit</option>
                 <option value="Order & Delivery Support">Order & Delivery Support</option>
                 <option value="Others">Others</option>
@@ -239,7 +236,6 @@ include('nav.php');
       </div>
     </div>
   </div>
-
 
 </div>
 

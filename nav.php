@@ -26,6 +26,8 @@ if (session_status() === PHP_SESSION_NONE) {
     <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
+    <link rel="icon" type="image/x-icon" href="asset/image/logo.png">
+
     <style>
         :root {
             --bg-color: #F5F2ED;
@@ -91,40 +93,147 @@ if (session_status() === PHP_SESSION_NONE) {
             width: 100%;
         }
 
-        /* Navbar Initial State */
+        /* Navbar Initial State (Transparent Floating Over Hero) */
         .custom-navbar {
             font-family: 'Outfit', sans-serif;
-            background-color: var(--bg-color);
-            padding: 8px 0;
-            width: 100%;
-            max-width: 100%;
+            position: fixed;
             top: 0;
             left: 0;
             right: 0;
+            width: 100%;
+            max-width: 100%;
             margin: 0 auto;
             border-radius: 0px;
-            box-shadow: 0 0 0 rgba(0, 0, 0, 0);
-            backdrop-filter: blur(0px);
-            -webkit-backdrop-filter: blur(0px);
-            border-bottom: 1px solid rgba(58, 53, 48, 0.08);
-            border-top: 1px solid transparent;
-            border-left: 1px solid transparent;
-            border-right: 1px solid transparent;
-            transition: var(--transition-smooth);
             z-index: 1045;
+            /* padding: 15px 0; */
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            border: 1px solid transparent;
+            transition: all 0.4s ease-in-out;
         }
 
-        /* Navbar Scrolled State (Floating, Sleek, Rounded) */
+        /* Nav Links Initial State (White for contrast against dark hero) */
+        .custom-navbar .navbar-nav .nav-link {
+            color: #F5F2ED;
+            font-weight: 500;
+            font-size: 1.02rem;
+            transition: color 0.3s ease;
+        }
+
+        .custom-navbar .navbar-nav .nav-link:hover,
+        .custom-navbar .navbar-nav .nav-link.active {
+            color: #DFBA5A !important;
+        }
+
+        /* Right Side Icons & Auth Buttons Initial State */
+        .custom-navbar .icon-link {
+            color: #F5F2ED;
+            background-color: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(4px);
+        }
+
+        .custom-navbar .icon-link:hover {
+            color: #1A1612;
+            background-color: #DFBA5A;
+            border-color: #DFBA5A;
+        }
+
+        .custom-navbar .btn-login {
+            color: #F5F2ED;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background-color: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(4px);
+        }
+
+        .custom-navbar .btn-login:hover {
+            color: #DFBA5A;
+            border-color: #DFBA5A;
+            background-color: rgba(212, 175, 55, 0.15);
+        }
+
+        .custom-navbar .btn-register {
+            color: #1A1612;
+            background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
+            border: none;
+            box-shadow: 0 4px 15px rgba(197, 155, 39, 0.3);
+        }
+
+        .custom-navbar .btn-register:hover {
+            color: #1A1612;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(197, 155, 39, 0.5);
+        }
+
+        /* Navbar Scrolled State */
+        .custom-navbar.nav-scrolled,
         .custom-navbar.navbar-scrolled {
-            background-color: rgba(245, 242, 237, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.08);
-            padding: 6px 20px;
+            background-image: none !important;
+            background: #F5F2ED !important;
+            background-color: #F5F2ED !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.12);
+            padding: 8px 24px;
             top: 15px;
             width: 95%;
             max-width: 1300px;
             border-radius: 50px;
+            border: 1px solid rgba(184, 134, 11, 0.25);
+        }
+
+        .custom-navbar.nav-scrolled .navbar-nav .nav-link,
+        .custom-navbar.navbar-scrolled .navbar-nav .nav-link {
+            color: #2A241D;
+        }
+
+        .custom-navbar.nav-scrolled .navbar-nav .nav-link:hover,
+        .custom-navbar.nav-scrolled .navbar-nav .nav-link.active,
+        .custom-navbar.navbar-scrolled .navbar-nav .nav-link:hover,
+        .custom-navbar.navbar-scrolled .navbar-nav .nav-link.active {
+            color: #B8860B !important;
+        }
+
+        .custom-navbar.nav-scrolled .icon-link,
+        .custom-navbar.navbar-scrolled .icon-link {
+            color: #2A241D;
+            background-color: rgba(50, 48, 46, 0.05);
+            border: 1px solid rgba(50, 48, 46, 0.08);
+        }
+
+        .custom-navbar.nav-scrolled .icon-link:hover,
+        .custom-navbar.navbar-scrolled .icon-link:hover {
+            color: #B8860B;
+            background-color: rgba(184, 134, 11, 0.12);
+            border-color: rgba(184, 134, 11, 0.25);
+        }
+
+        .custom-navbar.nav-scrolled .btn-login,
+        .custom-navbar.navbar-scrolled .btn-login {
+            color: #2A241D;
+            border: 1px solid transparent;
+            background-color: transparent;
+        }
+
+        .custom-navbar.nav-scrolled .btn-login:hover,
+        .custom-navbar.navbar-scrolled .btn-login:hover {
+            color: #B8860B;
+            background-color: rgba(184, 134, 11, 0.08);
+        }
+
+        .custom-navbar.nav-scrolled .btn-register,
+        .custom-navbar.navbar-scrolled .btn-register {
+            color: #FAF8F5;
+            background: #2A241D;
+            border: 1px solid #2A241D;
+            box-shadow: 0 4px 12px rgba(42, 36, 29, 0.15);
+        }
+
+        .custom-navbar.nav-scrolled .btn-register:hover,
+        .custom-navbar.navbar-scrolled .btn-register:hover {
+            color: #FAF8F5;
+            background: #B8860B;
+            border-color: #B8860B;
         }
 
 
@@ -960,8 +1069,75 @@ if (session_status() === PHP_SESSION_NONE) {
                 height: 35px !important;
             }
 
-            .navbar-toggler {
-                padding: 4px 8px !important;
+            /* Offcanvas Link & Button Colors Fix for Mobile */
+            #navbarNav .navbar-nav .nav-link {
+                color: #2A241D !important;
+                font-weight: 600;
+                font-size: 1.1rem;
+                padding: 10px 15px !important;
+            }
+
+            #navbarNav .navbar-nav .nav-link:hover,
+            #navbarNav .navbar-nav .nav-link.active {
+                color: #B8860B !important;
+            }
+
+            #navbarNav .btn-login {
+                color: #2A241D !important;
+                border: 1px solid rgba(42, 36, 29, 0.2) !important;
+                background-color: transparent !important;
+            }
+
+            #navbarNav .btn-login:hover {
+                color: #B8860B !important;
+                background-color: rgba(184, 134, 11, 0.08) !important;
+            }
+
+            #navbarNav .btn-register {
+                color: #FAF8F5 !important;
+                background: #2A241D !important;
+                border-color: #2A241D !important;
+            }
+
+            #navbarNav .btn-register:hover {
+                background: #B8860B !important;
+                border-color: #B8860B !important;
+            }
+
+            /* Modern Sleek Mobile Toggler Button */
+            .custom-toggler {
+                width: 44px;
+                height: 44px;
+                padding: 0 !important;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: 12px !important;
+                background: rgba(255, 255, 255, 0.15) !important;
+                border: 1px solid rgba(212, 175, 55, 0.4) !important;
+                backdrop-filter: blur(8px);
+                -webkit-backdrop-filter: blur(8px);
+                color: #DFBA5A !important;
+                font-size: 1.3rem;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+                transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+            }
+
+            .custom-toggler:focus,
+            .custom-toggler:active {
+                box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.35) !important;
+                outline: none !important;
+            }
+
+            .custom-navbar.nav-scrolled .custom-toggler,
+            .custom-navbar.navbar-scrolled .custom-toggler {
+                background: transparent !important;
+                border: none !important;
+                border-color: transparent !important;
+                box-shadow: none !important;
+                backdrop-filter: none !important;
+                -webkit-backdrop-filter: none !important;
+                color: #2A241D !important;
             }
         }
 
@@ -972,7 +1148,7 @@ if (session_status() === PHP_SESSION_NONE) {
             left: 0;
             right: 0;
             background-color: #FFFFFF;
-            height: 60px;
+            height: 63px;
             display: flex;
             justify-content: space-around;
             align-items: center;
@@ -1071,8 +1247,8 @@ if (session_status() === PHP_SESSION_NONE) {
             <?php endif; ?>
 
             <!-- Mobile Toggle Button -->
-            <button class="navbar-toggler <?php echo $isLoggedIn ? '' : 'ms-auto'; ?>" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            <button class="navbar-toggler custom-toggler <?php echo $isLoggedIn ? '' : 'ms-auto'; ?>" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-label="Toggle navigation">
+                <i class="fa-solid fa-bars-staggered"></i>
             </button>
 
             <!-- Offcanvas Sidebar Menu (Slides Left to Right on Mobile, displays inline on Desktop) -->
@@ -1393,8 +1569,8 @@ if (session_status() === PHP_SESSION_NONE) {
         </a>
         <!-- Shop -->
         <a href="category.php" class="mobile-bottom-nav-item" id="bottomNavShop">
-            <i class="fa-solid fa-bag-shopping"></i>
-            <span>Shop</span>
+            <i class="fa-solid fa-grip"></i>
+            <span>Explore</span>
         </a>
         <!-- Cart -->
         <a href="cart.php" class="mobile-bottom-nav-item" id="bottomNavCart">
@@ -1414,7 +1590,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     0
                 </span>
             </div>
-            <span>Cart</span>
+            <span>Wishlist</span>
         </a>
         <!-- Account -->
         <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true): ?>
@@ -1875,5 +2051,19 @@ if (session_status() === PHP_SESSION_NONE) {
             var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
                 return new bootstrap.Tooltip(tooltipTriggerEl);
             });
+
+            // Transparent to Solid Navbar on Scroll
+            const mainNav = document.getElementById("mainNavbar") || document.querySelector(".custom-navbar");
+            if (mainNav) {
+                function handleNavbarScroll() {
+                    if (window.scrollY > 50) {
+                        mainNav.classList.add("nav-scrolled", "navbar-scrolled");
+                    } else {
+                        mainNav.classList.remove("nav-scrolled", "navbar-scrolled");
+                    }
+                }
+                window.addEventListener("scroll", handleNavbarScroll);
+                handleNavbarScroll(); // Initial check on load
+            }
         });
     </script>

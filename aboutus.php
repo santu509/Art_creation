@@ -70,17 +70,17 @@
             width: 60px;
         }
 
-        /* Hero Section with Ken Burns Effect - HEIGHT REDUCED HERE */
+        /* Hero Section with Ken Burns Effect */
         .hero-section {
-            height: 50vh!important; /* Reduced from 50vh */
-         
+            height: 55vh !important;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             overflow: hidden;
-            margin-top: 2.7%;
+            margin-top: 0 !important;
+            padding-top: 60px;
         }
 
         .hero-bg {

@@ -2,6 +2,7 @@
 session_start();
 require_once(__DIR__ . "/../connection.php");
 /** @var mysqli $connect */
+require_once 'includes/pagination.php';
 
 // Check admin authentication
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -35,9 +36,11 @@ if ($statReadRes) {
     $readMessages = (int)$row['cnt'];
 }
 
-// Handle Search & Filter Parameters
+// Handle Search, Filter & Pagination Parameters
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $filter = isset($_GET['filter']) ? trim($_GET['filter']) : 'all';
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$perPage = isset($_GET['per_page']) ? max(1, (int)$_GET['per_page']) : 10;
 
 $whereClauses = [];
 
@@ -57,8 +60,23 @@ if (count($whereClauses) > 0) {
     $whereSQL = "WHERE " . implode(" AND ", $whereClauses);
 }
 
-// Fetch Messages
-$query = "SELECT * FROM contact_messages $whereSQL ORDER BY created_at DESC";
+// Count Total Filtered Records for Pagination
+$countQuery = "SELECT COUNT(*) as cnt FROM contact_messages $whereSQL";
+$countRes = mysqli_query($connect, $countQuery);
+$totalRecords = 0;
+if ($countRes) {
+    $row = mysqli_fetch_assoc($countRes);
+    $totalRecords = (int)$row['cnt'];
+}
+
+$totalPages = ceil($totalRecords / $perPage);
+if ($page > $totalPages && $totalPages > 0) {
+    $page = $totalPages;
+}
+$offset = ($page - 1) * $perPage;
+
+// Fetch Paginated Messages
+$query = "SELECT * FROM contact_messages $whereSQL ORDER BY created_at DESC LIMIT $offset, $perPage";
 $messagesResult = mysqli_query($connect, $query);
 
 $messagesList = [];
@@ -66,6 +84,189 @@ if ($messagesResult && mysqli_num_rows($messagesResult) > 0) {
     while ($row = mysqli_fetch_assoc($messagesResult)) {
         $messagesList[] = $row;
     }
+}
+
+// Prepare URL query parameters array for pagination component
+$queryParams = [
+    'search' => $search,
+    'filter' => $filter,
+    'per_page' => $perPage
+];
+
+// Handle AJAX Request (Partial rendering for live search & pagination without page reload)
+$isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') || isset($_GET['ajax']);
+
+if ($isAjax) {
+    ob_start();
+    renderMessagesTableCard($messagesList, $page, $perPage, $totalRecords, $totalPages, $queryParams, $search, $filter, $totalMessages, $unreadMessages, $readMessages, $offset);
+    $tableHtml = ob_get_clean();
+    echo json_encode([
+        'status' => 'success',
+        'html' => $tableHtml,
+        'totalRecords' => $totalRecords
+    ]);
+    exit;
+}
+
+// Helper Function to Render Messages Table Card Content
+function renderMessagesTableCard($messagesList, $page, $perPage, $totalRecords, $totalPages, $queryParams, $search, $filter, $totalMessages, $unreadMessages, $readMessages, $offset)
+{
+?>
+    <div class="table-card-header">
+        <h3 class="table-card-title">
+            <i class="fa-solid fa-comments me-2"></i>Contact Messages
+        </h3>
+
+        <div class="d-flex align-items-center gap-2 flex-wrap ms-auto">
+            <!-- Select Rows Dropdown -->
+            <?php renderPageSizeSelector($perPage, [5, 10, 25, 50, 100], 'changePerPage(this.value)'); ?>
+
+            <!-- Filter Pills -->
+            <div class="d-flex align-items-center gap-1">
+                <button type="button" onclick="filterMessages('all')" class="btn-filter-pill <?php echo ($filter === 'all') ? 'active' : ''; ?>">
+                    All (<?php echo $totalMessages; ?>)
+                </button>
+                <button type="button" onclick="filterMessages('unread')" class="btn-filter-pill <?php echo ($filter === 'unread') ? 'active' : ''; ?>">
+                    Unread (<?php echo $unreadMessages; ?>)
+                </button>
+                <button type="button" onclick="filterMessages('read')" class="btn-filter-pill <?php echo ($filter === 'read') ? 'active' : ''; ?>">
+                    Read (<?php echo $readMessages; ?>)
+                </button>
+            </div>
+
+            <!-- Search Input -->
+            <div class="search-input-box m-0">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="messageSearchInput" class="form-control" placeholder="Search sender, subject..." value="<?php echo htmlspecialchars($search); ?>" onkeyup="handleSearchInput(this.value)">
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table messages-table align-middle">
+            <thead>
+                <tr>
+                    <th style="width: 50px;">SL</th>
+                    <th>Sender Details</th>
+                    <th class="text-start">Subject</th>
+                    <th class="text-start">Date</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center" style="width: 180px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php if (!empty($messagesList)): ?>
+                    <?php
+                    $sl = $offset + 1;
+                    foreach ($messagesList as $msg):
+                        $msgId = (int)$msg['id'];
+                        $status = (int)$msg['status'];
+                        $isUnread = ($status === 0);
+                        $formattedDate = date('M d, Y - h:i A', strtotime($msg['created_at']));
+                    ?>
+                        <tr class="<?php echo $isUnread ? 'unread-row' : ''; ?>">
+                            <td>
+                                <span class="sl-number"><?php echo $sl++; ?></span>
+                            </td>
+                            <td>
+                                <div class="sender-name"><?php echo htmlspecialchars($msg['name']); ?></div>
+                                <div class="sender-meta">
+                                    <a href="mailto:<?php echo htmlspecialchars($msg['email']); ?>" title="Email Sender">
+                                        <i class="fa-regular fa-envelope me-1"></i><?php echo htmlspecialchars($msg['email']); ?>
+                                    </a>
+                                    <?php if (!empty($msg['phone'])): ?>
+                                        <span>•</span>
+                                        <a href="tel:<?php echo htmlspecialchars($msg['phone']); ?>" title="Call Phone">
+                                            <i class="fa-solid fa-phone me-1"></i><?php echo htmlspecialchars($msg['phone']); ?>
+                                        </a>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="subject-text" title="<?php echo htmlspecialchars($msg['subject']); ?>">
+                                    <?php echo !empty($msg['subject']) ? htmlspecialchars($msg['subject']) : '(No Subject)'; ?>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="date-text"><?php echo $formattedDate; ?></span>
+                            </td>
+                            <td class="text-center">
+                                <?php if ($isUnread): ?>
+                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 rounded-pill">
+                                        <i class="fa-solid fa-envelope me-1" style="font-size: 9px;"></i>Unread
+                                    </span>
+                                <?php else: ?>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill">
+                                        <i class="fa-solid fa-circle-check me-1" style="font-size: 9px;"></i>Read
+                                    </span>
+                                <?php endif; ?>
+                            </td>
+                            <td class="text-end">
+                                <div class="d-inline-flex align-items-center justify-content-end">
+                                    <!-- View Modal Trigger -->
+                                    <button type="button"
+                                        class="btn-action-icon view-btn"
+                                        title="View Details"
+                                        onclick="openViewModal(this)"
+                                        data-id="<?php echo $msgId; ?>"
+                                        data-name="<?php echo htmlspecialchars($msg['name']); ?>"
+                                        data-email="<?php echo htmlspecialchars($msg['email']); ?>"
+                                        data-phone="<?php echo htmlspecialchars($msg['phone']); ?>"
+                                        data-subject="<?php echo htmlspecialchars($msg['subject']); ?>"
+                                        data-date="<?php echo $formattedDate; ?>"
+                                        data-message="<?php echo htmlspecialchars($msg['message']); ?>"
+                                        data-status="<?php echo $status; ?>">
+                                        <i class="fa-solid fa-eye"></i>
+                                    </button>
+
+                                    <!-- Reply via Mailto -->
+                                    <a href="mailto:<?php echo htmlspecialchars($msg['email']); ?>?subject=<?php echo rawurlencode('Re: ' . ($msg['subject'] ?? '')); ?>"
+                                        class="btn-action-icon reply-btn"
+                                        title="Reply via Email">
+                                        <i class="fa-solid fa-reply"></i>
+                                    </a>
+
+                                    <!-- Toggle Status -->
+                                    <?php if ($isUnread): ?>
+                                        <a href="message_action.php?action=toggle_status&id=<?php echo $msgId; ?>"
+                                            class="btn-action-icon toggle-btn-active"
+                                            title="Mark as Read">
+                                            <i class="fa-solid fa-envelope-circle-check"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="message_action.php?action=toggle_status&id=<?php echo $msgId; ?>"
+                                            class="btn-action-icon toggle-btn-disabled"
+                                            title="Mark as Unread">
+                                            <img src="../asset/image/unread-message.png" width="20" alt="">
+                                        </a>
+                                    <?php endif; ?>
+
+                                    <!-- Delete Button -->
+                                    <button type="button"
+                                        class="btn-action-icon delete-btn"
+                                        title="Delete Message"
+                                        onclick="confirmDelete(<?php echo $msgId; ?>)">
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <tr>
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa-regular fa-folder-open mb-3 text-secondary" style="font-size: 38px; display: block;"></i>
+                            <span style="font-size: 15px; font-weight: 500;">No contact messages found.</span>
+                        </td>
+                    </tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Reusable Bottom Pagination Component -->
+    <?php renderPagination($totalPages, $page, $totalRecords, $perPage, $queryParams, 'messages'); ?>
+<?php
 }
 ?>
 <!DOCTYPE html>
@@ -609,159 +810,9 @@ if ($messagesResult && mysqli_num_rows($messagesResult) > 0) {
                     </div>
                 </div>
 
-                <!-- Messages Data Table Card -->
-                <div class="table-card">
-                    <div class="table-card-header">
-                        <h3 class="table-card-title">
-                            <i class="fa-solid fa-comments me-2"></i>Contact Messages
-                        </h3>
-
-                        <div class="d-flex align-items-center gap-2 flex-wrap ms-auto">
-                            <!-- Filter Pills -->
-                            <div class="d-flex align-items-center gap-1">
-                                <a href="messages.php?filter=all<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="btn-filter-pill <?php echo ($filter === 'all') ? 'active' : ''; ?>">
-                                    All (<?php echo $totalMessages; ?>)
-                                </a>
-                                <a href="messages.php?filter=unread<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="btn-filter-pill <?php echo ($filter === 'unread') ? 'active' : ''; ?>">
-                                    Unread (<?php echo $unreadMessages; ?>)
-                                </a>
-                                <a href="messages.php?filter=read<?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>" class="btn-filter-pill <?php echo ($filter === 'read') ? 'active' : ''; ?>">
-                                    Read (<?php echo $readMessages; ?>)
-                                </a>
-                            </div>
-
-                            <!-- Search Input -->
-                            <form action="messages.php" method="GET" class="search-input-box m-0">
-                                <?php if ($filter !== 'all'): ?>
-                                    <input type="hidden" name="filter" value="<?php echo htmlspecialchars($filter); ?>">
-                                <?php endif; ?>
-                                <i class="fa-solid fa-magnifying-glass"></i>
-                                <input type="text" name="search" class="form-control" placeholder="Search sender, subject..." value="<?php echo htmlspecialchars($search); ?>">
-                            </form>
-                        </div>
-                    </div>
-
-                    <div class="table-responsive">
-                        <table class="table messages-table align-middle">
-                            <thead>
-                                <tr>
-                                    <th style="width: 50px;">SL</th>
-                                    <th>Sender Details</th>
-                                    <th class="text-start">Subject</th>
-                                    <th class="text-start">Date</th>
-                                    <th class="text-center">Status</th>
-                                    <th class="text-center" style="width: 180px;">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if (!empty($messagesList)): ?>
-                                    <?php
-                                    $sl = 1;
-                                    foreach ($messagesList as $msg):
-                                        $msgId = (int)$msg['id'];
-                                        $status = (int)$msg['status'];
-                                        $isUnread = ($status === 0);
-                                        $formattedDate = date('M d, Y - h:i A', strtotime($msg['created_at']));
-                                    ?>
-                                        <tr class="<?php echo $isUnread ? 'unread-row' : ''; ?>">
-                                            <td>
-                                                <span class="sl-number"><?php echo $sl++; ?></span>
-                                            </td>
-                                            <td>
-                                                <div class="sender-name"><?php echo htmlspecialchars($msg['name']); ?></div>
-                                                <div class="sender-meta">
-                                                    <a href="mailto:<?php echo htmlspecialchars($msg['email']); ?>" title="Email Sender">
-                                                        <i class="fa-regular fa-envelope me-1"></i><?php echo htmlspecialchars($msg['email']); ?>
-                                                    </a>
-                                                    <?php if (!empty($msg['phone'])): ?>
-                                                        <span>•</span>
-                                                        <a href="tel:<?php echo htmlspecialchars($msg['phone']); ?>" title="Call Phone">
-                                                            <i class="fa-solid fa-phone me-1"></i><?php echo htmlspecialchars($msg['phone']); ?>
-                                                        </a>
-                                                    <?php endif; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="subject-text" title="<?php echo htmlspecialchars($msg['subject']); ?>">
-                                                    <?php echo !empty($msg['subject']) ? htmlspecialchars($msg['subject']) : '(No Subject)'; ?>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="date-text"><?php echo $formattedDate; ?></span>
-                                            </td>
-                                            <td class="text-center">
-                                                <?php if ($isUnread): ?>
-                                                    <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-2.5 py-1 rounded-pill">
-                                                        <i class="fa-solid fa-envelope me-1" style="font-size: 9px;"></i>Unread
-                                                    </span>
-                                                <?php else: ?>
-                                                    <span class="badge bg-success-subtle text-success border border-success-subtle px-2.5 py-1 rounded-pill">
-                                                        <i class="fa-solid fa-circle-check me-1" style="font-size: 9px;"></i>Read
-                                                    </span>
-                                                <?php endif; ?>
-                                            </td>
-                                            <td class="text-end">
-                                                <div class="d-inline-flex align-items-center justify-content-end">
-                                                    <!-- View Modal Trigger -->
-                                                    <button type="button"
-                                                        class="btn-action-icon view-btn"
-                                                        title="View Details"
-                                                        onclick="openViewModal(this)"
-                                                        data-id="<?php echo $msgId; ?>"
-                                                        data-name="<?php echo htmlspecialchars($msg['name']); ?>"
-                                                        data-email="<?php echo htmlspecialchars($msg['email']); ?>"
-                                                        data-phone="<?php echo htmlspecialchars($msg['phone']); ?>"
-                                                        data-subject="<?php echo htmlspecialchars($msg['subject']); ?>"
-                                                        data-date="<?php echo $formattedDate; ?>"
-                                                        data-message="<?php echo htmlspecialchars($msg['message']); ?>"
-                                                        data-status="<?php echo $status; ?>">
-                                                        <i class="fa-solid fa-eye"></i>
-                                                    </button>
-
-                                                    <!-- Reply via Mailto -->
-                                                    <a href="mailto:<?php echo htmlspecialchars($msg['email']); ?>?subject=<?php echo rawurlencode('Re: ' . ($msg['subject'] ?? '')); ?>"
-                                                        class="btn-action-icon reply-btn"
-                                                        title="Reply via Email">
-                                                        <i class="fa-solid fa-reply"></i>
-                                                    </a>
-
-                                                    <!-- Toggle Status -->
-                                                    <?php if ($isUnread): ?>
-                                                        <a href="message_action.php?action=toggle_status&id=<?php echo $msgId; ?>"
-                                                            class="btn-action-icon toggle-btn-active"
-                                                            title="Mark as Read">
-                                                            <i class="fa-solid fa-envelope-circle-check"></i>
-                                                        </a>
-                                                    <?php else: ?>
-                                                        <a href="message_action.php?action=toggle_status&id=<?php echo $msgId; ?>"
-                                                            class="btn-action-icon toggle-btn-disabled"
-                                                            title="Mark as Unread">
-                                                            <img src="../asset/image/unread-message.png" width="20" alt="">
-                                                        </a>
-                                                    <?php endif; ?>
-
-                                                    <!-- Delete Button -->
-                                                    <button type="button"
-                                                        class="btn-action-icon delete-btn"
-                                                        title="Delete Message"
-                                                        onclick="confirmDelete(<?php echo $msgId; ?>)">
-                                                        <i class="fa-solid fa-trash-can"></i>
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <tr>
-                                        <td colspan="6" class="text-center py-5 text-muted">
-                                            <i class="fa-regular fa-folder-open mb-3 text-secondary" style="font-size: 38px; display: block;"></i>
-                                            <span style="font-size: 15px; font-weight: 500;">No contact messages found.</span>
-                                        </td>
-                                    </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Messages Data Table Card Container -->
+                <div class="table-card" id="messagesTableContainer" style="transition: opacity 0.2s ease;">
+                    <?php renderMessagesTableCard($messagesList, $page, $perPage, $totalRecords, $totalPages, $queryParams, $search, $filter, $totalMessages, $unreadMessages, $readMessages, $offset); ?>
                 </div>
 
             </div>
@@ -928,6 +979,77 @@ if ($messagesResult && mysqli_num_rows($messagesResult) > 0) {
             if (viewModalInstance) {
                 viewModalInstance.show();
             }
+        }
+
+        let currentSearch = '<?php echo htmlspecialchars($search, ENT_QUOTES); ?>';
+        let currentFilter = '<?php echo htmlspecialchars($filter, ENT_QUOTES); ?>';
+        let currentPerPage = <?php echo (int)$perPage; ?>;
+        let currentPage = <?php echo (int)$page; ?>;
+        let searchTimer = null;
+
+        // Trigger AJAX Search, Filter & Pagination without page reload
+        function triggerSearch(page = 1) {
+            currentPage = page;
+            const searchInput = document.getElementById('messageSearchInput');
+            const isSearchFocused = (document.activeElement === searchInput);
+            if (searchInput) {
+                currentSearch = searchInput.value.trim();
+            }
+
+            const params = new URLSearchParams({
+                search: currentSearch,
+                filter: currentFilter,
+                per_page: currentPerPage,
+                page: currentPage,
+                ajax: '1'
+            });
+
+            const container = document.getElementById('messagesTableContainer');
+            if (container) {
+                container.style.opacity = '0.5';
+            }
+
+            fetch('messages.php?' + params.toString(), {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (container) {
+                        container.style.opacity = '1';
+                        if (data.status === 'success') {
+                            container.innerHTML = data.html;
+                            const newSearchInput = document.getElementById('messageSearchInput');
+                            if (newSearchInput && isSearchFocused) {
+                                newSearchInput.focus();
+                                newSearchInput.setSelectionRange(newSearchInput.value.length, newSearchInput.value.length);
+                            }
+                        }
+                    }
+                })
+                .catch(err => {
+                    if (container) container.style.opacity = '1';
+                    console.error('AJAX Search Error:', err);
+                });
+        }
+
+        function filterMessages(filterType) {
+            currentFilter = filterType;
+            triggerSearch(1);
+        }
+
+        function changePerPage(perPageVal) {
+            currentPerPage = parseInt(perPageVal);
+            triggerSearch(1);
+        }
+
+        function handleSearchInput(val) {
+            clearTimeout(searchTimer);
+            searchTimer = setTimeout(() => {
+                currentSearch = val.trim();
+                triggerSearch(1);
+            }, 300);
         }
 
         // Show Modern Confirmation Modal for Delete

@@ -84,7 +84,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </div>
                     <p>If you have any urgent queries regarding an order, feel free to call us at +91 12345 67890.</p>
                     <br>
-                    <p>Warm Regards,<br><strong>Siddhartha</strong><br>Siddha Art Creation Team</p>
+                    <p>Warm Regards,<br>Siddha Art Creation Team</p>
                 </div>
             ";
 

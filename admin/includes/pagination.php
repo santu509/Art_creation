@@ -1,20 +1,26 @@
 <?php
+
 /**
  * Reusable Pagination & Page-Size Selector Component
  * Siddha Art Creation Admin Panel
  */
 
 /**
- * Render Top Page-Size Selector Dropdown ("Showing [ 10 ˅ ] Result")
+ * Render Top Page-Size Selector Dropdown ("Select Rows: [ 10 ˅ ]")
  * 
  * @param int $perPage Currently selected per-page limit
  * @param array $options List of per-page options [5, 10, 25, 50, 100]
  * @param string $onchangeJS JS function call on change (default: 'changePerPage(this.value)')
+ * @param string $labelBefore Label before select (default: 'Select Rows:')
+ * @param string $labelAfter Label after select (default: '')
  */
-function renderPageSizeSelector($perPage = 10, $options = [5, 10, 25, 50, 100], $onchangeJS = 'changePerPage(this.value)') {
-    ?>
+function renderPageSizeSelector($perPage = 10, $options = [5, 10, 25, 50, 100], $onchangeJS = 'changePerPage(this.value)', $labelBefore = 'Select Rows:', $labelAfter = '')
+{
+?>
     <div class="page-size-selector-wrapper">
-        <span class="page-size-label">Showing</span>
+        <?php if (!empty($labelBefore)): ?>
+            <span class="page-size-label"><?php echo htmlspecialchars($labelBefore); ?></span>
+        <?php endif; ?>
         <select class="form-select-per-page" onchange="<?php echo htmlspecialchars($onchangeJS); ?>" title="Select items per page">
             <?php foreach ($options as $opt): ?>
                 <option value="<?php echo $opt; ?>" <?php echo ((int)$perPage === (int)$opt) ? 'selected' : ''; ?>>
@@ -22,7 +28,9 @@ function renderPageSizeSelector($perPage = 10, $options = [5, 10, 25, 50, 100], 
                 </option>
             <?php endforeach; ?>
         </select>
-        <span class="page-size-label">Result</span>
+        <?php if (!empty($labelAfter)): ?>
+            <span class="page-size-label"><?php echo htmlspecialchars($labelAfter); ?></span>
+        <?php endif; ?>
     </div>
     <style>
         .page-size-selector-wrapper {
@@ -54,13 +62,14 @@ function renderPageSizeSelector($perPage = 10, $options = [5, 10, 25, 50, 100], 
             box-shadow: 0 2px 6px rgba(184, 134, 11, 0.05);
         }
 
-        .form-select-per-page:focus, .form-select-per-page:hover {
+        .form-select-per-page:focus,
+        .form-select-per-page:hover {
             border-color: #D4AF37;
             background-color: #FFFFFF;
             box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
         }
     </style>
-    <?php
+<?php
 }
 
 /**
@@ -73,7 +82,8 @@ function renderPageSizeSelector($perPage = 10, $options = [5, 10, 25, 50, 100], 
  * @param array $queryParams URL Query parameters to preserve in links
  * @param string $entityName Singular/plural label for records e.g. "entries" or "customers"
  */
-function renderPagination($totalPages, $currentPage, $totalRecords, $perPage, $queryParams = [], $entityName = 'entries') {
+function renderPagination($totalPages, $currentPage, $totalRecords, $perPage, $queryParams = [], $entityName = 'entries')
+{
     if ($totalRecords == 0) {
         return;
     }
@@ -82,11 +92,11 @@ function renderPagination($totalPages, $currentPage, $totalRecords, $perPage, $q
     $endRecord = min($startRecord + $perPage - 1, $totalRecords);
 
     // Closure to construct page URLs dynamically preserving current filters
-    $buildUrl = function($page) use ($queryParams) {
+    $buildUrl = function ($page) use ($queryParams) {
         $params = array_merge($queryParams, ['page' => $page]);
         return '?' . http_build_query($params);
     };
-    ?>
+?>
     <div class="pagination-wrapper">
         <!-- Summary Info Left -->
         <div class="pagination-info">
@@ -95,50 +105,50 @@ function renderPagination($totalPages, $currentPage, $totalRecords, $perPage, $q
 
         <!-- Page Buttons Right -->
         <?php if ($totalPages > 1): ?>
-        <ul class="pagination-custom">
-            <!-- Previous Page Button -->
-            <li class="page-item-custom <?php echo ($currentPage <= 1) ? 'disabled' : ''; ?>">
-                <a href="<?php echo ($currentPage > 1) ? $buildUrl($currentPage - 1) : '#'; ?>" 
-                   onclick="<?php echo ($currentPage > 1) ? 'if(typeof triggerSearch === \'function\'){ event.preventDefault(); triggerSearch(' . ($currentPage - 1) . '); }' : ''; ?>"
-                   class="page-link-custom" aria-label="Previous">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </a>
-            </li>
+            <ul class="pagination-custom">
+                <!-- Previous Page Button -->
+                <li class="page-item-custom <?php echo ($currentPage <= 1) ? 'disabled' : ''; ?>">
+                    <a href="<?php echo ($currentPage > 1) ? $buildUrl($currentPage - 1) : '#'; ?>"
+                        onclick="<?php echo ($currentPage > 1) ? 'if(typeof triggerSearch === \'function\'){ event.preventDefault(); triggerSearch(' . ($currentPage - 1) . '); }' : ''; ?>"
+                        class="page-link-custom" aria-label="Previous">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </a>
+                </li>
 
-            <?php
-            $range = 2;
-            $startPage = max(1, $currentPage - $range);
-            $endPage = min($totalPages, $currentPage + $range);
+                <?php
+                $range = 2;
+                $startPage = max(1, $currentPage - $range);
+                $endPage = min($totalPages, $currentPage + $range);
 
-            if ($startPage > 1) {
-                echo '<li class="page-item-custom"><a href="' . $buildUrl(1) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(1);}" class="page-link-custom">1</a></li>';
-                if ($startPage > 2) {
-                    echo '<li class="page-item-custom disabled"><span class="page-link-custom">&hellip;</span></li>';
+                if ($startPage > 1) {
+                    echo '<li class="page-item-custom"><a href="' . $buildUrl(1) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(1);}" class="page-link-custom">1</a></li>';
+                    if ($startPage > 2) {
+                        echo '<li class="page-item-custom disabled"><span class="page-link-custom">&hellip;</span></li>';
+                    }
                 }
-            }
 
-            for ($i = $startPage; $i <= $endPage; $i++) {
-                $activeClass = ($i == $currentPage) ? 'active' : '';
-                echo '<li class="page-item-custom ' . $activeClass . '"><a href="' . $buildUrl($i) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(' . $i . ');}" class="page-link-custom">' . $i . '</a></li>';
-            }
-
-            if ($endPage < $totalPages) {
-                if ($endPage < $totalPages - 1) {
-                    echo '<li class="page-item-custom disabled"><span class="page-link-custom">&hellip;</span></li>';
+                for ($i = $startPage; $i <= $endPage; $i++) {
+                    $activeClass = ($i == $currentPage) ? 'active' : '';
+                    echo '<li class="page-item-custom ' . $activeClass . '"><a href="' . $buildUrl($i) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(' . $i . ');}" class="page-link-custom">' . $i . '</a></li>';
                 }
-                echo '<li class="page-item-custom"><a href="' . $buildUrl($totalPages) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(' . $totalPages . ');}" class="page-link-custom">' . $totalPages . '</a></li>';
-            }
-            ?>
 
-            <!-- Next Page Button -->
-            <li class="page-item-custom <?php echo ($currentPage >= $totalPages) ? 'disabled' : ''; ?>">
-                <a href="<?php echo ($currentPage < $totalPages) ? $buildUrl($currentPage + 1) : '#'; ?>" 
-                   onclick="<?php echo ($currentPage < $totalPages) ? 'if(typeof triggerSearch === \'function\'){ event.preventDefault(); triggerSearch(' . ($currentPage + 1) . '); }' : ''; ?>"
-                   class="page-link-custom" aria-label="Next">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </a>
-            </li>
-        </ul>
+                if ($endPage < $totalPages) {
+                    if ($endPage < $totalPages - 1) {
+                        echo '<li class="page-item-custom disabled"><span class="page-link-custom">&hellip;</span></li>';
+                    }
+                    echo '<li class="page-item-custom"><a href="' . $buildUrl($totalPages) . '" onclick="if(typeof triggerSearch===\'function\'){event.preventDefault();triggerSearch(' . $totalPages . ');}" class="page-link-custom">' . $totalPages . '</a></li>';
+                }
+                ?>
+
+                <!-- Next Page Button -->
+                <li class="page-item-custom <?php echo ($currentPage >= $totalPages) ? 'disabled' : ''; ?>">
+                    <a href="<?php echo ($currentPage < $totalPages) ? $buildUrl($currentPage + 1) : '#'; ?>"
+                        onclick="<?php echo ($currentPage < $totalPages) ? 'if(typeof triggerSearch === \'function\'){ event.preventDefault(); triggerSearch(' . ($currentPage + 1) . '); }' : ''; ?>"
+                        class="page-link-custom" aria-label="Next">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </a>
+                </li>
+            </ul>
         <?php endif; ?>
     </div>
 
@@ -221,6 +231,6 @@ function renderPagination($totalPages, $currentPage, $totalRecords, $perPage, $q
             }
         }
     </style>
-    <?php
+<?php
 }
 ?>
