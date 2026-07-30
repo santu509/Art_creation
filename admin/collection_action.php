@@ -121,7 +121,7 @@ if (isset($_POST['save_product'])) {
     $gallery_json = !empty($existing_gallery) ? $connect->real_escape_string(json_encode($existing_gallery)) : '';
 
     if ($id > 0) {
-        // Edit logic
+        // Edit logic in collection page
         $image_sql = $image ? "'$image'" : "NULL";
         $gallery_sql = $gallery_json ? "'$gallery_json'" : "NULL";
         
