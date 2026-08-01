@@ -1,5 +1,6 @@
 <!-- Navbar Inclusion -->
-<?php include_once('nav.php'); ?>
+<?php include_once('nav.php'); 
+include_once('connection.php');?>
 
 <style>
     /* -----------------------------------------
@@ -531,69 +532,75 @@
         border-radius: 2px;
     }
 
-    /* Light Modern Category Card (Warm Luxury UI) */
+    /* -----------------------------------------
+       Ultra Modern Soft-UI Category Card 
+    ----------------------------------------- */
+    .shop-by-category {
+        background-color: #F8F9FC; /* Very soft cool white */
+        overflow: hidden;
+    }
+
     .category-card {
         position: relative;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         width: 100%;
-        min-height: 270px;
-        aspect-ratio: 4 / 4.6;
-        border-radius: 22px;
+        min-height: 260px;
+        border-radius: 28px;
         overflow: hidden;
         text-decoration: none;
-        padding: 30px 24px;
-        background: linear-gradient(145deg, #FFFFFF 0%, #F9F5EE 100%);
-        border: 1px solid rgba(212, 175, 55, 0.22);
-        box-shadow: 0 10px 30px rgba(42, 36, 29, 0.05);
-        transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        padding: 35px 25px;
+        background: linear-gradient(135deg, #FFFFFF 0%, #FDFDFD 100%);
+        border: 1px solid rgba(0, 0, 0, 0.03);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         z-index: 1;
     }
 
-    /* Top Accent Line */
     .category-card::before {
         content: '';
         position: absolute;
         top: 0;
-        left: 0;
-        width: 100%;
-        height: 4px;
-        background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);
-        opacity: 0;
-        transition: opacity 0.35s ease;
+        right: 0;
+        width: 150px;
+        height: 150px;
+        background: linear-gradient(135deg, rgba(212, 175, 55, 0.15) 0%, rgba(212, 175, 55, 0) 70%);
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+        transition: transform 0.6s ease;
+        z-index: 0;
     }
 
     .category-card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 18px 40px rgba(184, 134, 11, 0.15);
-        border-color: rgba(212, 175, 55, 0.55);
-        background: linear-gradient(145deg, #FFFFFF 0%, #F5EFE4 100%);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 20px 40px rgba(212, 175, 55, 0.1);
+        border-color: rgba(212, 175, 55, 0.2);
     }
 
     .category-card:hover::before {
-        opacity: 1;
+        transform: translate(10%, -10%) scale(1.2);
     }
 
-    /* Large Monogram Watermark (Light Theme) */
+    /* Subtle Monogram Watermark */
     .category-watermark {
         position: absolute;
-        top: 10px;
-        right: 18px;
+        bottom: 10px;
+        right: 15px;
         font-family: 'Playfair Display', serif;
-        font-size: 6.8rem;
+        font-size: 7rem;
         font-weight: 800;
-        color: rgba(184, 134, 11, 0.07);
+        color: rgba(0, 0, 0, 0.02);
         line-height: 1;
         pointer-events: none;
         user-select: none;
-        transition: color 0.4s ease, transform 0.4s ease;
+        transition: all 0.5s ease;
         z-index: 0;
     }
 
     .category-card:hover .category-watermark {
-        color: rgba(184, 134, 11, 0.14);
-        transform: scale(1.1) translateX(-4px);
+        color: rgba(212, 175, 55, 0.05);
+        transform: scale(1.1) rotate(-5deg);
     }
 
     /* Card Top Header */
@@ -601,43 +608,41 @@
         position: relative;
         z-index: 2;
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
     }
 
     .category-icon-box {
-        width: 52px;
-        height: 52px;
+        width: 55px;
+        height: 55px;
         border-radius: 16px;
-        background: linear-gradient(135deg, rgba(212, 175, 55, 0.14) 0%, rgba(184, 134, 11, 0.06) 100%);
-        border: 1px solid rgba(212, 175, 55, 0.28);
+        background: #FFFFFF;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         color: #B8860B;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.3rem;
-        transition: all 0.35s ease;
-        box-shadow: 0 4px 12px rgba(184, 134, 11, 0.06);
+        font-size: 1.5rem;
+        transition: all 0.4s ease;
     }
 
     .category-card:hover .category-icon-box {
-        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
-        color: #1A1612;
-        border-color: transparent;
-        box-shadow: 0 8px 20px rgba(197, 155, 39, 0.35);
+        background: linear-gradient(135deg, #D4AF37 0%, #B8860B 100%);
+        color: #FFFFFF;
+        transform: rotateY(180deg);
     }
 
     .category-tag {
         font-family: 'Outfit', sans-serif;
-        font-size: 0.73rem;
-        font-weight: 700;
+        font-size: 0.7rem;
+        font-weight: 600;
         text-transform: uppercase;
         letter-spacing: 1px;
         color: #B8860B;
-        background: rgba(184, 134, 11, 0.08);
+        background: rgba(212, 175, 55, 0.1);
         padding: 5px 12px;
         border-radius: 20px;
-        border: 1px solid rgba(184, 134, 11, 0.18);
+        backdrop-filter: blur(4px);
     }
 
     /* Card Bottom Content */
@@ -647,64 +652,57 @@
     }
 
     .category-title {
-        font-family: 'Playfair Display', serif;
-        color: #1A1612;
+        font-family: 'Outfit', sans-serif; /* Switched to modern sans-serif for title */
+        color: #1A1A1A;
         font-size: 1.4rem;
         font-weight: 700;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         line-height: 1.3;
-        transition: color 0.3s ease, transform 0.35s ease;
+        transition: color 0.3s ease;
     }
 
     .category-card:hover .category-title {
         color: #B8860B;
-        transform: translateY(-2px);
     }
 
     .category-subtext {
         font-family: 'Outfit', sans-serif;
-        font-size: 0.86rem;
-        color: #7C7267;
-        margin-bottom: 16px;
+        font-size: 0.9rem;
+        color: #888888;
+        margin-bottom: 20px;
+        line-height: 1.5;
+        font-weight: 400;
     }
 
     .category-cta {
         display: inline-flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         color: #B8860B;
         font-family: 'Outfit', sans-serif;
-        font-size: 0.82rem;
+        font-size: 0.85rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 1px;
-        transition: all 0.35s ease;
-    }
-
-    .category-cta .cta-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: rgba(184, 134, 11, 0.1);
-        border: 1px solid rgba(184, 134, 11, 0.22);
-        color: #B8860B;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.8rem;
-        transition: all 0.35s ease;
+        transition: all 0.3s ease;
+        background: rgba(212, 175, 55, 0.05);
+        padding: 8px 16px;
+        border-radius: 30px;
     }
 
     .category-card:hover .category-cta {
-        color: #1A1612;
+        background: #D4AF37;
+        color: #FFFFFF;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    }
+
+    .category-cta .cta-icon {
+        font-size: 0.9rem;
+        transition: transform 0.3s ease;
     }
 
     .category-card:hover .category-cta .cta-icon {
-        transform: translateX(6px);
-        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
-        color: #1A1612;
-        border-color: transparent;
-        box-shadow: 0 4px 15px rgba(197, 155, 39, 0.35);
+        transform: translateX(4px);
     }
 
     /* Optional Image Overrides if image IS present */
@@ -757,6 +755,10 @@
         border-color: #B8860B;
         box-shadow: 0 8px 22px rgba(184, 134, 11, 0.35);
         transform: translateY(-2px);
+    }
+
+    .product-gallery{
+        background-color: #FAF8F5!important;
     }
 </style>
 
@@ -967,115 +969,210 @@
         </div>
     </section>
 
-    <!-- Modern Shop by Category Section -->
-    <section class="shop-by-category py-5">
-        <div class="container py-4">
+   
 
+    <!-- Category-wise Product Gallery -->
+    <section class="product-gallery py-5 bg-white">
+        <div class="container py-4">
             <!-- Section Header -->
             <div class="row justify-content-center text-center mb-5">
                 <div class="col-12 col-md-8 col-lg-6">
-                    <h2 class="section-title mb-3">Shop by Category</h2>
+                    <h2 class="section-title mb-3">Our Masterpieces</h2>
                     <p class="section-subtitle">
-                        Explore our handcrafted collections of divine idols, terracotta decor, and artisan creations.
+                        Explore our exquisite collection of handcrafted arts and divine creations.
                     </p>
                     <div class="title-divider mx-auto"></div>
                 </div>
             </div>
 
-            <!-- Category Grid (Simple Procedural MySQLi Query Loop) -->
-            <div class="row g-4">
-                <?php
-                include_once('connection.php');
-                global $connect;
-
-                // Fetch up to 4 active categories
-                $cat_query = "SELECT * FROM categories WHERE status = 1 ORDER BY id DESC LIMIT 4";
-                $cat_result = mysqli_query($connect, $cat_query);
-
-                // Decorative icons for the cards
-                $icons = ['fa-solid fa-shapes', 'fa-solid fa-hands-holding-circle', 'fa-solid fa-spray-can-sparkles', 'fa-solid fa-om', 'fa-solid fa-gem', 'fa-solid fa-fan'];
-                $icon_index = 0;
-
-                if ($cat_result && mysqli_num_rows($cat_result) > 0) {
-                    while ($row = mysqli_fetch_assoc($cat_result)) {
-                        $category_name = htmlspecialchars($row['name']);
-                        $category_id = $row['id'];
-                        $first_letter = mb_strtoupper(mb_substr($category_name, 0, 1, 'UTF-8'));
-
-                        // Use database description if available, limit to 40 characters
-                        $category_desc = !empty($row['description']) ? htmlspecialchars(mb_substr($row['description'], 0, 40)) . '...' : 'Explore Handcrafted Collection';
-
-                        $current_icon = $icons[$icon_index % count($icons)];
-                        $icon_index++;
-                ?>
-                        <!-- Category Card (Text & Icon Based) -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <a href="collections.php?category=<?php echo $category_id; ?>" class="category-card">
-                                <div class="category-watermark"><?php echo $first_letter; ?></div>
-                                <div class="category-card-top">
-                                    <div class="category-icon-box">
-                                        <i class="<?php echo $current_icon; ?>"></i>
-                                    </div>
-                                    <span class="category-tag"><i class="fa-solid fa-sparkles me-1"></i> Artisan</span>
-                                </div>
-                                <div class="category-card-bottom">
-                                    <h3 class="category-title"><?php echo $category_name; ?></h3>
-                                    <p class="category-subtext mb-3"><?php echo $category_desc; ?></p>
-                                    <div class="category-cta">
-                                        <span>Explore Now</span>
-                                        <div class="cta-icon"><i class="fa-solid fa-arrow-right"></i></div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    <?php
-                    }
-                } else {
-                    // Fallback categories if database table has no active records yet
-                    $fallback_cats = [
-                        ['name' => 'Divine Clay Idols', 'icon' => 'fa-solid fa-om', 'id' => 1],
-                        ['name' => 'Terracotta Home Decor', 'icon' => 'fa-solid fa-shapes', 'id' => 2],
-                        ['name' => 'Custom Sculptures', 'icon' => 'fa-solid fa-hands-holding-circle', 'id' => 3],
-                        ['name' => 'Handcrafted Accessories', 'icon' => 'fa-solid fa-gem', 'id' => 4],
-                    ];
-                    foreach ($fallback_cats as $cat) {
-                        $first_letter = mb_strtoupper(mb_substr($cat['name'], 0, 1, 'UTF-8'));
-                    ?>
-                        <!-- Fallback Category Card -->
-                        <div class="col-12 col-sm-6 col-lg-3">
-                            <a href="collections.php?category=<?php echo $cat['id']; ?>" class="category-card">
-                                <div class="category-watermark"><?php echo $first_letter; ?></div>
-                                <div class="category-card-top">
-                                    <div class="category-icon-box">
-                                        <i class="<?php echo $cat['icon']; ?>"></i>
-                                    </div>
-                                    <span class="category-tag"><i class="fa-solid fa-sparkles me-1"></i> Artisan</span>
-                                </div>
-                                <div class="category-card-bottom">
-                                    <h3 class="category-title"><?php echo htmlspecialchars($cat['name']); ?></h3>
-                                    <p class="category-subtext mb-3">Explore Handcrafted Collection</p>
-                                    <div class="category-cta">
-                                        <span>Explore Now</span>
-                                        <div class="cta-icon"><i class="fa-solid fa-arrow-right"></i></div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                <?php
-                    }
+            <?php
+            global $connect;
+            // Fetch categories for the filter
+            $filter_cat_query = "SELECT id, name FROM categories WHERE status = 1 ORDER BY id ASC";
+            $filter_cat_result = mysqli_query($connect, $filter_cat_query);
+            $filter_categories = [];
+            if ($filter_cat_result) {
+                while ($row = mysqli_fetch_assoc($filter_cat_result)) {
+                    $filter_categories[] = $row;
                 }
-                ?>
+            }
+
+            // Fetch active products
+            // Adjust table name/columns if they differ (using standard assumptions for products table)
+            $products_query = "SELECT * FROM products WHERE status = 1 ORDER BY id DESC LIMIT 12";
+            $products_result = mysqli_query($connect, $products_query);
+            $products = [];
+            if ($products_result) {
+                while ($row = mysqli_fetch_assoc($products_result)) {
+                    $products[] = $row;
+                }
+            }
+            ?>
+
+            <!-- Filter Buttons -->
+            <div class="row mb-5">
+                <div class="col-12 d-flex flex-nowrap flex-md-wrap justify-content-md-center gap-3 overflow-x-auto pb-2" style="scrollbar-width: none;" id="product-filters">
+                    <button class="filter-btn active text-nowrap" data-filter="all">All Masterpieces</button>
+                    <?php foreach ($filter_categories as $cat): ?>
+                        <button class="filter-btn text-nowrap" data-filter="cat-<?php echo $cat['id']; ?>">
+                            <?php echo htmlspecialchars($cat['name']); ?>
+                        </button>
+                    <?php endforeach; ?>
+                </div>
             </div>
 
-            <!-- View All Categories Button -->
-            <div class="text-center mt-5">
-                <a href="collections.php" class="btn btn-gold-outline rounded-pill px-5 py-3 text-uppercase" style="font-size: 0.9rem; letter-spacing: 0.8px;">
-                    View All Categories
-                </a>
+            <!-- Product Grid -->
+            <div class="row g-4 mobile-scroll-row" id="product-grid">
+                <?php if (!empty($products)): ?>
+                    <?php foreach ($products as $prod):
+                        $cat_class = "cat-" . $prod['category_id'];
+                        // Default image path, add a fallback onerror in HTML
+                        $img_src = !empty($prod['image']) ? "admin/uploads/products/" . htmlspecialchars($prod['image']) : "asset/image/placeholder.jpg";
+                    ?>
+                        <div class="col-12 col-sm-6 col-md-4 col-lg-3 product-item <?php echo $cat_class; ?>">
+                            <a href="product.php?id=<?php echo $prod['id']; ?>" class="product-card text-decoration-none d-block">
+                                <div class="product-img-wrapper">
+                                    <img src="<?php echo $img_src; ?>" alt="<?php echo htmlspecialchars($prod['name']); ?>" class="img-fluid" onerror="this.src='https://via.placeholder.com/400x400.png?text=Product+Image';">
+                                </div>
+                                <div class="product-info mt-3 text-center">
+                                    <h4 class="product-name text-dark"><?php echo htmlspecialchars($prod['name']); ?></h4>
+                                    <div class="product-price text-gold fw-bold">₹<?php echo number_format($prod['price'], 2); ?></div>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <!-- Fallback / Empty State -->
+                    <div class="col-12 text-center text-muted py-5">
+                        <i class="fa-solid fa-box-open fs-1 mb-3 text-light-gray"></i>
+                        <p class="fs-5">More exquisite products coming soon!</p>
+                    </div>
+                <?php endif; ?>
             </div>
-
         </div>
     </section>
+
+    <style>
+        /* Product Filter & Grid Styles */
+        .filter-btn {
+            background: transparent;
+            border: 1px solid #D4AF37;
+            color: #2A241D;
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: #D4AF37;
+            color: #FFF;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .product-item {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .product-card .product-img-wrapper {
+            overflow: hidden;
+            border-radius: 8px;
+            background: #F8F9FA;
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover img {
+            transform: scale(1.08);
+        }
+
+        .product-name {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            transition: color 0.3s ease;
+        }
+
+        .product-card:hover .product-name {
+            color: #B8860B !important;
+        }
+
+        .text-gold {
+            color: #B8860B;
+        }
+
+        /* Mobile Horizontal Scroll */
+        @media (max-width: 767.98px) {
+            .mobile-scroll-row {
+                display: flex;
+                flex-wrap: nowrap !important;
+                overflow-x: auto;
+                overflow-y: hidden;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none; /* Firefox */
+                padding-bottom: 20px;
+                scroll-snap-type: x mandatory;
+            }
+            .mobile-scroll-row::-webkit-scrollbar,
+            #product-filters::-webkit-scrollbar {
+                display: none; /* Chrome/Safari */
+            }
+            .mobile-scroll-row > [class*="col-"] {
+                flex: 0 0 85%;
+                max-width: 85%;
+                scroll-snap-align: center;
+            }
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const productItems = document.querySelectorAll('.product-item');
+
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    // Remove active class from all
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    // Add active class to current
+                    this.classList.add('active');
+
+                    const filterValue = this.getAttribute('data-filter');
+
+                    productItems.forEach(item => {
+                        if (filterValue === 'all' || item.classList.contains(filterValue)) {
+                            item.style.display = 'block';
+                            // Small delay to allow display:block to apply before animating opacity
+                            setTimeout(() => {
+                                item.style.opacity = '1';
+                                item.style.transform = 'scale(1)';
+                            }, 50);
+                        } else {
+                            item.style.opacity = '0';
+                            item.style.transform = 'scale(0.9)';
+                            // Wait for animation to finish before hiding
+                            setTimeout(() => {
+                                item.style.display = 'none';
+                            }, 400); 
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 
     <!-- Footer Inclusion -->
     <?php include_once('footer.php'); ?>
