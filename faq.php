@@ -1,4 +1,5 @@
-<?php include_once('nav.php'); ?>
+<?php include_once('nav.php');
+include_once('connection.php'); ?>
 
 
 <style>
@@ -415,98 +416,57 @@
 
 <main class="container mb-5 mt-4">
 
-    <!-- FAQ Accordion List -->
-    <div class="faq-list">
+   <!-- FAQ Accordion List -->
+<div class="faq-list">
 
-        <!-- Question 1 -->
-        <div class="faq-item active animate-up delay-1">
-            <button class="faq-trigger" aria-expanded="true">
-                <span>What is Siddha Art?</span>
-                <div class="faq-icon-box">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-            <div class="faq-content" style="max-height: 500px;">
-                <div class="faq-body">
-                    Siddha Art is a spiritual, meditative, and mystical approach to creation, drawing inspiration from ancient traditions and spiritual pathways. Each artwork is created intuitively, intended to elevate frequencies and bring beauty, balance, and positive energy to your physical space.
-                </div>
-            </div>
-        </div>
+    <?php 
+    global $connect;
+    $sql = "SELECT * FROM faq ORDER BY id ASC";
+    $run = mysqli_query($connect, $sql);
 
-        <!-- Question 2 -->
-        <div class="faq-item animate-up delay-2">
+    // Check if the query ran successfully and if there is data
+    if ($run && mysqli_num_rows($run) > 0) {
+        // Using a while loop is more memory-efficient for fetching rows
+        while ($faq = mysqli_fetch_assoc($run)) {
+            
+            // Securing the data to prevent XSS attacks
+            $question = htmlspecialchars($faq['question'], ENT_QUOTES, 'UTF-8');
+            
+            // NOTE: If your 'answer' column contains actual HTML tags (like <b>, <i>, <br>) 
+            // from a text editor, remove htmlspecialchars() below and just use $faq['answer']
+            $answer = htmlspecialchars($faq['answer'], ENT_QUOTES, 'UTF-8');
+    ?>
+
+        <!-- FAQ Item -->
+        <div class="faq-item animate-up delay-1">
             <button class="faq-trigger" aria-expanded="false">
-                <span>Do you offer custom art commissions?</span>
+                <span><?php echo $question; ?></span>
                 <div class="faq-icon-box">
                     <i class="bi bi-chevron-down"></i>
                 </div>
             </button>
             <div class="faq-content">
                 <div class="faq-body">
-                    Yes, we gladly work with collectors for personalized custom art pieces. The journey starts with a one-on-one consultation to understand your spatial design, colors, and the general energetic intention you want to capture in the canvas.
+                    <?php echo $answer; ?>
                 </div>
             </div>
         </div>
 
-        <!-- Question 3 -->
-        <div class="faq-item animate-up delay-3">
-            <button class="faq-trigger" aria-expanded="false">
-                <span>How long does it take to complete a custom piece?</span>
-                <div class="faq-icon-box">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-            <div class="faq-content">
-                <div class="faq-body">
-                    A typical commission takes between 4 to 8 weeks. This accommodates the intentional layer-by-layer drying times and detailed alignments required to craft a unique, museum-grade masterpiece.
-                </div>
-            </div>
+    <?php
+        } 
+    } 
+    else {
+    ?>
+        <!-- No FAQ Message -->
+        <div class="no-faq-message" style="text-align: center; padding: 20px; background-color: #f8f9fa; border-radius: 8px;">
+            <h4>No FAQs Available</h4>
+            <p>There are currently no frequently asked questions available. Please check back later.</p>
         </div>
+    <?php
+    }
+    ?>
 
-        <!-- Question 4 -->
-        <div class="faq-item">
-            <button class="faq-trigger" aria-expanded="false">
-                <span>What mediums do you use in your creations?</span>
-                <div class="faq-icon-box">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-            <div class="faq-content">
-                <div class="faq-body">
-                    Our medium list is diverse and premium: high-grade heavy body acrylics, organic oils, 24k gold leaf details, crushed crystals (like amethyst or quartz), and unique natural earth pigments to guarantee depth and textural beauty.
-                </div>
-            </div>
-        </div>
-
-        <!-- Question 5 -->
-        <div class="faq-item">
-            <button class="faq-trigger" aria-expanded="false">
-                <span>Do you ship internationally?</span>
-                <div class="faq-icon-box">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-            <div class="faq-content">
-                <div class="faq-body">
-                    Absolutely. We ship internationally using custom-built wood crating and verified fine-art couriers. Every single shipment is fully insured, and you will receive regular tracking information from our door to yours.
-                </div>
-            </div>
-        </div>
-
-        <!-- Question 6 -->
-        <div class="faq-item">
-            <button class="faq-trigger" aria-expanded="false">
-                <span>How should I care for my Siddha Art?</span>
-                <div class="faq-icon-box">
-                    <i class="bi bi-chevron-down"></i>
-                </div>
-            </button>
-            <div class="faq-content">
-                <div class="faq-body">
-                    To maintain color richness, avoid hanging your piece in places with extreme relative humidity or continuous harsh direct sunlight. Light dust can be brushed away safely using a soft, clean microfibre feather duster. Avoid pressing down on gold foil or raised textured surfaces.
-                </div>
-            </div>
-        </div>
+</div>
 
         <!-- Empty State for Search -->
         <div class="empty-state" id="emptyState">
