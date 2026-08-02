@@ -1210,6 +1210,36 @@ if (session_status() === PHP_SESSION_NONE) {
                 padding-bottom: 45px !important;
             }
         }
+
+        /* Staggered Text Keyframe Animations */
+        .animate-up {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.15s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.3s;
+        }
+
+        .delay-3 {
+            animation-delay: 0.45s;
+        }
+
+        .delay-4 {
+            animation-delay: 0.6s;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
     </style>
 </head>
 

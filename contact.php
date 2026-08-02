@@ -108,6 +108,36 @@ include('nav.php');
     height: 100%;
     min-height: 420px;
   }
+
+  /* Staggered Text Keyframe Animations */
+  .animate-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+
+  .delay-1 {
+    animation-delay: 0.15s;
+  }
+
+  .delay-2 {
+    animation-delay: 0.3s;
+  }
+
+  .delay-3 {
+    animation-delay: 0.45s;
+  }
+
+  .delay-4 {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes fadeUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 </style>
 
 <!-- Full-Width Hero Banner Section -->
@@ -116,14 +146,14 @@ include('nav.php');
   <div class="container position-relative z-2 h-100 d-flex align-items-center justify-content-center text-center" style="padding-top: 75px;">
     <div class="row justify-content-center w-100">
       <div class="col-12 col-lg-8">
-        <span class="badge rounded-pill px-3 py-2 fw-semibold text-uppercase mb-3" style="background-color: rgba(212, 175, 55, 0.15); color: #DFBA5A; border: 1px solid rgba(212, 175, 55, 0.35); backdrop-filter: blur(8px); letter-spacing: 1px;">
+        <span class="badge rounded-pill px-3 py-2 fw-semibold text-uppercase mb-3 animate-up delay-1" style="background-color: rgba(212, 175, 55, 0.15); color: #DFBA5A; border: 1px solid rgba(212, 175, 55, 0.35); backdrop-filter: blur(8px); letter-spacing: 1px;">
           <i class="fa-regular fa-paper-plane me-1"></i> We're Here For You
         </span>
-        <h1 class="display-4 fw-bold text-white mb-3" style="font-family: 'Playfair Display', serif;">
+        <h1 class="display-4 fw-bold text-white mb-3 animate-up delay-2" style="font-family: 'Playfair Display', serif;">
           Get In Touch With <span style="background: linear-gradient(135deg, #FFF0BD 0%, #DFBA5A 50%, #C59B27 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-style: italic;">Us</span>
         </h1>
-        <div class="mx-auto mb-4" style="width: 70px; height: 2px; background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);"></div>
-        <p class="lead text-light mb-0" style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: #E2DDD5 !important; line-height: 1.6;">
+        <div class="mx-auto mb-4 animate-up delay-2" style="width: 70px; height: 2px; background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);"></div>
+        <p class="lead text-light mb-0 animate-up delay-3" style="font-family: 'Outfit', sans-serif; font-size: 1.15rem; color: #E2DDD5 !important; line-height: 1.6;">
           Have a question about our handmade clay idols, terracotta home decor, custom hand-sculpted clay statues, or order delivery? Our art curation team is always ready to assist you.
         </p>
       </div>
@@ -134,7 +164,7 @@ include('nav.php');
 <div class="container my-5" style="max-width: 1140px;">
 
   <!-- Quick Info Cards (4 Columns) -->
-  <div class="row g-4 mb-5">
+  <div class="row g-4 mb-5 animate-up delay-3">
     <!-- Location Card -->
     <div class="col-md-6 col-lg-3">
       <div class="contact-card-info text-center text-md-start">
