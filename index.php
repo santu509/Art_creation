@@ -1299,7 +1299,7 @@ global $connect;
                 ?>
                         <div class="scroll-item">
                             <div class="modern-product-card">
-                                <a href="product.php?id=<?php echo $prod['id']; ?>" class="text-decoration-none d-block flex-grow-1">
+                                <a href="product_details.php?id=<?php echo $prod['id']; ?>" class="text-decoration-none d-block flex-grow-1">
                                     <?php if (isset($prod['status']) && $prod['status'] == 1): ?>
                                         <span class="badge-available">Available</span>
                                     <?php endif; ?>
@@ -1333,7 +1333,7 @@ global $connect;
                                         </div>
                                     </div>
                                 </a>
-                                <a href="product.php?id=<?php echo $prod['id']; ?>" class="add-to-cart-btn mt-auto">
+                                <a href="product_details.php?id=<?php echo $prod['id']; ?>" class="add-to-cart-btn mt-auto">
                                     Explore Product <i class="fa-solid fa-arrow-right ms-1"></i>
                                 </a>
                             </div>

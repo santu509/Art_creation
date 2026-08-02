@@ -140,9 +140,9 @@ function renderProductCardsHTML($productsResult, $search = '')
               </div>
             </div>
           </div>
-          <button type="button" class="add-to-cart-btn mt-3 mt-auto" data-bs-toggle="modal" data-bs-target="#artModal<?= $product['id'] ?>">
+          <a href="product_details.php?id=<?= $product['id'] ?>" class="add-to-cart-btn mt-3 mt-auto text-decoration-none">
             Explore Product <i class="fa-solid fa-arrow-right ms-1"></i>
-          </button>
+          </a>
         </div>
       </div>
     <?php
