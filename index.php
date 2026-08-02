@@ -1,6 +1,6 @@
 <!-- Navbar Inclusion -->
-<?php include_once('nav.php'); 
-include_once('connection.php');?>
+<?php include_once('nav.php');
+include_once('connection.php'); ?>
 
 <style>
     /* -----------------------------------------
@@ -221,7 +221,7 @@ include_once('connection.php');?>
     }
 
     .hero-indicators-wrapper {
-        bottom: 13px;
+        bottom: 55px;
     }
 
     @media (max-width: 768px) {
@@ -439,7 +439,6 @@ include_once('connection.php');?>
         border-radius: 20px;
         border: 1px solid rgba(212, 175, 55, 0.2);
         box-shadow: 0 10px 30px rgba(26, 22, 18, 0.04);
-        height: 100%;
         transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         overflow: hidden;
         z-index: 1;
@@ -503,6 +502,32 @@ include_once('connection.php');?>
         line-height: 1.6;
     }
 
+    /* Card 1 & Card 4 Taller Height */
+    .feature-card-tall {
+        min-height: 260px;
+        padding: 36px 26px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    /* Card 2 & Card 3 Shorter Height */
+    .feature-card-short {
+        min-height: 180px;
+        padding: 20px 22px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+    }
+
+    @media (max-width: 575.98px) {
+        .feature-card-tall,
+        .feature-card-short {
+            min-height: auto;
+            padding: 24px 20px;
+        }
+    }
+
     /* -----------------------------------------
        Shop by Category Section Styles 
     ----------------------------------------- */
@@ -536,7 +561,8 @@ include_once('connection.php');?>
        Ultra Modern Soft-UI Category Card 
     ----------------------------------------- */
     .shop-by-category {
-        background-color: #F8F9FC; /* Very soft cool white */
+        background-color: #F8F9FC;
+        /* Very soft cool white */
         overflow: hidden;
     }
 
@@ -652,7 +678,8 @@ include_once('connection.php');?>
     }
 
     .category-title {
-        font-family: 'Outfit', sans-serif; /* Switched to modern sans-serif for title */
+        font-family: 'Outfit', sans-serif;
+        /* Switched to modern sans-serif for title */
         color: #1A1A1A;
         font-size: 1.4rem;
         font-weight: 700;
@@ -757,8 +784,8 @@ include_once('connection.php');?>
         transform: translateY(-2px);
     }
 
-    .product-gallery{
-        background-color: #FAF8F5!important;
+    .product-gallery {
+        background-color: #FAF8F5 !important;
     }
 </style>
 
@@ -781,12 +808,9 @@ include_once('connection.php');?>
                                     Elevate your home altar and festival celebrations with 100% eco-friendly, hand-sculpted raw clay idols. Crafted with pure river clay, sacred mantras, and intricate artisan detail.
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
-                                    <a href="collections.php?category=divine-idols" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
+                                    <a href="collection.php" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
                                         <span>Explore Sacred Idols</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
-                                    </a>
-                                    <a href="gallery.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>View Divine Gallery</span>
                                     </a>
                                 </div>
                             </div>
@@ -807,12 +831,9 @@ include_once('connection.php');?>
                                     Transform your living spaces with eco-friendly terracotta vases, clay wall murals, and traditional earthenware artifacts that bring warmth and soul to modern interiors.
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
-                                    <a href="collections.php?category=terracotta-decor" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
+                                    <a href="collection.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
                                         <span>Shop Terracotta Decor</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
-                                    </a>
-                                    <a href="about.php#styling-guide" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Decor Styling Guide</span>
                                     </a>
                                 </div>
                             </div>
@@ -837,8 +858,8 @@ include_once('connection.php');?>
                                         <span>Commission Custom Statue</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
                                     </a>
-                                    <a href="about.php#artisan-story" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Watch Artisan Process <i class="fa-solid fa-circle-play ms-1"></i></span>
+                                    <a href="aboutus.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
+                                        <span>Read Artisan Process</span>
                                     </a>
                                 </div>
                             </div>
@@ -898,21 +919,21 @@ include_once('connection.php');?>
                         Siddha Art Creation is a celebration of our local craftsmanship. From beautifully detailed clay idols to handmade bags and terracotta decor, every single piece is crafted by the skilled hands of our local artists. We bring you the authentic touch of traditional art, directly from our workshop to your home.
                     </p>
 
-                    <!-- Trust Stats Bar -->
-                    <div class="trust-stats-bar d-flex align-items-center justify-content-between justify-content-lg-start my-4 py-3 px-1 px-sm-3 border-top border-bottom border-gold-subtle">
-                        <div class="stat-item d-flex align-items-center gap-1 gap-sm-2">
-                            <h3 class="stat-num fw-bold mb-0 text-gold-gradient">50+</h3>
-                            <span class="stat-label small text-muted lh-sm">Master<br>Artisans</span>
+                    <!-- Trust Feature Badges Bar (No Static Numbers) -->
+                    <div class="trust-stats-bar d-flex align-items-center justify-content-between justify-content-lg-start gap-2 gap-sm-4 my-4 py-3 px-1 px-sm-3 border-top border-bottom border-gold-subtle">
+                        <div class="stat-item d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-certificate fs-4 text-gold-gradient"></i>
+                            <span class="stat-label small fw-semibold text-dark lh-sm">Authentic<br><span class="text-muted fw-normal">Craftsmanship</span></span>
                         </div>
                         <div class="stat-divider vr opacity-25"></div>
-                        <div class="stat-item d-flex align-items-center gap-1 gap-sm-2">
-                            <h3 class="stat-num fw-bold mb-0 text-gold-gradient">100%</h3>
-                            <span class="stat-label small text-muted lh-sm">Pure River<br>Clay</span>
+                        <div class="stat-item d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-seedling fs-4 text-gold-gradient"></i>
+                            <span class="stat-label small fw-semibold text-dark lh-sm">Organic<br><span class="text-muted fw-normal">River Clay</span></span>
                         </div>
                         <div class="stat-divider vr opacity-25"></div>
-                        <div class="stat-item d-flex align-items-center gap-1 gap-sm-2">
-                            <h3 class="stat-num fw-bold mb-0 text-gold-gradient">10k+</h3>
-                            <span class="stat-label small text-muted lh-sm">Sacred Idols<br>Crafted</span>
+                        <div class="stat-item d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-shield-heart fs-4 text-gold-gradient"></i>
+                            <span class="stat-label small fw-semibold text-dark lh-sm">Safe & Care<br><span class="text-muted fw-normal">Packaging</span></span>
                         </div>
                     </div>
 
@@ -922,40 +943,40 @@ include_once('connection.php');?>
                     </a>
                 </div>
 
-                <!-- Right Side: Why Choose Us (4 Cards Staggered) -->
+                <!-- Right Side: Why Choose Us (4 Cards - 1 & 4 Tall, 2 & 3 Short) -->
                 <div class="col-12 col-lg-7">
-                    <div class="row g-4">
+                    <div class="row g-4 align-items-start">
 
-                        <!-- Feature 1 -->
+                        <!-- Feature 1 (Card 1: Taller) -->
                         <div class="col-12 col-sm-6">
-                            <div class="feature-card">
+                            <div class="feature-card feature-card-tall">
                                 <div class="icon-box"><i class="fa-solid fa-hand-sparkles"></i></div>
                                 <h4>100% Handmade</h4>
                                 <p>No machines used. Just pure devotion and skilled hands shaping every detail of our idols and bags.</p>
                             </div>
                         </div>
 
-                        <!-- Feature 2 (Staggered offset) -->
-                        <div class="col-12 col-sm-6 mt-sm-5">
-                            <div class="feature-card">
+                        <!-- Feature 2 (Card 2: Shorter with offset) -->
+                        <div class="col-12 col-sm-6 mt-sm-4">
+                            <div class="feature-card feature-card-short">
                                 <div class="icon-box"><i class="fa-solid fa-leaf"></i></div>
                                 <h4>Eco-Friendly Clay</h4>
                                 <p>We strictly use natural river clay and organic colors that are completely safe for nature & rivers.</p>
                             </div>
                         </div>
 
-                        <!-- Feature 3 -->
+                        <!-- Feature 3 (Card 3: Shorter) -->
                         <div class="col-12 col-sm-6">
-                            <div class="feature-card">
+                            <div class="feature-card feature-card-short">
                                 <div class="icon-box"><i class="fa-solid fa-users"></i></div>
                                 <h4>Support Local Artists</h4>
                                 <p>Your purchase directly empowers our hardworking local artisans and supports their traditional families.</p>
                             </div>
                         </div>
 
-                        <!-- Feature 4 (Staggered offset) -->
-                        <div class="col-12 col-sm-6 mt-sm-5">
-                            <div class="feature-card">
+                        <!-- Feature 4 (Card 4: Taller with offset) -->
+                        <div class="col-12 col-sm-6 mt-sm-4">
+                            <div class="feature-card feature-card-tall">
                                 <div class="icon-box"><i class="fa-solid fa-paintbrush"></i></div>
                                 <h4>Custom Orders</h4>
                                 <p>Looking for a specific idol or bag design? We take custom orders tailored to your exact choice.</p>
@@ -969,7 +990,7 @@ include_once('connection.php');?>
         </div>
     </section>
 
-   
+
 
     <!-- Category-wise Product Gallery -->
     <section class="product-gallery py-5 bg-white">
@@ -1122,15 +1143,19 @@ include_once('connection.php');?>
                 overflow-x: auto;
                 overflow-y: hidden;
                 -webkit-overflow-scrolling: touch;
-                scrollbar-width: none; /* Firefox */
+                scrollbar-width: none;
+                /* Firefox */
                 padding-bottom: 20px;
                 scroll-snap-type: x mandatory;
             }
+
             .mobile-scroll-row::-webkit-scrollbar,
             #product-filters::-webkit-scrollbar {
-                display: none; /* Chrome/Safari */
+                display: none;
+                /* Chrome/Safari */
             }
-            .mobile-scroll-row > [class*="col-"] {
+
+            .mobile-scroll-row>[class*="col-"] {
                 flex: 0 0 85%;
                 max-width: 85%;
                 scroll-snap-align: center;
@@ -1166,7 +1191,7 @@ include_once('connection.php');?>
                             // Wait for animation to finish before hiding
                             setTimeout(() => {
                                 item.style.display = 'none';
-                            }, 400); 
+                            }, 400);
                         }
                     });
                 });
