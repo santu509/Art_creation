@@ -277,7 +277,6 @@ global $connect;
         border-radius: 20px;
         border: 1px solid rgba(212, 175, 55, 0.2);
         box-shadow: 0 10px 30px rgba(26, 22, 18, 0.04);
-        height: 100%;
         transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
         position: relative;
         overflow: hidden;
@@ -595,12 +594,9 @@ global $connect;
                                     Elevate your home altar and festival celebrations with 100% eco-friendly, hand-sculpted raw clay idols. Crafted with pure river clay, sacred mantras, and intricate artisan detail.
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
-                                    <a href="collections.php?category=divine-idols" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
+                                    <a href="collection.php" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
                                         <span>Explore Sacred Idols</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
-                                    </a>
-                                    <a href="gallery.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>View Divine Gallery</span>
                                     </a>
                                 </div>
                             </div>
@@ -621,12 +617,9 @@ global $connect;
                                     Transform your living spaces with eco-friendly terracotta vases, clay wall murals, and traditional earthenware artifacts that bring warmth and soul to modern interiors.
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
-                                    <a href="collections.php?category=terracotta-decor" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
+                                    <a href="collection.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
                                         <span>Shop Terracotta Decor</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
-                                    </a>
-                                    <a href="about.php#styling-guide" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Decor Styling Guide</span>
                                     </a>
                                 </div>
                             </div>
@@ -651,8 +644,8 @@ global $connect;
                                         <span>Commission Custom Statue</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
                                     </a>
-                                    <a href="about.php#artisan-story" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Watch Artisan Process <i class="fa-solid fa-circle-play ms-1"></i></span>
+                                    <a href="aboutus.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
+                                        <span>Read Artisan Process</span>
                                     </a>
                                 </div>
                             </div>
@@ -717,7 +710,7 @@ global $connect;
                 <div class="col-12 col-lg-7">
                     <div class="row g-4">
                         <div class="col-12 col-sm-6">
-                            <div class="feature-card">
+                            <div class="feature-card feature-card-tall">
                                 <div class="icon-box"><i class="fa-solid fa-hand-sparkles"></i></div>
                                 <h4>100% Handmade</h4>
                                 <p>No machines used. Just pure devotion and skilled hands shaping every detail of our idols and bags.</p>
@@ -731,7 +724,7 @@ global $connect;
                             </div>
                         </div>
                         <div class="col-12 col-sm-6">
-                            <div class="feature-card">
+                            <div class="feature-card feature-card-short">
                                 <div class="icon-box"><i class="fa-solid fa-users"></i></div>
                                 <h4>Support Local Artists</h4>
                                 <p>Your purchase directly empowers our hardworking local artisans and supports their traditional families.</p>

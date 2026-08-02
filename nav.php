@@ -1183,8 +1183,18 @@ if (session_status() === PHP_SESSION_NONE) {
 
         .mobile-bottom-nav-item:hover,
         .mobile-bottom-nav-item.active {
-            color: #B8860B;
-            /* Gold Accent */
+            color: #C59B27 !important;
+            font-weight: 700 !important;
+        }
+
+        .mobile-bottom-nav-item.active i {
+            color: #C59B27 !important;
+            transform: translateY(-2px);
+        }
+
+        .mobile-bottom-nav-item.active span {
+            color: #C59B27 !important;
+            font-weight: 700 !important;
         }
 
         /* Hide on desktop, show only on mobile */
@@ -1269,7 +1279,7 @@ if (session_status() === PHP_SESSION_NONE) {
                             <a class="nav-link <?php echo ($currentPage == 'aboutus.php') ? 'active' : ''; ?>" href="aboutus.php">About Us</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="collection.php">Collections</a>
+                            <a class="nav-link <?php echo ($currentPage == 'collection.php') ? 'active' : ''; ?>" href="collection.php">Collections</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link <?php echo ($currentPage == 'contact.php') ? 'active' : ''; ?>" href="contact.php">Contact</a>
@@ -1561,19 +1571,22 @@ if (session_status() === PHP_SESSION_NONE) {
 
 
     <!-- Mobile Bottom Navigation Bar (Visible only on mobile screens) -->
+    <?php
+    $curNavPage = isset($currentPage) ? $currentPage : basename($_SERVER['PHP_SELF']);
+    ?>
     <div class="mobile-bottom-nav">
         <!-- Home -->
-        <a href="index.php" class="mobile-bottom-nav-item" id="bottomNavHome">
+        <a href="index.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'index.php' || $curNavPage == '') ? 'active' : ''; ?>" id="bottomNavHome">
             <i class="fa-solid fa-house"></i>
             <span>Home</span>
         </a>
-        <!-- Shop -->
-        <a href="category.php" class="mobile-bottom-nav-item" id="bottomNavShop">
+        <!-- Shop / Explore / Collections -->
+        <a href="collection.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'collection.php') ? 'active' : ''; ?>" id="bottomNavShop">
             <i class="fa-solid fa-grip"></i>
             <span>Explore</span>
         </a>
         <!-- Cart -->
-        <a href="cart.php" class="mobile-bottom-nav-item" id="bottomNavCart">
+        <a href="cart.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'cart.php') ? 'active' : ''; ?>" id="bottomNavCart">
             <div class="position-relative d-inline-flex">
                 <i class="fa-solid fa-cart-flatbed-suitcase"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
@@ -1583,7 +1596,7 @@ if (session_status() === PHP_SESSION_NONE) {
             <span>Cart</span>
         </a>
         <!-- Wishlist -->
-        <a href="wishlist.php" class="mobile-bottom-nav-item" id="bottomNavWishlist">
+        <a href="wishlist.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'wishlist.php') ? 'active' : ''; ?>" id="bottomNavWishlist">
             <div class="position-relative d-inline-flex">
                 <i class="fa-solid fa-heart"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
@@ -1594,12 +1607,12 @@ if (session_status() === PHP_SESSION_NONE) {
         </a>
         <!-- Account -->
         <?php if (isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true): ?>
-            <a href="profile.php" class="mobile-bottom-nav-item" id="bottomNavAccount">
+            <a href="profile.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'profile.php') ? 'active' : ''; ?>" id="bottomNavAccount">
                 <i class="fa-solid fa-user"></i>
                 <span>Account</span>
             </a>
         <?php else: ?>
-            <button type="button" class="mobile-bottom-nav-item" id="bottomNavAccount" data-bs-toggle="modal" data-bs-target="#loginModal">
+            <button type="button" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'profile.php' || $curNavPage == 'login.php') ? 'active' : ''; ?>" id="bottomNavAccount" data-bs-toggle="modal" data-bs-target="#loginModal">
                 <i class="fa-solid fa-user"></i>
                 <span>Account</span>
             </button>
@@ -1977,7 +1990,7 @@ if (session_status() === PHP_SESSION_NONE) {
         // Automatic active bottom nav state detection
         function setActiveBottomNav() {
             const path = window.location.pathname;
-            const page = path.split("/").pop();
+            const page = path.split("/").pop().toLowerCase();
 
             document.querySelectorAll('.mobile-bottom-nav-item').forEach(item => {
                 item.classList.remove('active');
@@ -1985,11 +1998,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
             if (page.includes('index') || page === '') {
                 document.getElementById('bottomNavHome')?.classList.add('active');
-            } else if (page.includes('menu') || page.includes('shop') || page.includes('product')) {
+            } else if (page.includes('collection') || page.includes('menu') || page.includes('shop') || page.includes('product')) {
                 document.getElementById('bottomNavShop')?.classList.add('active');
             } else if (page.includes('cart')) {
                 document.getElementById('bottomNavCart')?.classList.add('active');
-            } else if (page.includes('profile') || page.includes('account') || page.includes('user')) {
+            } else if (page.includes('wishlist')) {
+                document.getElementById('bottomNavWishlist')?.classList.add('active');
+            } else if (page.includes('profile') || page.includes('account') || page.includes('user') || page.includes('login')) {
                 document.getElementById('bottomNavAccount')?.classList.add('active');
             }
         }
