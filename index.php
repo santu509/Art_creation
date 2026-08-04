@@ -46,6 +46,29 @@ global $connect;
         line-height: 1.18;
     }
 
+    /* Autotyping Cursor Animation */
+    .typing-cursor {
+        display: inline-block;
+        color: #DFBA5A;
+        font-weight: 300;
+        margin-left: 3px;
+        animation: blinkCursor 0.75s ease-in-out infinite;
+        user-select: none;
+        -webkit-text-fill-color: #DFBA5A !important;
+    }
+
+    @keyframes blinkCursor {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0;
+        }
+    }
+
     .text-gold-accent {
         background: linear-gradient(135deg, #FFF0BD 0%, #DFBA5A 50%, #C59B27 100%);
         -webkit-background-clip: text;
@@ -273,6 +296,7 @@ global $connect;
     }
 
     @media (max-width: 576px) {
+
         .hero-btn-primary,
         .hero-btn-secondary {
             padding: 7px 13px !important;
@@ -1019,7 +1043,11 @@ global $connect;
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
                             <div class="col-12 col-lg-8 col-xl-7 px-4">
-                                <h1 class="hero-title fw-bold text-white mb-4">
+                                <h1 class="hero-title fw-bold text-white mb-4 autotype-title" data-phrases='[
+                                    "Sacred Clay Idols &amp; <span class=\"text-gold-accent\">Divine Blessing</span> Creations",
+                                    "Handcrafted River Clay &amp; <span class=\"text-gold-accent\">Pure Sacred</span> Artistry",
+                                    "Eco-Friendly Sculptures &amp; <span class=\"text-gold-accent\">Artisan Divine</span> Masterpieces"
+                                ]'>
                                     Sacred Clay Idols &amp; <span class="text-gold-accent">Divine Blessing</span> Creations
                                 </h1>
                                 <p class="hero-description fw-light mb-5">
@@ -1042,7 +1070,11 @@ global $connect;
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
                             <div class="col-12 col-lg-8 col-xl-7 px-4">
-                                <h1 class="hero-title fw-bold text-white mb-4">
+                                <h1 class="hero-title fw-bold text-white mb-4 autotype-title" data-phrases='[
+                                    "Earthy Terracotta &amp; <span class=\"text-gold-accent\">Rustic Home Decor</span> Artistry",
+                                    "Hand-Molded Vases &amp; <span class=\"text-gold-accent\">Traditional Clay</span> Murals",
+                                    "Warm Earthen Artifacts &amp; <span class=\"text-gold-accent\">Soulful Modern</span> Interiors"
+                                ]'>
                                     Earthy Terracotta &amp; <span class="text-gold-accent">Rustic Home Decor</span> Artistry
                                 </h1>
                                 <p class="hero-description fw-light mb-5">
@@ -1065,7 +1097,11 @@ global $connect;
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
                             <div class="col-12 col-lg-8 col-xl-7 px-4">
-                                <h1 class="hero-title fw-bold text-white mb-4">
+                                <h1 class="hero-title fw-bold text-white mb-4 autotype-title" data-phrases='[
+                                    "Bespoke Sculptures &amp; <span class=\"text-gold-accent\">Custom Hand-Molded</span> Statues",
+                                    "Personalized Figures &amp; <span class=\"text-gold-accent\">Spiritual Vision</span> Creations",
+                                    "Handcrafted Art by <span class=\"text-gold-accent\">Renowned Master</span> Sculptors"
+                                ]'>
                                     Bespoke Sculptures &amp; <span class="text-gold-accent">Custom Hand-Molded</span> Statues
                                 </h1>
                                 <p class="hero-description fw-light mb-5">
@@ -1446,6 +1482,169 @@ global $connect;
                     });
                 }
             }
+
+            // ================================================
+            // Auto-Typing Text Animation Engine with Cursor
+            // ================================================
+            class TypewriterEngine {
+                constructor(element, phrases, options = {}) {
+                    this.element = element;
+                    this.phrases = phrases;
+
+                    // ==========================================================
+                    // ⚙️ SPEED CONTROLS
+                    // ==========================================================
+                    this.typeSpeed = options.typeSpeed || 120; // Type korar speed (100 theke 150 kora holo - joto barabe toto aste type hobe)
+                    this.deleteSpeed = options.deleteSpeed || 40; //deletespeed
+                    this.holdTime = options.holdTime || 3000; // Hold time
+                    this.pauseTime = options.pauseTime || 500; // pause time to start new line
+                    // ==========================================================
+
+                    this.phraseIndex = 0;
+                    this.tokenIndex = 0;
+                    this.isDeleting = false;
+                    this.timer = null;
+
+                    this.element.innerHTML = '<span class="autotype-content"></span><span class="typing-cursor">|</span>';
+                    this.contentSpan = this.element.querySelector('.autotype-content');
+
+                    this.start();
+                }
+
+                tokenize(html) {
+                    const tokens = [];
+                    let i = 0;
+                    while (i < html.length) {
+                        if (html[i] === '<') {
+                            let tag = '';
+                            while (i < html.length && html[i] !== '>') {
+                                tag += html[i];
+                                i++;
+                            }
+                            if (i < html.length) {
+                                tag += html[i];
+                                i++;
+                            }
+                            tokens.push({
+                                type: 'tag',
+                                value: tag
+                            });
+                        } else if (html[i] === '&') {
+                            let semicolonIndex = html.indexOf(';', i);
+                            if (semicolonIndex !== -1 && semicolonIndex - i <= 10) {
+                                let entity = html.substring(i, semicolonIndex + 1);
+                                tokens.push({
+                                    type: 'entity',
+                                    value: entity
+                                });
+                                i = semicolonIndex + 1;
+                            } else {
+                                tokens.push({
+                                    type: 'char',
+                                    value: html[i]
+                                });
+                                i++;
+                            }
+                        } else {
+                            tokens.push({
+                                type: 'char',
+                                value: html[i]
+                            });
+                            i++;
+                        }
+                    }
+                    return tokens;
+                }
+
+                render(tokens, maxIndex) {
+                    let html = '';
+                    const openTags = [];
+
+                    for (let i = 0; i < maxIndex; i++) {
+                        const token = tokens[i];
+                        if (token.type === 'tag') {
+                            html += token.value;
+                            if (token.value.startsWith('</')) {
+                                openTags.pop();
+                            } else if (!token.value.endsWith('/>')) {
+                                const match = token.value.match(/<([a-zA-Z0-9]+)/);
+                                if (match) {
+                                    openTags.push(match[1]);
+                                }
+                            }
+                        } else {
+                            html += token.value;
+                        }
+                    }
+
+                    for (let i = openTags.length - 1; i >= 0; i--) {
+                        html += `</${openTags[i]}>`;
+                    }
+
+                    this.contentSpan.innerHTML = html;
+                }
+
+                tick() {
+                    const currentPhrase = this.phrases[this.phraseIndex];
+                    const tokens = this.tokenize(currentPhrase);
+
+                    if (!this.isDeleting) {
+                        // Type forward
+                        while (this.tokenIndex < tokens.length && tokens[this.tokenIndex].type === 'tag') {
+                            this.tokenIndex++;
+                        }
+
+                        this.render(tokens, this.tokenIndex);
+
+                        if (this.tokenIndex < tokens.length) {
+                            this.tokenIndex++;
+                            this.timer = setTimeout(() => this.tick(), this.typeSpeed);
+                        } else {
+                            // Reached the end: pause with blinking cursor then delete backward
+                            this.isDeleting = true;
+                            this.timer = setTimeout(() => this.tick(), this.holdTime);
+                        }
+                    } else {
+                        // Delete backward
+                        while (this.tokenIndex > 0 && tokens[this.tokenIndex - 1].type === 'tag') {
+                            this.tokenIndex--;
+                        }
+
+                        this.render(tokens, this.tokenIndex);
+
+                        if (this.tokenIndex > 0) {
+                            this.tokenIndex--;
+                            this.timer = setTimeout(() => this.tick(), this.deleteSpeed);
+                        } else {
+                            // Finished deleting backward: move to next phrase
+                            this.isDeleting = false;
+                            this.phraseIndex = (this.phraseIndex + 1) % this.phrases.length;
+                            this.timer = setTimeout(() => this.tick(), this.pauseTime);
+                        }
+                    }
+                }
+
+                start() {
+                    this.tick();
+                }
+            }
+
+            // Initialize all autotype titles
+            document.querySelectorAll('.autotype-title').forEach(el => {
+                let phrases = [];
+                try {
+                    const dataAttr = el.getAttribute('data-phrases');
+                    if (dataAttr) {
+                        phrases = JSON.parse(dataAttr);
+                    }
+                } catch (e) {
+                    console.error('Error parsing autotype phrases:', e);
+                }
+                if (!phrases || phrases.length === 0) {
+                    phrases = [el.innerHTML.trim()];
+                }
+                new TypewriterEngine(el, phrases);
+            });
         });
     </script>
 </body>

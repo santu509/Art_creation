@@ -13,10 +13,10 @@ require 'vendor/PHPMailer/src/SMTP.php';
 
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', 587);
-define('SMTP_USER', 'priyabratabera67@gmail.com');
-define('SMTP_PASS', 'qpip ylxz wxwt awlk');
+define('SMTP_USER', 'siddhaartcreation@gmail.com');
+define('SMTP_PASS', 'ejvs frll todh hcif');
 define('SMTP_SECURE', 'tls');
-define('SMTP_FROM_EMAIL', 'priyabratabera67@gmail.com');
+define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
 define('SMTP_FROM_NAME', 'Sidda Art Creation');
 
 header('Content-Type: application/json');

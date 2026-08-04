@@ -119,7 +119,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
 <!-- Custom CSS for Single Product Details Page -->
 <style>
     body {
-        background-color: #FAF8F5;
+        background-color: #F5F0E8;
         font-family: 'Outfit', sans-serif;
         color: #2A241D;
     }
@@ -146,6 +146,43 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
         border: 1px solid #EAE6DF;
         box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.02);
         margin: 0 auto 16px auto;
+    }
+
+    /* Top-Right Image Action Buttons (Cart & Wishlist) */
+    .image-top-actions {
+        position: absolute;
+        top: 14px;
+        right: 14px;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-image-action {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.95);
+        color: #2A241D;
+        border: 1px solid rgba(212, 175, 55, 0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.05rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        backdrop-filter: blur(6px);
+        text-decoration: none;
+    }
+
+    .btn-image-action:hover {
+        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
+        color: #FFFFFF;
+        border-color: transparent;
+        transform: scale(1.12);
+        box-shadow: 0 6px 20px rgba(197, 155, 39, 0.4);
     }
 
     .main-image-viewport img {
@@ -866,6 +903,17 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                 <!-- Large Viewport Image -->
                 <div class="main-image-viewport">
                     <span class="badge-available-details">Available</span>
+
+                    <!-- Top-Right Action Buttons Overlay -->
+                    <div class="image-top-actions">
+                        <button type="button" class="btn-image-action" title="Add to Cart">
+                            <i class="fa-solid fa-cart-plus"></i>
+                        </button>
+                        <button type="button" class="btn-image-action" title="Add to Wishlist">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+
                     <img id="mainProductImage" src="<?= $galleryImages[0] ?>" alt="<?= htmlspecialchars($product['name']) ?>" onerror="this.src='asset/image/default-image.jpg';">
                     <?php if ($discount > 0): ?>
                         <span class="badge-discount-details">
@@ -963,28 +1011,18 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
             </div>
 
             <!-- Unified Main Action Buttons Row -->
-            <div class="d-flex align-items-center gap-2 mb-4">
+            <div class="mb-4">
                 <?php if (!empty($externalLinks)): ?>
                     <!-- Single Large Premium Gold CTA Button -->
-                    <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
+                    <button type="button" class="btn-main-order-gold shadow-lg w-100" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
                         <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Buy Original Piece
                     </button>
                 <?php else: ?>
                     <!-- Fallback Direct Order Button if no external links -->
-                    <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg flex-grow-1 text-decoration-none">
+                    <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg w-100 text-decoration-none">
                         <i class="fa-solid fa-paper-plane fs-5 me-2"></i> Inquire &amp; Order Direct
                     </a>
                 <?php endif; ?>
-
-                <!-- Small Add to Cart Button -->
-                <button type="button" class="btn-action-icon-details" title="Add to Cart">
-                    <i class="fa-solid fa-cart-plus"></i>
-                </button>
-
-                <!-- Small Add to Wishlist Button -->
-                <button type="button" class="btn-action-icon-details" title="Add to Wishlist">
-                    <i class="fa-regular fa-heart"></i>
-                </button>
             </div>
 
             <!-- Trust Badges Bar -->

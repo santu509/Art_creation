@@ -14,10 +14,10 @@ require 'vendor/PHPMailer/src/SMTP.php';
 // SMTP Configuration
 define('SMTP_HOST', 'smtp.gmail.com');
 define('SMTP_PORT', 587);
-define('SMTP_USER', 'priyabratabera67@gmail.com'); //owner gmail
-define('SMTP_PASS', 'qpip ylxz wxwt awlk'); // owner app password
+define('SMTP_USER', 'siddhaartcreation@gmail.com'); //owner gmail
+define('SMTP_PASS', 'ejvs frll todh hcif'); // owner app password
 define('SMTP_SECURE', 'tls');
-define('SMTP_FROM_EMAIL', 'priyabratabera67@gmail.com');
+define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
 define('SMTP_FROM_NAME', 'Siddha Art Creation');
 
 header('Content-Type: application/json');
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div style='background-color: #FFFFFF; padding: 15px; border-radius: 8px; border: 1px solid #E5E1DB; margin: 20px 0;'>
                         <p style='margin: 0; font-size: 14px; color: #7D756C;'><strong>Your Message:</strong><br><br>" . nl2br(htmlspecialchars($message)) . "</p>
                     </div>
-                    <p>If you have any urgent queries regarding an order, feel free to call us at +91 12345 67890.</p>
+                    <p>If you have any urgent queries regarding an order, feel free to call us at +91 9775085649 or +91 6297657671.</p>
                     <br>
                     <p>Warm Regards,<br>Siddha Art Creation Team</p>
                 </div>

@@ -183,8 +183,8 @@ include('nav.php');
           <i class="fa-solid fa-phone"></i>
         </div>
         <h5 class="fw-bold text-dark mb-2" style="font-family: 'Playfair Display', serif;">Call Us Directly</h5>
-        <p class="text-muted small mb-1">+91 12345 67890</p>
-        <p class="text-muted small mb-0">+91 98765 43210</p>
+        <p class="text-muted small mb-1">+91 9775085649</p>
+        <p class="text-muted small mb-0">+91 6297657671</p>
       </div>
     </div>
 
@@ -195,8 +195,7 @@ include('nav.php');
           <i class="fa-regular fa-envelope"></i>
         </div>
         <h5 class="fw-bold text-dark mb-2" style="font-family: 'Playfair Display', serif;">Email Inquiries</h5>
-        <p class="text-muted small mb-1">santusau123@gmail.com</p>
-        <p class="text-muted small mb-0">support@siddhaart.com</p>
+        <p class="text-muted small mb-1">siddhaartcreation@gmail.com</p>
       </div>
     </div>
 
@@ -207,8 +206,7 @@ include('nav.php');
           <i class="fa-regular fa-clock"></i>
         </div>
         <h5 class="fw-bold text-dark mb-2" style="font-family: 'Playfair Display', serif;">Store Hours</h5>
-        <p class="text-muted small mb-1">Mon - Sat: 10:00 AM - 7:00 PM</p>
-        <p class="text-muted small mb-0">Sunday: Closed</p>
+        <p class="text-muted small mb-1">Mon–Sun: Open</p>
       </div>
     </div>
   </div>
