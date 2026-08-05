@@ -906,10 +906,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
 
                     <!-- Top-Right Action Buttons Overlay -->
                     <div class="image-top-actions">
-                        <button type="button" class="btn-image-action" title="Add to Cart">
-                            <i class="fa-solid fa-cart-plus"></i>
-                        </button>
-                        <button type="button" class="btn-image-action" title="Add to Wishlist">
+                        <button type="button" class="btn-image-action btn-wishlist" title="Add to Wishlist" data-product-id="<?= $product['id'] ?>" onclick="toggleWishlist(<?= $product['id'] ?>, this)">
                             <i class="fa-regular fa-heart"></i>
                         </button>
                     </div>
@@ -958,14 +955,6 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
 
             <!-- Rating & Artisan Quality Rating -->
             <div class="d-flex align-items-center gap-2 mb-4 p-2 rounded-3" style="background: rgba(255, 255, 255, 0.7); border: 1px solid rgba(234, 230, 223, 0.8);">
-                <div class="d-flex align-items-center text-gold small">
-                    <i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i>
-                    <i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i>
-                    <i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i>
-                    <i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i>
-                    <i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i>
-                    <span class="fw-bold text-dark ms-1">4.9 / 5.0</span>
-                </div>
                 <span class="small text-muted border-start ps-2 fw-medium" style="font-size: 0.82rem; color: #7A7267 !important;">
                     100% Authentic Hand-Sculpted Indian Creation
                 </span>
@@ -1011,7 +1000,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
             </div>
 
             <!-- Unified Main Action Buttons Row -->
-            <div class="mb-4">
+            <div class="d-flex align-items-center gap-3 mb-4">
                 <?php if (!empty($externalLinks)): ?>
                     <!-- Single Large Premium Gold CTA Button -->
                     <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
@@ -1019,7 +1008,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                     </button>
                 <?php else: ?>
                     <!-- Fallback Direct Order Button if no external links -->
-                    <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg w-100 text-decoration-none">
+                    <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg flex-grow-1 text-decoration-none">
                         <i class="fa-solid fa-paper-plane fs-5 me-2"></i> Inquire &amp; Order Direct
                     </a>
                 <?php endif; ?>
@@ -1085,8 +1074,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                                         </span>
                                     <?php endif; ?>
                                     <div class="action-buttons">
-                                        <div class="action-btn" title="Add to Cart"><i class="fa-solid fa-cart-plus"></i></div>
-                                        <div class="action-btn" title="Add to Wishlist"><i class="fa-regular fa-heart"></i></div>
+                                        <div class="action-btn btn-wishlist" title="Add to Wishlist" data-product-id="<?= $rel['id'] ?>" onclick="toggleWishlist(<?= $rel['id'] ?>, this)"><i class="fa-regular fa-heart"></i></div>
                                     </div>
                                 </div>
                                 <div class="card-info">

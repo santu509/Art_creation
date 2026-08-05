@@ -123,8 +123,7 @@ function renderProductCardsHTML($productsResult, $search = '')
                 </span>
               <?php endif; ?>
               <div class="action-buttons">
-                <div class="action-btn" title="Add to Cart"><i class="fa-solid fa-cart-plus"></i></div>
-                <div class="action-btn" title="Add to Wishlist"><i class="fa-regular fa-heart"></i></div>
+                <div class="action-btn btn-wishlist" title="Add to Wishlist" data-product-id="<?= $product['id'] ?>" onclick="toggleWishlist(<?= $product['id'] ?>, this)"><i class="fa-regular fa-heart"></i></div>
               </div>
             </div>
             <div class="card-info">

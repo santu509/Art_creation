@@ -2,6 +2,9 @@
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
+
+include_once('connection.php');
+global $connect;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -1154,7 +1157,7 @@ if (session_status() === PHP_SESSION_NONE) {
             display: flex;
             justify-content: space-around;
             align-items: center;
-            border-top: 1px solid rgba(58, 53, 48, 0.08);
+            border-top: 1px solid rgba(58, 53, 48, 0.16);
             box-shadow: 0 -4px 15px rgba(58, 53, 48, 0.05);
             z-index: 1030;
             padding-bottom: env(safe-area-inset-bottom);
@@ -1195,7 +1198,6 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         .mobile-bottom-nav-item.active span {
-            color: #C59B27 !important;
             font-weight: 700 !important;
         }
 
@@ -1257,6 +1259,20 @@ if (session_status() === PHP_SESSION_NONE) {
             $userName = $isLoggedIn ? $_SESSION['user_name'] : '';
             $userEmail = $isLoggedIn ? $_SESSION['user_email'] : '';
             $userImage = ($isLoggedIn && !empty($_SESSION['user_image'])) ? $_SESSION['user_image'] : 'asset/image/default-image.jpg';
+
+            // Fetch initial wishlist count & item IDs for active user
+            $initialWishlistCount = 0;
+            $userWishlistIds = [];
+            if ($isLoggedIn && isset($_SESSION['user_id'])) {
+                $uId = intval($_SESSION['user_id']);
+                $wlRes = mysqli_query($connect, "SELECT product_id FROM wishlist WHERE user_id = $uId");
+                if ($wlRes) {
+                    while ($wlRow = mysqli_fetch_assoc($wlRes)) {
+                        $userWishlistIds[] = intval($wlRow['product_id']);
+                    }
+                    $initialWishlistCount = count($userWishlistIds);
+                }
+            }
             ?>
 
             <!-- Left Side: Logo -->
@@ -1292,7 +1308,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 <i class="fa-solid fa-bars-staggered"></i>
             </button>
 
-            <!-- Offcanvas Sidebar Menu (Slides Left to Right on Mobile, displays inline on Desktop) -->
+            <!-- Offcanvas Sidebar Menu -->
             <div class="offcanvas offcanvas-lg offcanvas-start" tabindex="-1" id="navbarNav" aria-labelledby="navbarNavLabel" style="background-color: #F5F2ED;">
                 <!-- Header for mobile menu only -->
                 <div class="offcanvas-header d-lg-none">
@@ -1320,22 +1336,14 @@ if (session_status() === PHP_SESSION_NONE) {
                         </li>
                     </ul>
 
-                    <!-- Right Side: Cart, Wishlist, Login & Create Account / Profile -->
+                    <!-- Right Side: Wishlist, Login & Create Account / Profile -->
                     <div class="d-flex align-items-lg-center flex-column flex-lg-row gap-3 mt-3 mt-lg-0">
 
-                        <!-- Cart Icon (Desktop only) -->
-                        <a href="#" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Cart">
-                            <i class="fa-solid fa-cart-shopping"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
-                                0
-                            </span>
-                        </a>
-
                         <!-- Wishlist Icon (Desktop only) -->
-                        <a href="#" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Wishlist">
+                        <a href="wishlist.php" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Saved Artworks">
                             <i class="fa-regular fa-heart"></i>
-                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge">
-                                0
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge wishlist-badge-count" id="wishlistNavBadge">
+                                <?php echo $initialWishlistCount; ?>
                             </span>
                         </a>
 
@@ -1471,8 +1479,8 @@ if (session_status() === PHP_SESSION_NONE) {
                     <div class="modal-split-left">
                         <img src="asset/image/logo.png" alt="Logo" class="brand-logo">
                         <div>
-                            <h3>Join the Creator <span>Circle</span></h3>
-                            <p class="desc">Unlock exclusive access to rare artworks and join a community of world-class creators.</p>
+                            <h3>Discover Authentic <span>Artistry</span></h3>
+                            <p class="desc">Explore and shop our premium collection of handcrafted clay idols, exclusive jewellery, and terracotta decor.</p>
 
                             <div class="feature-list">
                                 <div class="feature-item">
@@ -1480,8 +1488,8 @@ if (session_status() === PHP_SESSION_NONE) {
                                         <i class="fa-regular fa-star"></i>
                                     </div>
                                     <div>
-                                        <div class="feature-text">Exclusive Previews</div>
-                                        <div class="feature-subtext">Be the first to see masterworks before public release.</div>
+                                        <div class="feature-text">SAVE YOUR FAVORITES</div>
+                                        <div class="feature-subtext">Easily save the handcrafted pieces you love to your personal wishlist and purchase them anytime.</div>
                                     </div>
                                 </div>
                                 <div class="feature-item">
@@ -1489,8 +1497,8 @@ if (session_status() === PHP_SESSION_NONE) {
                                         <i class="fa-solid fa-palette"></i>
                                     </div>
                                     <div>
-                                        <div class="feature-text">Artist Support</div>
-                                        <div class="feature-subtext">Direct channels for mentorship and creative growth.</div>
+                                        <div class="feature-text">CUSTOM ART ORDERS</div>
+                                        <div class="feature-subtext">Get priority access to request personalized sculptures, unique idols, and custom-crafted items just for you.</div>
                                     </div>
                                 </div>
                             </div>
@@ -1505,7 +1513,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <button type="button" class="modal-close-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         <div>
                             <h2>Create Account</h2>
-                            <p class="subtitle">Begin your artistic journey with us today.</p>
+                            <p class="subtitle">Begin your seamless shopping experience today.</p>
 
                             <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
                                 <!-- Name and Email -->
@@ -1513,7 +1521,7 @@ if (session_status() === PHP_SESSION_NONE) {
                                     <label class="form-label-custom">Full Name</label>
                                     <div class="input-wrapper">
                                         <i class="fa-regular fa-user input-icon-left"></i>
-                                        <input type="text" id="registerName" name="name" class="input-custom" placeholder="e.g., Leonardo da Vinci" required>
+                                        <input type="text" id="registerName" name="name" class="input-custom" placeholder="e.g., Siddha Art Creation" required>
                                     </div>
                                 </div>
 
@@ -1587,7 +1595,7 @@ if (session_status() === PHP_SESSION_NONE) {
                         <div id="registerFooterLinks">
                             <p class="auth-footer-text">Already have an account? <a href="#" onclick="switchModals('registerModal', 'loginModal')">Sign in here</a></p>
                             <div class="modal-sub-links">
-                                <a href="#">Artist Guidelines</a>
+                                <a href="#">Shopping Policy</a>
                                 <span>•</span>
                                 <a href="#">Privacy</a>
                             </div>
@@ -1615,22 +1623,12 @@ if (session_status() === PHP_SESSION_NONE) {
             <i class="fa-solid fa-grip"></i>
             <span>Explore</span>
         </a>
-        <!-- Cart -->
-        <a href="cart.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'cart.php') ? 'active' : ''; ?>" id="bottomNavCart">
-            <div class="position-relative d-inline-flex">
-                <i class="fa-solid fa-cart-flatbed-suitcase"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
-                    0
-                </span>
-            </div>
-            <span>Cart</span>
-        </a>
         <!-- Wishlist -->
         <a href="wishlist.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'wishlist.php') ? 'active' : ''; ?>" id="bottomNavWishlist">
             <div class="position-relative d-inline-flex">
                 <i class="fa-solid fa-heart"></i>
-                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge" style="font-size: 0.58rem; padding: 2px 5px;">
-                    0
+                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge wishlist-badge-count" id="wishlistMobileNavBadge" style="font-size: 0.58rem; padding: 2px 5px;">
+                    <?php echo $initialWishlistCount; ?>
                 </span>
             </div>
             <span>Wishlist</span>
@@ -2030,8 +2028,6 @@ if (session_status() === PHP_SESSION_NONE) {
                 document.getElementById('bottomNavHome')?.classList.add('active');
             } else if (page.includes('collection') || page.includes('menu') || page.includes('shop') || page.includes('product')) {
                 document.getElementById('bottomNavShop')?.classList.add('active');
-            } else if (page.includes('cart')) {
-                document.getElementById('bottomNavCart')?.classList.add('active');
             } else if (page.includes('wishlist')) {
                 document.getElementById('bottomNavWishlist')?.classList.add('active');
             } else if (page.includes('profile') || page.includes('account') || page.includes('user') || page.includes('login')) {
@@ -2109,6 +2105,101 @@ if (session_status() === PHP_SESSION_NONE) {
                 }
                 window.addEventListener("scroll", handleNavbarScroll);
                 handleNavbarScroll(); // Initial check on load
+            }
+        });
+
+        // =========================================================
+        // GLOBAL WISHLIST JS ENGINE
+        // =========================================================
+        window.isUserLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
+        window.userWishlistIds = <?php echo json_encode($userWishlistIds); ?>;
+
+        function toggleWishlist(productId, btnElement) {
+            if (!window.isUserLoggedIn) {
+                showToast("Please log in to save artworks to your wishlist.", "error");
+                const loginModalEl = document.getElementById('loginModal');
+                if (loginModalEl) {
+                    const modal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
+                    modal.show();
+                }
+                return;
+            }
+
+            if (!productId || productId <= 0) return;
+
+            // Visual feedback during request
+            if (btnElement) {
+                btnElement.style.pointerEvents = 'none';
+                btnElement.style.opacity = '0.7';
+            }
+
+            fetch('wishlist_action.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: `product_id=${productId}`
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (btnElement) {
+                        btnElement.style.pointerEvents = 'auto';
+                        btnElement.style.opacity = '1';
+                    }
+
+                    if (data.success) {
+                        // Update badges across both Desktop & Mobile navigation bars
+                        const badges = document.querySelectorAll('.wishlist-badge-count, #wishlistNavBadge, #wishlistMobileNavBadge');
+                        badges.forEach(badge => {
+                            if (badge && typeof data.wishlist_count !== 'undefined') {
+                                badge.innerText = data.wishlist_count;
+                            }
+                        });
+
+                        // Update icon across ALL buttons on the page for this product_id
+                        const allMatchingBtns = document.querySelectorAll(`[data-product-id="${productId}"]`);
+                        allMatchingBtns.forEach(btn => {
+                            const icon = btn.querySelector('i');
+                            if (data.action === 'added') {
+                                if (icon) {
+                                    icon.className = 'fa-solid fa-heart text-danger';
+                                }
+                                btn.setAttribute('title', 'Remove from Wishlist');
+                            } else if (data.action === 'removed') {
+                                if (icon) {
+                                    icon.className = 'fa-regular fa-heart';
+                                }
+                                btn.setAttribute('title', 'Add to Wishlist');
+                            }
+                        });
+
+                        showToast(data.message, data.action === 'added' ? 'success' : 'info');
+                    } else {
+                        showToast(data.message || "Action failed.", "error");
+                    }
+                })
+                .catch(err => {
+                    if (btnElement) {
+                        btnElement.style.pointerEvents = 'auto';
+                        btnElement.style.opacity = '1';
+                    }
+                    showToast("Network error. Please try again.", "error");
+                });
+        }
+
+        // Auto-highlight active wishlist hearts on DOM Load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (Array.isArray(window.userWishlistIds) && window.userWishlistIds.length > 0) {
+                window.userWishlistIds.forEach(id => {
+                    const btns = document.querySelectorAll(`[data-product-id="${id}"]`);
+                    btns.forEach(btn => {
+                        const icon = btn.querySelector('i');
+                        if (icon) {
+                            icon.className = 'fa-solid fa-heart text-danger';
+                        }
+                        btn.setAttribute('title', 'Remove from Wishlist');
+                    });
+                });
             }
         });
     </script>

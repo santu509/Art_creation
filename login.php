@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'connection.php';
-
+global $connect;
 header('Content-Type: application/json');
 
 $action = isset($_GET['action']) ? $_GET['action'] : '';

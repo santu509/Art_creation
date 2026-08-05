@@ -677,7 +677,8 @@ global $connect;
     }
 
     /* Modern Custom Dot Indicator Scrollbar Styles */
-    .cat-dot-control-wrapper {
+    .cat-dot-control-wrapper,
+    .prod-dot-control-wrapper {
         display: flex;
         align-items: center;
         justify-content: center;
@@ -685,13 +686,15 @@ global $connect;
         margin-top: 25px;
     }
 
-    .cat-dots-container {
+    .cat-dots-container,
+    .prod-dots-container {
         display: flex;
         align-items: center;
         gap: 8px;
     }
 
-    .cat-dot-item {
+    .cat-dot-item,
+    .prod-dot-item {
         width: 10px;
         height: 10px;
         border-radius: 50%;
@@ -700,12 +703,14 @@ global $connect;
         transition: all 0.35s cubic-bezier(0.25, 1, 0.5, 1);
     }
 
-    .cat-dot-item:hover {
+    .cat-dot-item:hover,
+    .prod-dot-item:hover {
         background: #C59B27;
         transform: scale(1.25);
     }
 
-    .cat-dot-item.active {
+    .cat-dot-item.active,
+    .prod-dot-item.active {
         width: 32px;
         height: 10px;
         border-radius: 20px;
@@ -713,7 +718,8 @@ global $connect;
         box-shadow: 0 4px 12px rgba(197, 155, 39, 0.4);
     }
 
-    .cat-scroll-nav-btn {
+    .cat-scroll-nav-btn,
+    .prod-scroll-nav-btn {
         width: 36px;
         height: 36px;
         border-radius: 50%;
@@ -730,7 +736,8 @@ global $connect;
         font-size: 0.85rem;
     }
 
-    .cat-scroll-nav-btn:hover {
+    .cat-scroll-nav-btn:hover,
+    .prod-scroll-nav-btn:hover {
         background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
         color: #FFFFFF;
         border-color: transparent;
@@ -1192,9 +1199,9 @@ global $connect;
                 <div class="text-center text-md-start mb-3 mb-md-0">
                     <h2 class="section-title mb-2">Shop by <span style="color: #CBA232;">Category</span> </h2>
                     <p class="section-subtitle mb-0">
-                       Discover our wide range of handcrafted categories tailored for your aesthetic taste.
+                        Discover our wide range of handcrafted categories tailored for your aesthetic taste.
                     </p>
-                   
+
                     <div class="title-divider mx-auto mx-md-0 mt-3"></div>
                 </div>
                 <div class="text-center text-md-end">
@@ -1292,7 +1299,7 @@ global $connect;
             $products_result = mysqli_query($connect, $products_query);
             ?>
 
-            <div class="horizontal-scroll-container mt-4">
+            <div class="horizontal-scroll-container mt-4" id="productScrollSlider">
                 <?php
                 if ($products_result && mysqli_num_rows($products_result) > 0):
                     while ($prod = mysqli_fetch_assoc($products_result)):
@@ -1316,8 +1323,7 @@ global $connect;
                                             </span>
                                         <?php endif; ?>
                                         <div class="action-buttons">
-                                            <div class="action-btn" title="Add to Cart"><i class="fa-solid fa-cart-plus"></i></div>
-                                            <div class="action-btn" title="Add to Wishlist"><i class="fa-regular fa-heart"></i></div>
+                                            <div class="action-btn btn-wishlist" title="Add to Wishlist" data-product-id="<?php echo $prod['id']; ?>" onclick="event.preventDefault(); toggleWishlist(<?php echo $prod['id']; ?>, this);"><i class="fa-regular fa-heart"></i></div>
                                         </div>
                                     </div>
                                     <div class="card-info">
@@ -1351,6 +1357,19 @@ global $connect;
                         <p class="fs-5">More exquisite products coming soon!</p>
                     </div>
                 <?php endif; ?>
+            </div>
+
+            <!-- Dot Scrollbar Navigation Controls for Products -->
+            <div class="prod-dot-control-wrapper">
+                <button class="prod-scroll-nav-btn" id="prodScrollPrev" title="Scroll Left">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </button>
+                <div class="prod-dots-container" id="prodDotsContainer">
+                    <!-- Dynamic Dots populated via JS -->
+                </div>
+                <button class="prod-scroll-nav-btn" id="prodScrollNext" title="Scroll Right">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </button>
             </div>
         </div>
     </section>
@@ -1445,6 +1464,80 @@ global $connect;
                     catNext.addEventListener('click', function() {
                         catSlider.scrollBy({
                             left: 290,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            }
+
+            // Custom Product Dot Scrollbar Logic
+            const prodSlider = document.getElementById('productScrollSlider');
+            const prodDotsContainer = document.getElementById('prodDotsContainer');
+            const prodPrev = document.getElementById('prodScrollPrev');
+            const prodNext = document.getElementById('prodScrollNext');
+
+            if (prodSlider && prodDotsContainer) {
+                const prodItems = prodSlider.querySelectorAll('.scroll-item');
+                const itemCount = prodItems.length;
+
+                // Create Dots matching item count
+                prodDotsContainer.innerHTML = '';
+                for (let i = 0; i < itemCount; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'prod-dot-item' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('title', `Go to product ${i + 1}`);
+                    dot.addEventListener('click', function() {
+                        if (prodItems[i]) {
+                            prodItems[i].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'start'
+                            });
+                        }
+                    });
+                    prodDotsContainer.appendChild(dot);
+                }
+
+                const dots = prodDotsContainer.querySelectorAll('.prod-dot-item');
+
+                function updateActiveProductDot() {
+                    const sliderRect = prodSlider.getBoundingClientRect();
+                    let activeIndex = 0;
+                    let minDiff = Infinity;
+
+                    prodItems.forEach((item, index) => {
+                        const itemRect = item.getBoundingClientRect();
+                        const diff = Math.abs(itemRect.left - sliderRect.left);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            activeIndex = index;
+                        }
+                    });
+
+                    dots.forEach((dot, index) => {
+                        if (index === activeIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                }
+
+                prodSlider.addEventListener('scroll', updateActiveProductDot);
+                window.addEventListener('resize', updateActiveProductDot);
+
+                if (prodPrev) {
+                    prodPrev.addEventListener('click', function() {
+                        prodSlider.scrollBy({
+                            left: -300,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+                if (prodNext) {
+                    prodNext.addEventListener('click', function() {
+                        prodSlider.scrollBy({
+                            left: 300,
                             behavior: 'smooth'
                         });
                     });
