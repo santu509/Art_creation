@@ -967,7 +967,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                 <?php if (!empty($externalLinks)): ?>
                     <!-- Single Large Premium Gold CTA Button -->
                     <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
-                        <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Buy Original Piece
+                        <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Buy Now
                     </button>
                 <?php else: ?>
                     <!-- Fallback Direct Order Button if no external links -->

@@ -478,40 +478,7 @@ global $connect;
         font-weight: 700;
     }
 
-    /* -----------------------------------------
-       FLOWING ANIMATED GOLD TEXT GRADIENT
-    ----------------------------------------- */
-    .animated-gold-text {
-        font-family: 'Playfair Display', serif;
-        /* Richer, deeper gold gradient without pure white so it stays readable */
-        background: linear-gradient(to right,
-                #B8860B 0%,
-                #D4AF37 25%,
-                #fce1b6 50%,
-                #D4AF37 75%,
-                #B8860B 100%);
-        /* Set exactly to 200% for mathematical seamless looping */
-        background-size: 200% auto;
-        color: #B8860B;
-        /* Fallback color */
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        /* Increased time slightly for a more elegant, smooth flow */
-        animation: goldShineFlow 6s linear infinite;
-        display: inline-block;
-    }
 
-    @keyframes goldShineFlow {
-        0% {
-            background-position: 0% center;
-        }
-
-        100% {
-            /* Moving exactly to 200% matches the background size and creates a perfect loop */
-            background-position: 200% center;
-        }
-    }
 
     .section-subtitle {
         color: #6C757D;
@@ -1187,10 +1154,11 @@ global $connect;
         <div class="container py-4">
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
                 <div class="text-center text-md-start mb-3 mb-md-0">
-                    <h2 class="section-title animated-gold-text mb-2">Shop by Category</h2>
+                    <h2 class="section-title mb-2">Shop by <span style="color: #CBA232;">Category</span> </h2>
                     <p class="section-subtitle mb-0">
-                        Discover our wide range of handcrafted categories tailored for your aesthetic taste.
+                       Discover our wide range of handcrafted categories tailored for your aesthetic taste.
                     </p>
+                   
                     <div class="title-divider mx-auto mx-md-0 mt-3"></div>
                 </div>
                 <div class="text-center text-md-end">
