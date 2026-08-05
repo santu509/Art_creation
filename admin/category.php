@@ -2,6 +2,7 @@
 session_start();
 require_once(__DIR__ . "/../connection.php");
 /** @var mysqli $connect */
+require_once 'includes/pagination.php';
 
 // Check admin authentication
 if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== true) {
@@ -39,9 +40,11 @@ if ($editId > 0) {
     }
 }
 
-// Fetch Search & Sort Parameters
+// Fetch Search, Sort & Pagination Parameters
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 $sort = isset($_GET['sort']) ? trim($_GET['sort']) : 'newest';
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$perPage = isset($_GET['per_page']) ? max(1, (int)$_GET['per_page']) : 10;
 
 $whereClause = "";
 if (!empty($search)) {
@@ -106,11 +109,20 @@ switch ($sort) {
         break;
 }
 
-// Render Table Rows Function for reuse and AJAX
-function renderCategoryRows($categoriesList)
+// Pagination Calculations
+$totalRecords = count($categoriesList);
+$totalPages = (int)ceil($totalRecords / $perPage);
+if ($page > $totalPages && $totalPages > 0) {
+    $page = $totalPages;
+}
+$offset = ($page - 1) * $perPage;
+$pagedCategories = array_slice($categoriesList, $offset, $perPage);
+
+// Render Table Rows Function for reuse
+function renderCategoryRows($categoriesList, $startSl = 1)
 {
     if (!empty($categoriesList)):
-        $sl = 1;
+        $sl = $startSl;
         foreach ($categoriesList as $cat):
             $catStatus = (int)$cat['status'];
             $prodCount = (int)$cat['product_count'];
@@ -210,17 +222,94 @@ function renderCategoryRows($categoriesList)
 <?php endif;
 }
 
-// Handle AJAX Response for Live Search & Sorting
+// Render Full Table Card Component with Header, Rows, and Bottom Pagination
+function renderCategoryTableCard($pagedCategories, $page, $perPage, $totalRecords, $totalPages, $search, $sort, $offset)
+{
+    $queryParams = [
+        'search' => $search,
+        'sort' => $sort,
+        'per_page' => $perPage
+    ];
+?>
+    <div class="table-card" id="categoryTableContainer">
+        <!-- Table Header Toolbar -->
+        <div class="table-card-header">
+            <h5 class="table-card-title">
+                <i class="fa-solid fa-list me-2"></i>Existing Categories
+            </h5>
+
+            <div class="d-flex align-items-center gap-2 flex-wrap ms-auto">
+                <!-- Top Page Size Selector -->
+                <?php renderPageSizeSelector($perPage, [5, 10, 25, 50, 100], 'changePerPage(this.value)'); ?>
+
+                <!-- KeyUp Live Search Box -->
+                <div class="search-input-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text"
+                        id="searchInput"
+                        name="search"
+                        class="form-control form-control-custom"
+                        placeholder="Search categories..."
+                        value="<?php echo htmlspecialchars($search); ?>"
+                        autocomplete="off">
+                </div>
+
+                <!-- Filter Sort Dropdown -->
+                <div class="dropdown">
+                    <button class="btn btn-filter-sort"
+                        type="button"
+                        id="sortDropdownBtn"
+                        data-bs-toggle="dropdown"
+                        aria-expanded="false"
+                        title="Sort Categories">
+                        <i class="fa-solid fa-filter"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end dropdown-menu-sort" aria-labelledby="sortDropdownBtn">
+                        <li class="dropdown-header text-muted small fw-bold px-3 py-1 text-uppercase">Sort Categories By</li>
+                        <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'name_asc' ? 'active' : ''; ?>" href="#" data-sort="name_asc">Name (A to Z)</a></li>
+                        <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'name_desc' ? 'active' : ''; ?>" href="#" data-sort="name_desc">Name (Z to A)</a></li>
+                        <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'products_desc' ? 'active' : ''; ?>" href="#" data-sort="products_desc">Most Products</a></li>
+                        <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'products_asc' ? 'active' : ''; ?>" href="#" data-sort="products_asc">Least Products</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Section -->
+        <div class="table-responsive">
+            <table class="table category-table align-middle">
+                <thead>
+                    <tr>
+                        <th style="width: 20px;">SL</th>
+                        <th>Category Name</th>
+                        <th class="text-center" style="width: 120px;">Status</th>
+                        <th class="text-center" style="width: 170px;">Total Products</th>
+                        <th class="text-center" style="width: 130px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="categoryTableBody">
+                    <?php renderCategoryRows($pagedCategories, $offset + 1); ?>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Bottom Pagination Controls -->
+        <?php renderPagination($totalPages, $page, $totalRecords, $perPage, $queryParams, 'categories'); ?>
+    </div>
+<?php
+}
+
+// Handle AJAX Response for Live Search, Sorting & Pagination
 $isAjax = (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') || isset($_GET['ajax']);
 
 if ($isAjax) {
     ob_start();
-    renderCategoryRows($categoriesList);
-    $tableRowsHtml = ob_get_clean();
+    renderCategoryTableCard($pagedCategories, $page, $perPage, $totalRecords, $totalPages, $search, $sort, $offset);
+    $tableCardHtml = ob_get_clean();
     echo json_encode([
         'status' => 'success',
-        'html' => $tableRowsHtml,
-        'count' => count($categoriesList)
+        'html' => $tableCardHtml,
+        'count' => $totalRecords
     ]);
     exit;
 }
@@ -884,66 +973,8 @@ if ($isAjax) {
                     </div>
 
                     <!-- Right Column: Existing Categories Table -->
-                    <div class="col-12 col-lg-8">
-                        <div class="table-card">
-                            <!-- Table Header Toolbar -->
-                            <div class="table-card-header">
-                                <h5 class="table-card-title">
-                                    <i class="fa-solid fa-list me-2"></i>Existing Categories
-                                </h5>
-
-                                <div class="d-flex align-items-center gap-2">
-                                    <!-- KeyUp Live Search Box -->
-                                    <div class="search-input-box">
-                                        <i class="fa-solid fa-magnifying-glass"></i>
-                                        <input type="text"
-                                            id="searchInput"
-                                            name="search"
-                                            class="form-control form-control-custom"
-                                            placeholder="Search categories..."
-                                            value="<?php echo htmlspecialchars($search); ?>"
-                                            autocomplete="off">
-                                    </div>
-
-                                    <!-- Filter Sort Dropdown -->
-                                    <div class="dropdown">
-                                        <button class="btn btn-filter-sort"
-                                            type="button"
-                                            id="sortDropdownBtn"
-                                            data-bs-toggle="dropdown"
-                                            aria-expanded="false"
-                                            title="Sort Categories">
-                                            <i class="fa-solid fa-filter"></i>
-                                        </button>
-                                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-sort" aria-labelledby="sortDropdownBtn">
-                                            <li class="dropdown-header text-muted small fw-bold px-3 py-1 text-uppercase">Sort Categories By</li>
-                                            <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'name_asc' ? 'active' : ''; ?>" href="#" data-sort="name_asc">Name (A to Z)</a></li>
-                                            <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'name_desc' ? 'active' : ''; ?>" href="#" data-sort="name_desc">Name (Z to A)</a></li>
-                                            <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'products_desc' ? 'active' : ''; ?>" href="#" data-sort="products_desc">Most Products</a></li>
-                                            <li><a class="dropdown-item dropdown-item-sort sort-item <?php echo $sort === 'products_asc' ? 'active' : ''; ?>" href="#" data-sort="products_asc">Least Products</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Table Section -->
-                            <div class="table-responsive">
-                                <table class="table category-table align-middle">
-                                    <thead>
-                                        <tr>
-                                            <th style="width: 20px;">SL</th>
-                                            <th>Category Name</th>
-                                            <th class="text-center" style="width: 120px;">Status</th>
-                                            <th class="text-center" style="width: 170px;">Total Products</th>
-                                            <th class="text-center" style="width: 130px;">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="categoryTableBody">
-                                        <?php renderCategoryRows($categoriesList); ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="col-12 col-lg-8" id="categoryTableWrapper">
+                        <?php renderCategoryTableCard($pagedCategories, $page, $perPage, $totalRecords, $totalPages, $search, $sort, $offset); ?>
                     </div>
 
                 </div>
@@ -991,24 +1022,56 @@ if ($isAjax) {
             });
         }, 4000);
 
-        // Modern Modal Logic & KeyUp Live Search & Sorting without Page Reload
+        // Modern Modal Logic & KeyUp Live Search, Sorting & Pagination
         let modernModalInstance = null;
         let currentSort = '<?php echo htmlspecialchars($sort); ?>';
+        let currentPage = <?php echo $page; ?>;
+        let currentPerPage = <?php echo $perPage; ?>;
         let searchDebounceTimer = null;
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const modalElement = document.getElementById('modernAlertModal');
-            if (modalElement) {
-                modernModalInstance = new bootstrap.Modal(modalElement);
-            }
+        function changePerPage(val) {
+            currentPerPage = parseInt(val, 10);
+            triggerSearch(1);
+        }
 
+        function triggerSearch(page = 1) {
+            currentPage = page;
+            const searchInput = document.getElementById('searchInput');
+            const searchVal = searchInput ? searchInput.value.trim() : '';
+            const wrapper = document.getElementById('categoryTableWrapper');
+
+            if (!wrapper) return;
+            wrapper.style.opacity = '0.5';
+
+            const fetchUrl = `category.php?ajax=1&search=${encodeURIComponent(searchVal)}&sort=${encodeURIComponent(currentSort)}&page=${currentPage}&per_page=${currentPerPage}`;
+
+            fetch(fetchUrl, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    wrapper.style.opacity = '1';
+                    if (data.status === 'success') {
+                        wrapper.innerHTML = data.html;
+                        bindTableEvents();
+                    }
+                })
+                .catch(err => {
+                    wrapper.style.opacity = '1';
+                    console.error('Failed to fetch categories:', err);
+                });
+        }
+
+        function bindTableEvents() {
             // KeyUp Live Search Listener
             const searchInput = document.getElementById('searchInput');
             if (searchInput) {
                 searchInput.addEventListener('keyup', function() {
                     clearTimeout(searchDebounceTimer);
                     searchDebounceTimer = setTimeout(function() {
-                        fetchCategoriesNoReload();
+                        triggerSearch(1);
                     }, 250);
                 });
             }
@@ -1021,39 +1084,18 @@ if ($isAjax) {
                     sortItems.forEach(el => el.classList.remove('active'));
                     this.classList.add('active');
                     currentSort = this.getAttribute('data-sort');
-                    fetchCategoriesNoReload();
+                    triggerSearch(1);
                 });
             });
-        });
-
-        // AJAX Fetch Categories with no page reload
-        function fetchCategoriesNoReload() {
-            const searchInput = document.getElementById('searchInput');
-            const searchVal = searchInput ? searchInput.value.trim() : '';
-            const tbody = document.getElementById('categoryTableBody');
-
-            if (!tbody) return;
-            tbody.style.opacity = '0.5';
-
-            const fetchUrl = `category.php?ajax=1&search=${encodeURIComponent(searchVal)}&sort=${encodeURIComponent(currentSort)}`;
-
-            fetch(fetchUrl, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => response.json())
-                .then(data => {
-                    tbody.style.opacity = '1';
-                    if (data.status === 'success') {
-                        tbody.innerHTML = data.html;
-                    }
-                })
-                .catch(err => {
-                    tbody.style.opacity = '1';
-                    console.error('Failed to fetch categories:', err);
-                });
         }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalElement = document.getElementById('modernAlertModal');
+            if (modalElement) {
+                modernModalInstance = new bootstrap.Modal(modalElement);
+            }
+            bindTableEvents();
+        });
 
         // Show Modern Confirmation Modal
         function showConfirmModal(title, message, confirmUrl, confirmBtnText, btnClass) {

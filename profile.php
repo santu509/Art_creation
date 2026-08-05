@@ -274,9 +274,6 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
       <div class="col-12 col-md mt-2 mt-md-0">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
           <h2 class="mb-0 fw-semibold text-white" style="font-family: 'Playfair Display', serif;" id="heroDisplayName"><?php echo $userName; ?></h2>
-          <span class="badge rounded-pill bg-warning text-dark px-3 py-2 fw-semibold fs-7" style="background-color: #C5A880 !important; color: #12110F !important;">
-            <i class="fa-solid fa-crown me-1"></i> Art Patron
-          </span>
         </div>
         <p class="mb-2 text-white-50" id="heroDisplayEmail"><i class="fa-regular fa-envelope me-2"></i><?php echo $userEmail; ?></p>
         <div class="d-flex flex-wrap justify-content-center justify-content-md-start gap-3 text-white-50 small">

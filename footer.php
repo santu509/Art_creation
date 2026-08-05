@@ -182,6 +182,7 @@
         border-radius: 8px !important;
         box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
     }
+
     .bs-tooltip-top .tooltip-arrow::before,
     .bs-tooltip-auto[data-popper-placement^="top"] .tooltip-arrow::before {
         border-top-color: var(--footer-gold) !important;
@@ -231,7 +232,8 @@
 
     @media (max-width: 991px) {
         .btn-scroll-top {
-            bottom: 75px; /* Offset above the mobile bottom nav bar */
+            bottom: 75px;
+            /* Offset above the mobile bottom nav bar */
             right: 20px;
             width: 44px;
             height: 44px;
@@ -279,7 +281,7 @@
             <!-- Contact Info -->
             <div class="col-lg-3 col-md-6">
                 <h4 class="foot_upper">Contact Us</h4>
-                
+
                 <div class="footer-contact-item">
                     <div class="footer-contact-icon">
                         <i class="fa fa-map-marker-alt"></i>
@@ -291,14 +293,21 @@
                     <div class="footer-contact-icon">
                         <i class="fa fa-phone"></i>
                     </div>
-                    <p>+91 12345 67890</p>
+                    <div class="d-flex flex-column align-items-center">
+                        <a href="tel:+919775085649" class="text-decoration-none">
+                            <p>+91 9775085649</p>
+                        </a>
+                        <a href="tel:+916297657671" class="text-decoration-none">
+                            <p>+91 6297657671</p>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="footer-contact-item">
                     <div class="footer-contact-icon">
                         <i class="fa fa-envelope"></i>
                     </div>
-                    <p>santusau123@gmail.com</p>
+                    <p>siddhaartcreation@gmail.com</p>
                 </div>
 
                 <!-- Social Media Icons with Tooltips -->
@@ -351,14 +360,14 @@
 <!-- JS Libraries -->
 <script src="asset/bootstrap-5.3.7-dist/js/bootstrap.bundle.min.js"></script>
 <script src="asset/bootstrap-5.3.7-dist/js/jquery.min.js"></script>
-    <!-- AOS Animation Library JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+<!-- AOS Animation Library JS -->
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 
 <script>
     // Initialize Bootstrap Tooltips for Social Icons and Scroll Button
     document.addEventListener("DOMContentLoaded", function() {
         var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+        tooltipTriggerList.forEach(function(tooltipTriggerEl) {
             new bootstrap.Tooltip(tooltipTriggerEl);
         });
 

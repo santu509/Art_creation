@@ -8,6 +8,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
 }
 
 include_once(__DIR__ . '/../connection.php');
+require_once __DIR__ . '/includes/pagination.php';
 global $connect;
 
 
@@ -611,35 +612,7 @@ $currentPage = "collection.php";
                     </div>
 
                     <!-- Pagination -->
-                    <?php if ($total_pages > 1): ?>
-                        <div class="px-4 py-3 border-top d-flex justify-content-center justify-content-md-end" style="border-color: var(--gold-border) !important; background-color: #FAF8F5;">
-                            <nav>
-                                <ul class="pagination mb-0 gap-1 align-items-center">
-                                    <?php if ($page > 1): ?>
-                                        <li class="page-item me-2">
-                                            <a class="page-link shadow-sm rounded fw-medium" href="?page=<?= $page - 1 ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>" style="color: var(--gold-deep); border-color: var(--gold-border); background-color: #fff; font-size: 13px;">
-                                                <i class="fas fa-chevron-left me-1"></i> Prev
-                                            </a>
-                                        </li>
-                                    <?php endif; ?>
-
-                                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                                        <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                                            <a class="page-link shadow-sm rounded" href="?page=<?= $i ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>" style="<?= ($page == $i) ? 'background-color: var(--gold-deep); border-color: var(--gold-deep); color: white; font-weight: bold;' : 'color: var(--gold-deep); border-color: var(--gold-border); background-color: #fff;' ?>"><?= $i ?></a>
-                                        </li>
-                                    <?php endfor; ?>
-
-                                    <?php if ($page < $total_pages): ?>
-                                        <li class="page-item ms-2">
-                                            <a class="page-link shadow-sm rounded fw-medium" href="?page=<?= $page + 1 ?>&limit=<?= $limit ?>&search=<?= urlencode($search) ?>" style="color: var(--gold-deep); border-color: var(--gold-border); background-color: #fff; font-size: 13px;">
-                                                Next <i class="fas fa-chevron-right ms-1"></i>
-                                            </a>
-                                        </li>
-                                    <?php endif; ?>
-                                </ul>
-                            </nav>
-                        </div>
-                    <?php endif; ?>
+                    <?php renderPagination($total_pages, $page, (int)$total_row['total'], $limit, ['search' => $search, 'limit' => $limit], 'artworks'); ?>
                 </div>
 
             </div>

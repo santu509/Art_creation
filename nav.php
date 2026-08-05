@@ -30,10 +30,10 @@ if (session_status() === PHP_SESSION_NONE) {
 
     <style>
         :root {
-            --bg-color: #F5F2ED;
+            --bg-color: #e8e7e5d7;
             --text-color: #3A3530;
             --accent-color: #B8860B;
-            --accent-light: rgba(184, 134, 11, 0.1);
+            --accent-light: rgba(184, 134, 11, 0.15);
             --transition-smooth: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
         }
 
@@ -43,7 +43,7 @@ if (session_status() === PHP_SESSION_NONE) {
         }
 
         body {
-            background-color: #fcfbfa;
+            background-color: #F5F0E8;
             font-family: 'Outfit', sans-serif;
             padding-top: 0;
             overflow-x: hidden;
@@ -169,17 +169,17 @@ if (session_status() === PHP_SESSION_NONE) {
         .custom-navbar.nav-scrolled,
         .custom-navbar.navbar-scrolled {
             background-image: none !important;
-            background: #F5F2ED !important;
-            background-color: #F5F2ED !important;
+            background: #EFEBE4 !important;
+            background-color: #EFEBE4 !important;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.12);
+            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.14);
             padding: 8px 24px;
             top: 15px;
             width: 95%;
             max-width: 1300px;
             border-radius: 50px;
-            border: 1px solid rgba(184, 134, 11, 0.25);
+            border: 1.5px solid rgba(184, 134, 11, 0.35);
         }
 
         .custom-navbar.nav-scrolled .navbar-nav .nav-link,
@@ -309,7 +309,9 @@ if (session_status() === PHP_SESSION_NONE) {
                 position: absolute;
                 top: 0;
                 left: 0;
-                background-color: rgba(184, 134, 11, 0.08);
+                background-color: rgba(184, 134, 11, 0.18);
+                border: 1px solid rgba(184, 134, 11, 0.28);
+                box-shadow: inset 0 0 12px rgba(184, 134, 11, 0.08);
                 /* Capsule background */
                 border-radius: 30px;
                 z-index: 1;
@@ -1277,7 +1279,6 @@ if (session_status() === PHP_SESSION_NONE) {
                             <hr class="dropdown-divider">
                         </li>
                         <li><a class="dropdown-item <?php echo ($currentPage == 'profile.php') ? 'active' : ''; ?>" href="profile.php"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
-                        <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -1364,7 +1365,6 @@ if (session_status() === PHP_SESSION_NONE) {
                                         <hr class="dropdown-divider">
                                     </li>
                                     <li><a class="dropdown-item <?php echo ($currentPage == 'profile.php') ? 'active' : ''; ?>" href="profile.php"><i class="fa-regular fa-user me-2"></i>My Profile</a></li>
-                                    <li><a class="dropdown-item" href="#"><i class="fa-solid fa-gear me-2"></i>Settings</a></li>
                                     <li>
                                         <hr class="dropdown-divider">
                                     </li>
