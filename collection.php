@@ -508,7 +508,7 @@ $initialPaginationHTML = renderPaginationHTML($initialData['page'], $initialData
   .sort-select {
     border-radius: 50px;
     border: 1px solid #E5E1DB;
-    padding: 10px 20px;
+    
     font-size: 0.9rem;
     background-color: #FAF8F5;
     color: #3A3530;

@@ -3,6 +3,24 @@
 include_once('nav.php');
 include_once('connection.php');
 global $connect;
+
+$user_has_review = false;
+$existing_rating = 0;
+$existing_review = '';
+
+if (isset($_SESSION['user_id'])) {
+    $customer_id = $_SESSION['user_id'];
+    $stmt = mysqli_prepare($connect, "SELECT rating, review FROM feedback WHERE customers_id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $customer_id);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+    if ($row = mysqli_fetch_assoc($result)) {
+        $user_has_review = true;
+        $existing_rating = (int)$row['rating'];
+        $existing_review = $row['review'];
+    }
+    mysqli_stmt_close($stmt);
+}
 ?>
 
 <style>
@@ -671,8 +689,8 @@ global $connect;
 
     @media (max-width: 767.98px) {
         .category-scroll-item {
-            flex: 0 0 80%;
-            min-width: 260px;
+            flex: 0 0 100%;
+            min-width: 100%;
         }
     }
 
@@ -779,7 +797,7 @@ global $connect;
 
     @media (max-width: 768px) {
         .scroll-item {
-            flex: 0 0 75%;
+            flex: 0 0 100%;
         }
     }
 
@@ -924,8 +942,8 @@ global $connect;
     }
 
     .prod-name {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.25rem;
+        /* font-family: 'Playfair Display', serif; */
+        font-size: 1rem;
         font-weight: 700;
         color: #2C2620;
         margin-bottom: 8px;
@@ -937,7 +955,7 @@ global $connect;
     }
 
     .modern-product-card:hover .prod-name {
-        color: #C59B27;
+        color: #5a3301;
     }
 
     .price-box {
@@ -1003,6 +1021,186 @@ global $connect;
         border-color: #B8860B;
         box-shadow: 0 8px 22px rgba(184, 134, 11, 0.35);
         transform: translateY(-2px);
+    }
+
+    /* Premium Our Local Story Cards */
+    .premium-image-card {
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .premium-image-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15) !important;
+    }
+
+    .hover-zoom {
+        transition: transform 0.8s ease;
+    }
+
+    .premium-image-card:hover .hover-zoom {
+        transform: scale(1.08);
+    }
+
+    .premium-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 60%);
+    }
+
+    .font-outfit {
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .premium-text-card {
+        transition: all 0.3s ease;
+    }
+
+    .premium-text-card:hover {
+        background: #FDFBF7 !important;
+        border-color: rgba(212, 175, 55, 0.5) !important;
+        transform: translateY(-3px);
+    }
+
+    /* Ultra-Premium Minimalist Category Button */
+    .category-btn-card {
+        background: transparent;
+        border: 1px solid rgba(197, 155, 39, 0.3);
+        border-radius: 50px;
+        padding: 20px 30px;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        min-height: 120px;
+    }
+
+    .category-btn-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #1A1612 0%, #2A241D 100%);
+        transform: translateY(100%);
+        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+        z-index: 0;
+    }
+
+    .category-btn-card:hover {
+        border-color: #1A1612;
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(26, 22, 18, 0.15);
+    }
+
+    .category-btn-card:hover::before {
+        transform: translateY(0);
+    }
+
+    .cat-btn-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.35rem;
+        font-weight: 500;
+        letter-spacing: 0.5px;
+        color: #1A1612;
+        position: relative;
+        z-index: 1;
+        transition: color 0.5s ease;
+        margin-bottom: 8px;
+    }
+
+    .category-btn-card:hover .cat-btn-title {
+        color: #DFBA5A;
+    }
+
+    .cat-btn-count {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.75rem;
+        font-weight: 400;
+        letter-spacing: 2px;
+        color: #8C8276;
+        text-transform: uppercase;
+        position: relative;
+        z-index: 1;
+        transition: color 0.5s ease;
+    }
+
+    .category-btn-card:hover .cat-btn-count {
+        color: #E2DDD5;
+    }
+
+    /* Testimonial Section */
+    .testimonial-card {
+        background: #FFFFFF;
+        border-radius: 16px;
+        padding: 30px 25px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        border: none;
+        height: 100%;
+        transition: transform 0.3s ease;
+        position: relative;
+    }
+
+    .testimonial-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    .quote-icon-custom {
+        position: absolute;
+        top: 25px;
+        right: 25px;
+        color: #F0E3D3;
+        font-size: 3.2rem;
+        line-height: 1;
+        opacity: 0.8;
+    }
+
+    .testimonial-img-wrapper {
+        width: 60px;
+        height: 60px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        border: 2px solid #C49A45;
+        padding: 2px;
+        background: #fff;
+    }
+
+    .testimonial-img-wrapper img,
+    .testimonial-img-wrapper div {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .testimonial-star {
+        color: #FFB800;
+        font-size: 1rem;
+        margin-right: 2px;
+    }
+
+    /* Contact Section */
+    .contact-form-control {
+        border: 1px solid #EAE6DF;
+        border-radius: 12px;
+        padding: 12px 20px;
+        font-family: 'Outfit', sans-serif;
+        background: #FDFBF7;
+    }
+
+    .contact-form-control:focus {
+        border-color: #DFBA5A;
+        box-shadow: 0 0 0 3px rgba(223, 186, 90, 0.15);
+        background: #FFFFFF;
     }
 </style>
 
@@ -1155,36 +1353,27 @@ global $connect;
                         <span>Read Our Story</span><i class="fa-solid fa-arrow-right-long ms-2"></i>
                     </a>
                 </div>
-                <!-- Right Side -->
-                <div class="col-12 col-lg-7">
-                    <div class="row g-4">
-                        <div class="col-12 col-sm-6">
-                            <div class="feature-card feature-card-tall">
-                                <div class="icon-box"><i class="fa-solid fa-hand-sparkles"></i></div>
-                                <h4>100% Handmade</h4>
-                                <p>No machines used. Just pure devotion and skilled hands shaping every detail of our idols and bags.</p>
-                            </div>
+                <!-- Right Side (Updated Layout) -->
+                <div class="col-12 col-lg-7 d-flex justify-content-center align-items-center mt-5 mt-lg-0">
+                    <div class="story-image-wrapper position-relative" style="width: 100%; max-width: 500px; aspect-ratio: 1/1;">
+                        <!-- Gold Outline -->
+                        <div class="story-outline position-absolute border rounded-4 border-2" style="border-color: #C59B27 !important; top: -15px; right: 15px; width: 90%; height: 90%; z-index: 0;"></div>
+
+                        <!-- Main Back Image -->
+                        <div class="story-img-main position-absolute rounded-4 overflow-hidden shadow-lg" style="top: 0; left: 0; width: 80%; height: 80%; border: 8px solid #FFFFFF; z-index: 1;">
+                            <img src="asset/image/artisan_story.jpg" alt="Artisan Sculpting" class="img-fluid w-100 h-100 object-fit-cover">
                         </div>
-                        <div class="col-12 col-sm-6 mt-sm-5">
-                            <div class="feature-card">
-                                <div class="icon-box"><i class="fa-solid fa-leaf"></i></div>
-                                <h4>Eco-Friendly Clay</h4>
-                                <p>We strictly use natural river clay and organic colors that are completely safe for nature & rivers.</p>
-                            </div>
+
+                        <!-- EST Badge -->
+                        <div class="story-badge position-absolute rounded-circle d-flex flex-column justify-content-center align-items-center shadow" style="top: -20px; left: -20px; width: 90px; height: 90px; background-color: #3b2a22; z-index: 2; border: 4px solid #FAF8F5;">
+                            <div class="w-100 h-100 rounded-circle position-absolute" style="border: 1px dashed rgba(223, 186, 90, 0.6); top: 0; left: 0; transform: scale(0.85);"></div>
+                            <span style="color: #DFBA5A; font-size: 0.7rem; font-family: 'Outfit', sans-serif; letter-spacing: 1px; margin-bottom: -2px;">EST.</span>
+                            <span style="color: #FFFFFF; font-size: 1.1rem; font-family: 'Playfair Display', serif; font-weight: 700;">2026</span>
                         </div>
-                        <div class="col-12 col-sm-6">
-                            <div class="feature-card feature-card-short">
-                                <div class="icon-box"><i class="fa-solid fa-users"></i></div>
-                                <h4>Support Local Artists</h4>
-                                <p>Your purchase directly empowers our hardworking local artisans and supports their traditional families.</p>
-                            </div>
-                        </div>
-                        <div class="col-12 col-sm-6 mt-sm-5">
-                            <div class="feature-card">
-                                <div class="icon-box"><i class="fa-solid fa-paintbrush"></i></div>
-                                <h4>Custom Orders</h4>
-                                <p>Looking for a specific idol or bag design? We take custom orders tailored to your exact choice.</p>
-                            </div>
+
+                        <!-- Small Front Image -->
+                        <div class="story-img-small position-absolute rounded-4 overflow-hidden shadow-lg" style="bottom: 0; right: 0; width: 55%; height: 55%; border: 8px solid #FFFFFF; z-index: 3;">
+                            <img src="asset/image/clay_artwork.jpg" alt="Clay Artwork" class="img-fluid w-100 h-100 object-fit-cover">
                         </div>
                     </div>
                 </div>
@@ -1236,21 +1425,9 @@ global $connect;
                         $countText = sprintf("%02d", $cat['product_count']) . ' ' . ($cat['product_count'] == 1 ? 'Item' : 'Items');
                 ?>
                         <div class="category-scroll-item">
-                            <a href="collection.php?category=<?php echo $cat['id']; ?>" class="modern-cat-card">
-                                <div>
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="cat-icon-wrapper">
-                                            <i class="<?php echo $currentIcon; ?>"></i>
-                                        </div>
-                                        <span class="cat-card-count">
-                                            <i class="fa-solid fa-box-open me-1"></i> <?php echo $countText; ?>
-                                        </span>
-                                    </div>
-                                    <h3 class="cat-card-title"><?php echo htmlspecialchars($cat['name']); ?></h3>
-                                </div>
-                                <div class="cat-card-action">
-                                    Explore Collection <i class="fa-solid fa-arrow-right ms-2"></i>
-                                </div>
+                            <a href="collection.php?category=<?php echo $cat['id']; ?>" class="category-btn-card">
+                                <span class="cat-btn-title"><?php echo htmlspecialchars($cat['name']); ?></span>
+                                <span class="cat-btn-count"><?php echo $countText; ?></span>
                             </a>
                         </div>
                 <?php
@@ -1294,8 +1471,20 @@ global $connect;
             </div>
 
             <?php
-            // Fetch latest active products
-            $products_query = "SELECT p.*, c.name as category_name FROM products p LEFT JOIN categories c ON p.category_id = c.id WHERE p.status = 1 ORDER BY p.id DESC LIMIT 8";
+            // Fetch latest active product from each category
+            $products_query = "
+                SELECT p.*, c.name as category_name 
+                FROM products p 
+                LEFT JOIN categories c ON p.category_id = c.id 
+                WHERE p.id IN (
+                    SELECT MAX(id) 
+                    FROM products 
+                    WHERE status = 1 
+                    GROUP BY category_id
+                )
+                ORDER BY p.id DESC 
+                LIMIT 8
+            ";
             $products_result = mysqli_query($connect, $products_query);
             ?>
 
@@ -1373,6 +1562,584 @@ global $connect;
             </div>
         </div>
     </section>
+
+    <style>
+        .testi-scroll-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            gap: 1.5rem;
+            -ms-overflow-style: none;
+            /* IE/Edge */
+            scrollbar-width: none;
+            /* Firefox */
+            scroll-behavior: smooth;
+            padding-bottom: 15px;
+        }
+
+        .testi-scroll-slider::-webkit-scrollbar {
+            display: none;
+            /* Chrome/Safari */
+        }
+
+        .testi-scroll-item {
+            flex: 0 0 calc(33.333% - 1rem);
+            scroll-snap-align: start;
+        }
+
+        @media (max-width: 991.98px) {
+            .testi-scroll-item {
+                flex: 0 0 calc(50% - 0.75rem);
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .testi-scroll-item {
+                flex: 0 0 100%;
+            }
+        }
+    </style>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section py-5" style="background-color: #FAF8F5;">
+        <div class="container py-4">
+            <div class="text-center mb-5">
+                <div class="badge-custom mb-3"><i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i> Authentic Reviews</div>
+                <h2 class="section-title mb-2">What Our <span style="color: #CBA232;">Clients Say</span></h2>
+                <div class="title-divider mx-auto mt-3"></div>
+            </div>
+
+            <div class="testi-scroll-slider" id="testiScrollSlider">
+                <?php
+                $testi_query = "SELECT f.rating, f.review, u.name, u.image FROM feedback f JOIN users u ON f.customers_id = u.id ORDER BY f.id DESC";
+                $testi_result = mysqli_query($connect, $testi_query);
+                if ($testi_result && mysqli_num_rows($testi_result) > 0) {
+                    while ($testi = mysqli_fetch_assoc($testi_result)) {
+                        $profile_img = 'asset/image/default-image.jpg';
+                        if (!empty($testi['image']) && $testi['image'] !== 'default.png') {
+                            if (strpos($testi['image'], 'uploads/') === 0) {
+                                $profile_img = $testi['image'];
+                            } else {
+                                $profile_img = 'uploads/' . $testi['image'];
+                            }
+                        }
+
+                        // Extract initials as fallback
+                        $words = explode(" ", trim($testi['name']));
+                        $initials = "";
+                        foreach ($words as $w) {
+                            if (!empty($w)) $initials .= strtoupper($w[0]);
+                        }
+                        if (strlen($initials) > 2) $initials = substr($initials, 0, 2);
+                        if (empty($initials)) $initials = "U";
+                ?>
+                        <div class="testi-scroll-item">
+                            <div class="testimonial-card h-100 d-flex flex-column">
+                                <i class="fa-solid fa-quote-right quote-icon-custom"></i>
+                                <p class="font-outfit text-muted mb-4 flex-grow-1" style="line-height: 1.6; font-style: italic; font-size: 0.95rem; padding-right: 40px;"><?php echo htmlspecialchars('"' . $testi['review'] . '"'); ?></p>
+                                <div class="d-flex align-items-center gap-3 mt-auto">
+                                    <div class="testimonial-img-wrapper">
+                                        <img src="<?php echo htmlspecialchars($profile_img); ?>" onerror="this.onerror=null; this.outerHTML='<div class=\'bg-dark text-white d-flex align-items-center justify-content-center fw-bold\' style=\'font-size: 1rem;\'><?php echo htmlspecialchars($initials); ?></div>';" alt="User">
+                                    </div>
+
+                                    <div>
+                                        <h5 class="mb-1 fw-bold" style="font-family: 'Outfit', sans-serif; font-size: 1.1rem; color: #3E2B1F;"><?php echo htmlspecialchars($testi['name']); ?></h5>
+                                        <div>
+                                            <?php
+                                            for ($i = 1; $i <= 5; $i++) {
+                                                if ($i <= $testi['rating']) echo '<i class="fa-solid fa-star testimonial-star"></i>';
+                                                else echo '<i class="fa-solid fa-star" style="color: #F0E3D3; font-size: 1rem; margin-right: 2px;"></i>';
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                <?php
+                    }
+                } else {
+                    echo '<p class="text-center text-muted w-100">No reviews yet.</p>';
+                }
+                ?>
+            </div>
+
+            <?php if ($testi_result && mysqli_num_rows($testi_result) > 0) { ?>
+                <!-- Dot Scrollbar Navigation Controls -->
+                <div class="cat-dot-control-wrapper mt-4">
+                    <button class="cat-scroll-nav-btn" id="testiScrollPrev" title="Scroll Left">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <div class="cat-dots-container" id="testiDotsContainer">
+                        <!-- Dynamic Dots populated via JS -->
+                    </div>
+                    <button class="cat-scroll-nav-btn" id="testiScrollNext" title="Scroll Right">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            <?php } ?>
+        </div>
+    </section>
+
+    <!-- Contact & Feedback Section -->
+    <style>
+        .contact-new-section {
+            background-color: #FDFBF7;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .contact-new-section .section-subtitle {
+            color: #C49A45;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .contact-new-section .section-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            font-size: 2.5rem;
+            color: #2D2D2D;
+            position: relative;
+            display: inline-block;
+            margin-bottom: 3.5rem;
+        }
+
+        .contact-new-section .section-title::after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 1.5px;
+            background-color: #C49A45;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .contact-card,
+        .feedback-card {
+            background-color: #fff;
+            border-radius: 1.2rem;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.04);
+            padding: 2.5rem;
+            height: 100%;
+        }
+
+        .contact-info-item {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-info-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #FDF1D5;
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            font-size: 1.2rem;
+        }
+
+        .contact-info-text h6 {
+            margin-bottom: 0.1rem;
+            font-weight: 500;
+            color: #2D2D2D;
+            font-size: 1.05rem;
+        }
+
+        .contact-info-text p {
+            margin-bottom: 0;
+            color: #717171;
+            font-size: 0.9rem;
+        }
+
+        .map-container {
+            border-radius: 12px;
+            overflow: hidden;
+            height: 200px;
+            margin-top: 1.5rem;
+            border: 1px solid #f0f0f0;
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin: 1.5rem 0;
+            color: #e0e0e0;
+            font-size: 2rem;
+        }
+
+        .star-rating i:hover,
+        .star-rating i.active {
+            color: #F8C31C;
+            cursor: pointer;
+        }
+
+        .feedback-card textarea {
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            padding: 1rem;
+            resize: none;
+            box-shadow: none;
+            font-size: 0.95rem;
+        }
+
+        .feedback-card textarea:focus {
+            border-color: #F8C31C;
+            box-shadow: 0 0 0 0.2rem rgba(248, 195, 28, 0.15);
+            outline: none;
+        }
+
+        .btn-submit-review {
+            background-color: #F4C41B;
+            color: #111;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 2rem;
+            width: 100%;
+            transition: all 0.3s;
+            margin-top: 1.5rem;
+        }
+
+        .btn-submit-review:hover {
+            background-color: #dfb215;
+            color: #111;
+        }
+
+        .rate-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: #2D2D2D;
+            font-size: 1.8rem;
+        }
+
+        .rate-title i {
+            color: #F8C31C;
+            margin-right: 0.5rem;
+        }
+
+        .select-rating-text {
+            color: #555;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        /* Custom Guest Login Modal */
+        .guest-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            z-index: 1050;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .guest-modal-overlay.show {
+            display: flex;
+            opacity: 1;
+        }
+
+        .guest-modal {
+            background: #fff;
+            border-radius: 16px;
+            padding: 3rem 2.5rem;
+            max-width: 420px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .guest-modal-overlay.show .guest-modal {
+            transform: translateY(0);
+        }
+
+        .guest-modal-icon {
+            width: 70px;
+            height: 70px;
+            background: #FDF1D5;
+            color: #C49A45;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 1.5rem auto;
+        }
+
+        .guest-modal h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            color: #2D2D2D;
+            margin-bottom: 1rem;
+        }
+
+        .guest-modal p {
+            color: #666;
+            margin-bottom: 2rem;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .guest-modal .btn-login {
+            background-color: #F4C41B;
+            color: #111;
+            font-weight: 600;
+            border: none;
+            border-radius: 8px;
+            padding: 0.8rem 2rem;
+            width: 100%;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .guest-modal .btn-login:hover {
+            background-color: #dfb215;
+            color: #111;
+        }
+
+        .guest-modal .btn-close-modal {
+            background: transparent;
+            border: none;
+            color: #aaa;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            text-decoration: underline;
+            transition: color 0.2s;
+        }
+
+        .guest-modal .btn-close-modal:hover {
+            color: #666;
+        }
+    </style>
+
+    <section class="contact-new-section py-5">
+        <div class="container py-4">
+            <div class="text-center mb-2">
+                <div class="section-subtitle">Get in touch</div>
+                <h2 class="section-title">Contact & Feedback</h2>
+            </div>
+
+            <div class="row g-4 align-items-stretch mt-3">
+                <div class="col-lg-4">
+                    <div class="contact-card">
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-solid fa-location-dot"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h6>Address</h6>
+                                <p>CCLMS, Contai, India</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-solid fa-phone"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h6>Call Us</h6>
+                                <p>+91 2583691235</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h6>Whatsapp Us</h6>
+                                <p>+91 3265489526</p>
+                            </div>
+                        </div>
+                        <div class="contact-info-item">
+                            <div class="contact-info-icon">
+                                <i class="fa-solid fa-envelope"></i>
+                            </div>
+                            <div class="contact-info-text">
+                                <h6>Email Us</h6>
+                                <p>santusau@gmail.com</p>
+                            </div>
+                        </div>
+
+                        <div class="map-container">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117926.24135547926!2d87.69741544335937!3d21.776657900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a03264669f9d789%3A0xe985d7da0019672f!2sContai%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+                    <div class="feedback-card text-center">
+                        <h3 class="rate-title"><i class="fa-solid fa-star"></i> Rate Our Service</h3>
+
+                        <form id="feedbackForm">
+                            <div class="star-rating" id="starRating">
+                                <i class="fa-solid fa-star" data-rating="1"></i>
+                                <i class="fa-solid fa-star" data-rating="2"></i>
+                                <i class="fa-solid fa-star" data-rating="3"></i>
+                                <i class="fa-solid fa-star" data-rating="4"></i>
+                                <i class="fa-solid fa-star" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" name="rating" id="ratingInput" value="<?php echo $existing_rating; ?>">
+
+                            <div class="select-rating-text">
+                                <?php echo $user_has_review ? 'Update your rating' : 'Select Rating'; ?>
+                            </div>
+
+                            <textarea name="message" class="form-control" rows="6" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+
+                            <button type="submit" class="btn-submit-review">
+                                <?php echo $user_has_review ? 'Update Review' : 'Submit Review'; ?>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Custom Guest Modal -->
+    <div class="guest-modal-overlay" id="guestModal">
+        <div class="guest-modal">
+            <div class="guest-modal-icon">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <h4>Login Required</h4>
+            <p>You need to be logged in to share your valuable feedback with us.</p>
+            <a href="login.php" class="btn-login">Go to Login</a>
+            <button class="btn-close-modal" id="closeGuestModal">Maybe Later</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const stars = document.querySelectorAll('#starRating i');
+            const ratingInput = document.getElementById('ratingInput');
+            const isLoggedIn = <?php echo isset($_SESSION['user_id']) ? 'true' : 'false'; ?>;
+            const guestModal = document.getElementById('guestModal');
+            const closeGuestModal = document.getElementById('closeGuestModal');
+            const feedbackForm = document.getElementById('feedbackForm');
+
+
+            // Initialize stars if existing rating
+            highlightStars(ratingInput.value);
+
+            stars.forEach(star => {
+                star.addEventListener('mouseover', function() {
+                    const rating = this.getAttribute('data-rating');
+                    highlightStars(rating);
+                });
+
+                star.addEventListener('mouseout', function() {
+                    const rating = ratingInput.value;
+                    highlightStars(rating);
+                });
+
+                star.addEventListener('click', function() {
+                    const rating = this.getAttribute('data-rating');
+                    ratingInput.value = rating;
+                    highlightStars(rating);
+                });
+            });
+
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    if (star.getAttribute('data-rating') <= rating && rating > 0) {
+                        star.style.color = '#F8C31C';
+                    } else {
+                        star.style.color = '#e0e0e0';
+                    }
+                });
+            }
+
+            // Guest Modal Logic
+            if (closeGuestModal) {
+                closeGuestModal.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    guestModal.classList.remove('show');
+                    setTimeout(() => guestModal.style.display = 'none', 300);
+                });
+            }
+
+            // Form Submit Logic
+            if (feedbackForm) {
+                feedbackForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+
+                    if (!isLoggedIn) {
+                        guestModal.style.display = 'flex';
+                        // small delay for transition
+                        setTimeout(() => guestModal.classList.add('show'), 10);
+                        return;
+                    }
+
+                    if (ratingInput.value == 0) {
+                        showToast('Please select a rating before submitting.', 'error');
+                        return;
+                    }
+
+                    const message = feedbackForm.querySelector('textarea[name="message"]').value.trim();
+                    if (message.length < 30 || message.length > 120) {
+                        showToast('Your review must be between 20 and 50 characters.', 'error');
+                        return;
+                    }
+
+                    // Basic spam/gibberish validation
+                    // 1. Check for repeated characters (e.g., 'aaaaaa')
+                    if (/(.)\1{4,}/.test(message)) {
+                        showToast('Please provide relevant feedback, avoid repeating characters.', 'error');
+                        return;
+                    }
+                    // 2. Check if the message is one long continuous word without spaces
+                    if (message.indexOf(' ') === -1 && message.length > 15) {
+                        showToast('Please provide a proper sentence with spaces.', 'error');
+                        return;
+                    }
+
+                    const formData = new FormData(feedbackForm);
+                    const submitBtn = feedbackForm.querySelector('.btn-submit-review');
+                    const originalBtnText = submitBtn.innerHTML;
+                    submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+                    submitBtn.disabled = true;
+
+                    fetch('feedback_action.php', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                showToast(data.message, 'success');
+                                submitBtn.innerHTML = 'Update Review';
+                            } else {
+                                showToast(data.message, 'error');
+                                submitBtn.innerHTML = originalBtnText;
+                            }
+                        })
+                        .catch(error => {
+                            showToast('An error occurred. Please try again.', 'error');
+                            submitBtn.innerHTML = originalBtnText;
+                        })
+                        .finally(() => {
+                            submitBtn.disabled = false;
+                        });
+                });
+            }
+        });
+    </script>
 
     <!-- Footer Inclusion -->
     <?php include_once('footer.php'); ?>
@@ -1470,6 +2237,80 @@ global $connect;
                 }
             }
 
+            // Custom Testimonial Dot Scrollbar Logic
+            const testiSlider = document.getElementById('testiScrollSlider');
+            const testiDotsContainer = document.getElementById('testiDotsContainer');
+            const testiPrev = document.getElementById('testiScrollPrev');
+            const testiNext = document.getElementById('testiScrollNext');
+
+            if (testiSlider && testiDotsContainer) {
+                const testiItems = testiSlider.querySelectorAll('.testi-scroll-item');
+                const itemCount = testiItems.length;
+
+                // Create Dots matching item count
+                testiDotsContainer.innerHTML = '';
+                for (let i = 0; i < itemCount; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'cat-dot-item' + (i === 0 ? ' active' : '');
+                    dot.setAttribute('title', `Go to testimonial ${i + 1}`);
+                    dot.addEventListener('click', function() {
+                        if (testiItems[i]) {
+                            testiItems[i].scrollIntoView({
+                                behavior: 'smooth',
+                                block: 'nearest',
+                                inline: 'start'
+                            });
+                        }
+                    });
+                    testiDotsContainer.appendChild(dot);
+                }
+
+                const dots = testiDotsContainer.querySelectorAll('.cat-dot-item');
+
+                function updateActiveDotTesti() {
+                    const sliderRect = testiSlider.getBoundingClientRect();
+                    let activeIndex = 0;
+                    let minDiff = Infinity;
+
+                    testiItems.forEach((item, index) => {
+                        const itemRect = item.getBoundingClientRect();
+                        const diff = Math.abs(itemRect.left - sliderRect.left);
+                        if (diff < minDiff) {
+                            minDiff = diff;
+                            activeIndex = index;
+                        }
+                    });
+
+                    dots.forEach((dot, index) => {
+                        if (index === activeIndex) {
+                            dot.classList.add('active');
+                        } else {
+                            dot.classList.remove('active');
+                        }
+                    });
+                }
+
+                testiSlider.addEventListener('scroll', updateActiveDotTesti);
+                window.addEventListener('resize', updateActiveDotTesti);
+
+                if (testiPrev) {
+                    testiPrev.addEventListener('click', function() {
+                        testiSlider.scrollBy({
+                            left: -320,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+                if (testiNext) {
+                    testiNext.addEventListener('click', function() {
+                        testiSlider.scrollBy({
+                            left: 320,
+                            behavior: 'smooth'
+                        });
+                    });
+                }
+            }
+
             // Custom Product Dot Scrollbar Logic
             const prodSlider = document.getElementById('productScrollSlider');
             const prodDotsContainer = document.getElementById('prodDotsContainer');
@@ -1555,7 +2396,7 @@ global $connect;
                     // ==========================================================
                     // ⚙️ SPEED CONTROLS
                     // ==========================================================
-                    this.typeSpeed = options.typeSpeed || 120; // Type korar speed (100 theke 150 kora holo - joto barabe toto aste type hobe)
+                    this.typeSpeed = options.typeSpeed || 120; // Type korar speed
                     this.deleteSpeed = options.deleteSpeed || 40; //deletespeed
                     this.holdTime = options.holdTime || 3000; // Hold time
                     this.pauseTime = options.pauseTime || 500; // pause time to start new line
