@@ -1,0 +1,13 @@
+# ===================================================
+# APACHE SERVER CONFIGURATION - SIDDHA ART CREATION
+# ===================================================
+
+# Seamless 404 Error Handler (Preserves requested URL)
+ErrorDocument 404 /Art_creation/404.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    
+    # Disable directory listing for security
+    Options -Indexes
+</IfModule>

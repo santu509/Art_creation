@@ -601,7 +601,7 @@ $initialPaginationHTML = renderPaginationHTML($initialData['page'], $initialData
   .action-buttons {
     position: absolute;
     top: 10px;
-    right: -50px;
+    right: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -695,7 +695,7 @@ $initialPaginationHTML = renderPaginationHTML($initialData['page'], $initialData
     width: 100%;
     padding: 12px;
     border-radius: 12px;
-    background: #FDFBF7;
+    background: #f8e5c0;
     color: #4A4036;
     border: 1px solid #EBE5D9;
     font-family: 'Outfit', sans-serif;

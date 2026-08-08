@@ -647,7 +647,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
     .action-buttons {
         position: absolute;
         top: 10px;
-        right: -50px;
+        right: 10px;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -1002,15 +1002,28 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
             <!-- Unified Main Action Buttons Row -->
             <div class="d-flex align-items-center gap-3 mb-4">
                 <?php if (!empty($externalLinks)): ?>
-                    <!-- Single Large Premium Gold CTA Button -->
-                    <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
-                        <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Order Now
-                    </button>
+                    <?php if ($isLoggedIn): ?>
+                        <!-- Single Large Premium Gold CTA Button for Logged-In User -->
+                        <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#buyOptionsModal">
+                            <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Order Now
+                        </button>
+                    <?php else: ?>
+                        <!-- Login Check Guard for Guest User -->
+                        <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="if(typeof showToast==='function'){showToast('Login Required: Please log in to your account to place an order.', 'info');}">
+                            <i class="fa-solid fa-shield-halved fs-5 me-2"></i> Order Now
+                        </button>
+                    <?php endif; ?>
                 <?php else: ?>
-                    <!-- Fallback Direct Order Button if no external links -->
-                    <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg flex-grow-1 text-decoration-none">
-                        <i class="fa-solid fa-paper-plane fs-5 me-2"></i> Inquire &amp; Order Direct
-                    </a>
+                    <?php if ($isLoggedIn): ?>
+                        <!-- Fallback Direct Order Button if no external links -->
+                        <a href="contact.php?inquire=<?= urlencode($product['name']) ?>" class="btn-main-order-gold shadow-lg flex-grow-1 text-decoration-none">
+                            <i class="fa-solid fa-paper-plane fs-5 me-2"></i> Inquire &amp; Order Direct
+                        </a>
+                    <?php else: ?>
+                        <button type="button" class="btn-main-order-gold shadow-lg flex-grow-1" data-bs-toggle="modal" data-bs-target="#loginModal" onclick="if(typeof showToast==='function'){showToast('Login Required: Please log in to your account to place an order.', 'info');}">
+                            <i class="fa-solid fa-paper-plane fs-5 me-2"></i> Inquire &amp; Order Direct
+                        </button>
+                    <?php endif; ?>
                 <?php endif; ?>
             </div>
 
@@ -1174,18 +1187,33 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                                 $iconClass = 'fa-solid fa-cart-shopping';
                             }
                         ?>
-                            <a href="<?= $url ?>" target="_blank" rel="noopener noreferrer" class="partner-card text-decoration-none">
-                                <div class="partner-icon-box" style="background: <?= $iconBg ?>; color: <?= $iconColor ?>;">
-                                    <i class="<?= $iconClass ?>"></i>
-                                </div>
-                                <div class="partner-info ms-3 flex-grow-1">
-                                    <div class="partner-name">Order via <?= $platform ?></div>
-                                    <div class="partner-subtext"><i class="fa-solid fa-shield-cat me-1" style="color: #DFBA5A;"></i> Authorized Delivery Partner</div>
-                                </div>
-                                <div class="partner-arrow">
-                                    <i class="fa-solid fa-chevron-right"></i>
-                                </div>
-                            </a>
+                            <?php if ($isLoggedIn): ?>
+                                <a href="<?= $url ?>" target="_blank" rel="noopener noreferrer" class="partner-card text-decoration-none">
+                                    <div class="partner-icon-box" style="background: <?= $iconBg ?>; color: <?= $iconColor ?>;">
+                                        <i class="<?= $iconClass ?>"></i>
+                                    </div>
+                                    <div class="partner-info ms-3 flex-grow-1">
+                                        <div class="partner-name">Order via <?= $platform ?></div>
+                                        <div class="partner-subtext"><i class="fa-solid fa-shield-cat me-1" style="color: #DFBA5A;"></i> Authorized Delivery Partner</div>
+                                    </div>
+                                    <div class="partner-arrow">
+                                        <i class="fa-solid fa-chevron-right"></i>
+                                    </div>
+                                </a>
+                            <?php else: ?>
+                                <a href="#" onclick="event.preventDefault(); handleGuestOrderClick();" class="partner-card text-decoration-none">
+                                    <div class="partner-icon-box" style="background: <?= $iconBg ?>; color: <?= $iconColor ?>;">
+                                        <i class="<?= $iconClass ?>"></i>
+                                    </div>
+                                    <div class="partner-info ms-3 flex-grow-1">
+                                        <div class="partner-name">Order via <?= $platform ?> <span class="badge bg-warning text-dark ms-2" style="font-size: 0.65rem;">Login Required</span></div>
+                                        <div class="partner-subtext"><i class="fa-solid fa-shield-cat me-1" style="color: #DFBA5A;"></i> Authorized Delivery Partner</div>
+                                    </div>
+                                    <div class="partner-arrow">
+                                        <i class="fa-solid fa-lock text-warning"></i>
+                                    </div>
+                                </a>
+                            <?php endif; ?>
                         <?php endforeach; ?>
                     <?php endif; ?>
                 </div>
@@ -1201,5 +1229,23 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
         </div>
     </div>
 </div>
+
+<script>
+    function handleGuestOrderClick() {
+        const buyModalEl = document.getElementById('buyOptionsModal');
+        if (buyModalEl) {
+            const buyModal = bootstrap.Modal.getInstance(buyModalEl);
+            if (buyModal) buyModal.hide();
+        }
+        const loginModalEl = document.getElementById('loginModal');
+        if (loginModalEl) {
+            const loginModal = bootstrap.Modal.getOrCreateInstance(loginModalEl);
+            loginModal.show();
+        }
+        if (typeof showToast === 'function') {
+            showToast('Login Required: Please log in to your account to place an order.', 'info');
+        }
+    }
+</script><?php echo "\n"; ?>
 
 <?php include_once('footer.php'); ?>

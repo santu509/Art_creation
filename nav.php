@@ -110,8 +110,8 @@ global $connect;
             z-index: 1045;
             /* padding: 15px 0; */
             background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
-            border: 1px solid transparent;
+            border: 0px solid transparent;
+            -webkit-backface-visibility: hidden;
             transition: all 0.4s ease-in-out;
         }
 
@@ -931,35 +931,38 @@ global $connect;
             margin-top: 15px;
         }
 
-        /* Profile picture in Navbar styling */
+        /* Profile picture in Navbar styling (BULLETPROOF CIRCLE FIX) */
         .profile-container {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #C5A880;
-            padding: 2px;
-            display: inline-flex;
+            width: 45px !important;
+            height: 45px !important;
+            padding: 0 !important;
+            /* Button er default padding remove kora holo */
+            border-radius: 50% !important;
+            display: inline-flex !important;
             align-items: center;
             justify-content: center;
-            transition: var(--transition-smooth);
-            cursor: pointer;
             background-color: transparent;
+            border: none !important;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        /* Lukiye thaka dropdown arrow take puro delete kora holo, jate image squish na hoy */
+        .profile-container.dropdown-toggle::after {
+            display: none !important;
+            content: none !important;
         }
 
         .profile-pic {
-            width: 45px;
-            height: 40px;
-            object-fit: cover;
-
-            /* Changes made below */
-            display: block;
-            /* Ensures vertical margin is respected */
-            margin-top: 10px;
-            /* Use px or rem instead of % for predictable spacing */
-
-            border-radius: 50%;
-            border: 2px solid #f0b82c;
-            box-shadow: 0 4px 15px rgba(246, 234, 176, 0.5);
+            width: 45px !important;
+            height: 45px !important;
+            object-fit: cover !important;
+            border-radius: 50% !important;
+            border: 2px solid #f0b82c !important;
+            box-shadow: 0 4px 15px rgba(246, 234, 176, 0.5) !important;
+            margin-top: 15px !important;
+            flex-shrink: 0 !important;
+            /* Flexbox ke bola holo ei image ke konodin chyapta korbi na */
         }
 
         .profile-dropdown-menu {
@@ -1341,7 +1344,7 @@ global $connect;
 
                         <!-- Wishlist Icon (Desktop only) -->
                         <a href="wishlist.php" class="icon-link position-relative text-decoration-none d-none d-lg-inline-flex" title="Saved Artworks">
-                            <i class="fa-regular fa-heart"></i>
+                            <i class="<?php echo ($initialWishlistCount > 0) ? 'fa-solid fa-heart text-danger' : 'fa-regular fa-heart'; ?>" id="navWishlistIcon"></i>
                             <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge wishlist-badge-count" id="wishlistNavBadge">
                                 <?php echo $initialWishlistCount; ?>
                             </span>
@@ -1360,7 +1363,7 @@ global $connect;
 
                         <!-- Profile Dropdown (Visible when Logged In on Desktop only) -->
                         <?php if ($isLoggedIn): ?>
-                            <div class="dropdown d-none d-lg-block" id="profileDropdown" data-bs-toggle="tooltip" data-bs-placement="top" title="Profile">
+                            <div class="dropdown d-none d-lg-block" id="profileDropdown">
                                 <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic">
                                 </button>
@@ -1626,7 +1629,7 @@ global $connect;
         <!-- Wishlist -->
         <a href="wishlist.php" class="mobile-bottom-nav-item <?php echo ($curNavPage == 'wishlist.php') ? 'active' : ''; ?>" id="bottomNavWishlist">
             <div class="position-relative d-inline-flex">
-                <i class="fa-solid fa-heart"></i>
+                <i class="<?php echo ($initialWishlistCount > 0) ? 'fa-solid fa-heart text-danger' : 'fa-regular fa-heart'; ?>" id="mobileNavWishlistIcon"></i>
                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill custom-badge wishlist-badge-count" id="wishlistMobileNavBadge" style="font-size: 0.58rem; padding: 2px 5px;">
                     <?php echo $initialWishlistCount; ?>
                 </span>
@@ -2061,14 +2064,12 @@ global $connect;
                     indicator.style.opacity = '1';
                 }
 
-                // Protita link e mouse gele indicator move korbe
                 navLinks.forEach(link => {
                     link.addEventListener('mouseenter', function() {
                         setIndicator(this);
                     });
                 });
 
-                // Nav theke mouse beriye gele abar Active item e phire asbe
                 navContainer.addEventListener('mouseleave', function() {
                     const activeLink = navContainer.querySelector('.nav-link.active');
                     if (activeLink) {
@@ -2078,7 +2079,6 @@ global $connect;
                     }
                 });
 
-                // Page load er pore initial state set kora
                 setTimeout(() => {
                     const activeLink = navContainer.querySelector('.nav-link.active');
                     if (activeLink) setIndicator(activeLink);
@@ -2155,6 +2155,19 @@ global $connect;
                                 badge.innerText = data.wishlist_count;
                             }
                         });
+
+                        // Update Navbar Wishlist Heart Icons (Desktop & Mobile)
+                        if (typeof data.wishlist_count !== 'undefined') {
+                            const desktopNavIcon = document.getElementById('navWishlistIcon');
+                            const mobileNavIcon = document.getElementById('mobileNavWishlistIcon');
+                            if (data.wishlist_count > 0) {
+                                if (desktopNavIcon) desktopNavIcon.className = 'fa-solid fa-heart text-danger';
+                                if (mobileNavIcon) mobileNavIcon.className = 'fa-solid fa-heart text-danger';
+                            } else {
+                                if (desktopNavIcon) desktopNavIcon.className = 'fa-regular fa-heart';
+                                if (mobileNavIcon) mobileNavIcon.className = 'fa-regular fa-heart';
+                            }
+                        }
 
                         // Update icon across ALL buttons on the page for this product_id
                         const allMatchingBtns = document.querySelectorAll(`[data-product-id="${productId}"]`);

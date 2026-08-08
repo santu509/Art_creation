@@ -511,6 +511,254 @@ if (isset($_SESSION['user_id'])) {
     }
 
     /* -----------------------------------------
+       Animated 4-Card Asymmetric Bento Grid (2 Large, 2 Small)
+    ----------------------------------------- */
+    .about-card-grid {
+        position: relative;
+    }
+
+    /* Keyframe Floating Animations */
+    @keyframes gentleFloat1 {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-8px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes gentleFloat2 {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(8px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes goldPulseRing {
+        0% {
+            box-shadow: 0 0 0 0 rgba(197, 155, 39, 0.4);
+        }
+
+        70% {
+            box-shadow: 0 0 0 12px rgba(197, 155, 39, 0);
+        }
+
+        100% {
+            box-shadow: 0 0 0 0 rgba(197, 155, 39, 0);
+        }
+    }
+
+    @keyframes shimmerSweep {
+        0% {
+            transform: translateX(-150%) skewX(-25deg);
+        }
+
+        100% {
+            transform: translateX(250%) skewX(-25deg);
+        }
+    }
+
+    .about-interactive-card {
+        background: #FFFFFF;
+        border-radius: 24px;
+        border: 1px solid rgba(197, 155, 39, 0.24);
+        box-shadow: 0 12px 35px rgba(26, 22, 18, 0.05);
+        transition: transform 0.45s cubic-bezier(0.165, 0.84, 0.44, 1),
+            box-shadow 0.45s cubic-bezier(0.165, 0.84, 0.44, 1),
+            border-color 0.45s ease;
+        position: relative;
+        overflow: hidden;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 1;
+    }
+
+    /* Floating Classes */
+    .float-card-1 {
+        animation: gentleFloat1 6s ease-in-out infinite;
+    }
+
+    .float-card-2 {
+        animation: gentleFloat2 5.5s ease-in-out infinite 0.5s;
+    }
+
+    .float-card-3 {
+        animation: gentleFloat2 6.5s ease-in-out infinite 1s;
+    }
+
+    .float-card-4 {
+        animation: gentleFloat1 5.8s ease-in-out infinite 1.5s;
+    }
+
+    /* Size Variations: 2 Large Cards, 2 Small Cards */
+    .about-card-lg {
+        padding: 2rem 1.6rem;
+        background: linear-gradient(145deg, #FFFFFF 0%, #FAF6EE 100%);
+        border: 1.5px solid rgba(197, 155, 39, 0.32);
+    }
+
+    .about-card-sm {
+        padding: 1.35rem 1.2rem;
+        background: #FFFFFF;
+    }
+
+    /* Ambient Radial Background Glow */
+    .about-interactive-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle at 100% 0%, rgba(223, 186, 90, 0.18) 0%, rgba(255, 255, 255, 0) 70%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: -1;
+    }
+
+    /* Top Animated Gold Line */
+    .about-interactive-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 50%, #9B781E 100%);
+        transition: width 0.45s ease-in-out;
+    }
+
+    /* Shimmer Light Reflection Effect */
+    .about-interactive-card .shimmer-light {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.6) 50%, rgba(255, 255, 255, 0) 100%);
+        pointer-events: none;
+        opacity: 0;
+        z-index: 2;
+    }
+
+    .about-interactive-card:hover {
+        animation-play-state: paused !important;
+        transform: translateY(-12px) scale(1.03) !important;
+        box-shadow: 0 25px 50px rgba(197, 155, 39, 0.25);
+        border-color: rgba(197, 155, 39, 0.65);
+    }
+
+    .about-interactive-card:hover::before {
+        opacity: 1;
+    }
+
+    .about-interactive-card:hover::after {
+        width: 100%;
+    }
+
+    .about-interactive-card:hover .shimmer-light {
+        opacity: 1;
+        animation: shimmerSweep 0.85s ease-in-out;
+    }
+
+    /* Icon Box & Glow */
+    .about-card-icon-box {
+        width: 50px;
+        height: 50px;
+        border-radius: 16px;
+        background: linear-gradient(135deg, rgba(223, 186, 90, 0.18) 0%, rgba(197, 155, 39, 0.28) 100%);
+        color: #9B781E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.35rem;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(197, 155, 39, 0.32);
+        animation: goldPulseRing 3s infinite;
+    }
+
+    .about-card-lg .about-card-icon-box {
+        width: 58px;
+        height: 58px;
+        font-size: 1.5rem;
+        border-radius: 18px;
+    }
+
+    .about-interactive-card:hover .about-card-icon-box {
+        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
+        color: #1A1612;
+        transform: scale(1.15) rotate(8deg);
+        box-shadow: 0 10px 25px rgba(197, 155, 39, 0.45);
+    }
+
+
+
+    /* Titles & Text */
+    .about-card-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 1.15rem;
+        color: #1A1612;
+        margin-top: 0.85rem;
+        margin-bottom: 0.35rem;
+        transition: color 0.3s ease;
+    }
+
+    .about-card-lg .about-card-title {
+        font-size: 1.35rem;
+        margin-top: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .about-interactive-card:hover .about-card-title {
+        color: #9B781E;
+    }
+
+    .about-card-desc {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.86rem;
+        color: #5C5449;
+        line-height: 1.55;
+        margin-bottom: 0;
+    }
+
+    .about-card-lg .about-card-desc {
+        font-size: 0.92rem;
+        line-height: 1.65;
+    }
+
+    /* Feature Badge Pill on Large Cards */
+    .about-card-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        color: #9B781E;
+        background: rgba(197, 155, 39, 0.12);
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(197, 155, 39, 0.25);
+        margin-top: 0.85rem;
+    }
+
+    /* -----------------------------------------
        Section Utility Styles
     ----------------------------------------- */
     .section-title {
@@ -662,36 +910,168 @@ if (isset($_SESSION['user_id'])) {
     /* Horizontal Scroll Slider for Modern Category Cards */
     .category-scroll-slider {
         display: flex;
-        gap: 20px;
+        gap: 16px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
-        padding-top: 10px;
-        padding-bottom: 20px;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding: 12px 6px 24px 6px;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        /* Hide scrollbar Firefox */
         -ms-overflow-style: none;
-        /* Hide scrollbar IE/Edge */
     }
 
     .category-scroll-slider::-webkit-scrollbar {
         display: none;
-        /* Hide scrollbar Chrome/Safari */
     }
 
     .category-scroll-item {
-        flex: 0 0 280px;
-        min-width: 270px;
+        flex: 0 0 auto;
+        min-width: 235px;
         scroll-snap-align: start;
     }
 
-    @media (max-width: 767.98px) {
-        .category-scroll-item {
-            flex: 0 0 100%;
-            min-width: 100%;
+    @media (max-width: 576px) {
+        .category-scroll-slider {
+            gap: 0px !important;
+            padding-left: 0px !important;
+            padding-right: 0px !important;
         }
+
+        .category-scroll-item {
+            flex: 0 0 100% !important;
+            min-width: 100% !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            scroll-snap-align: center !important;
+            padding: 0 4px !important;
+        }
+
+        .category-btn-card {
+            width: 100% !important;
+            justify-content: space-between !important;
+        }
+    }
+
+    /* Sleek Low-Height Category Button Styling (Light Hover Color) */
+    .category-btn-card {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 18px;
+        background: linear-gradient(145deg, #FFFFFF 0%, #FAF7F2 100%);
+        border: 1.5px solid rgba(197, 155, 39, 0.28);
+        border-radius: 50px;
+        text-decoration: none;
+        box-shadow: 0 6px 20px rgba(26, 22, 18, 0.04);
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Light Warm Gold Gradient Background on Hover */
+    .category-btn-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #FAF3E3 0%, #F4E7C7 100%);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        z-index: 0;
+    }
+
+    .category-btn-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0%;
+        height: 3px;
+        background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);
+        transition: width 0.4s ease;
+        z-index: 2;
+    }
+
+    .category-btn-card:hover {
+        transform: translateY(-4px) scale(1.02);
+        box-shadow: 0 12px 28px rgba(197, 155, 39, 0.25);
+        border-color: #C59B27;
+    }
+
+    .category-btn-card:hover::before {
+        opacity: 1;
+    }
+
+    .category-btn-card:hover::after {
+        width: 80%;
+    }
+
+    .cat-btn-content {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        flex-grow: 1;
+        position: relative;
+        z-index: 1;
+    }
+
+    .cat-btn-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: 0.96rem;
+        color: #1A1612;
+        line-height: 1.2;
+        transition: color 0.3s ease;
+        white-space: nowrap;
+    }
+
+    .category-btn-card:hover .cat-btn-title {
+        color: #9B781E;
+    }
+
+    .cat-btn-count {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.8px;
+        text-transform: uppercase;
+        color: #8C7E6C;
+        margin-top: 1px;
+        transition: color 0.3s ease;
+    }
+
+    .category-btn-card:hover .cat-btn-count {
+        color: #7A6951;
+    }
+
+    .cat-btn-arrow {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background: rgba(197, 155, 39, 0.12);
+        color: #9B781E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.7rem;
+        transition: all 0.4s ease;
+        flex-shrink: 0;
+        position: relative;
+        z-index: 1;
+    }
+
+    .category-btn-card:hover .cat-btn-arrow {
+        background: #C59B27;
+        color: #FFFFFF;
+        transform: translateX(3px);
+    }
+
+    .category-btn-card:hover .cat-btn-arrow {
+        background: rgba(223, 186, 90, 0.25);
+        color: #DFBA5A;
+        transform: translateX(4px);
     }
 
     /* Modern Custom Dot Indicator Scrollbar Styles */
@@ -858,7 +1238,7 @@ if (isset($_SESSION['user_id'])) {
 
     .badge-available {
         position: absolute;
-        top: 12px;
+        top: 22px !important;
         left: 12px;
         z-index: 2;
     }
@@ -891,7 +1271,7 @@ if (isset($_SESSION['user_id'])) {
     .action-buttons {
         position: absolute;
         top: 10px;
-        right: -50px;
+        right: 10px;
         display: flex;
         flex-direction: column;
         gap: 8px;
@@ -984,7 +1364,7 @@ if (isset($_SESSION['user_id'])) {
         width: 100%;
         padding: 12px;
         border-radius: 12px;
-        background: #FDFBF7;
+        background: #f8e5c0;
         color: #4A4036;
         border: 1px solid #EBE5D9;
         font-family: 'Outfit', sans-serif;
@@ -1064,78 +1444,7 @@ if (isset($_SESSION['user_id'])) {
         transform: translateY(-3px);
     }
 
-    /* Ultra-Premium Minimalist Category Button */
-    .category-btn-card {
-        background: transparent;
-        border: 1px solid rgba(197, 155, 39, 0.3);
-        border-radius: 50px;
-        padding: 20px 30px;
-        text-decoration: none;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        position: relative;
-        overflow: hidden;
-        transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        min-height: 120px;
-    }
 
-    .category-btn-card::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: linear-gradient(135deg, #1A1612 0%, #2A241D 100%);
-        transform: translateY(100%);
-        transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
-        z-index: 0;
-    }
-
-    .category-btn-card:hover {
-        border-color: #1A1612;
-        transform: translateY(-5px);
-        box-shadow: 0 15px 35px rgba(26, 22, 18, 0.15);
-    }
-
-    .category-btn-card:hover::before {
-        transform: translateY(0);
-    }
-
-    .cat-btn-title {
-        font-family: 'Playfair Display', serif;
-        font-size: 1.35rem;
-        font-weight: 500;
-        letter-spacing: 0.5px;
-        color: #1A1612;
-        position: relative;
-        z-index: 1;
-        transition: color 0.5s ease;
-        margin-bottom: 8px;
-    }
-
-    .category-btn-card:hover .cat-btn-title {
-        color: #DFBA5A;
-    }
-
-    .cat-btn-count {
-        font-family: 'Outfit', sans-serif;
-        font-size: 0.75rem;
-        font-weight: 400;
-        letter-spacing: 2px;
-        color: #8C8276;
-        text-transform: uppercase;
-        position: relative;
-        z-index: 1;
-        transition: color 0.5s ease;
-    }
-
-    .category-btn-card:hover .cat-btn-count {
-        color: #E2DDD5;
-    }
 
     /* Testimonial Section */
     .testimonial-card {
@@ -1202,6 +1511,466 @@ if (isset($_SESSION['user_id'])) {
         box-shadow: 0 0 0 3px rgba(223, 186, 90, 0.15);
         background: #FFFFFF;
     }
+
+
+    .testi-scroll-slider {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: 1.5rem;
+        -ms-overflow-style: none;
+        /* IE/Edge */
+        scrollbar-width: none;
+        /* Firefox */
+        scroll-behavior: smooth;
+        padding-bottom: 15px;
+    }
+
+    .testi-scroll-slider::-webkit-scrollbar {
+        display: none;
+        /* Chrome/Safari */
+    }
+
+    .testi-scroll-item {
+        flex: 0 0 calc(33.333% - 1rem);
+        scroll-snap-align: start;
+    }
+
+    @media (max-width: 991.98px) {
+        .testi-scroll-item {
+            flex: 0 0 calc(50% - 0.75rem);
+        }
+    }
+
+    @media (max-width: 767.98px) {
+        .testi-scroll-item {
+            flex: 0 0 100%;
+        }
+    }
+
+
+    /* -----------------------------------------
+           Contact & Feedback Section (Ultra-Modern UX & Luxury Colors)
+        ----------------------------------------- */
+    .contact-new-section {
+        background: linear-gradient(180deg, #FAF8F5 0%, #F4EFE6 100%);
+        font-family: 'Outfit', sans-serif;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .contact-new-section .bg-ambient-glow-contact {
+        position: absolute;
+        width: 450px;
+        height: 450px;
+        background: radial-gradient(circle, rgba(223, 186, 90, 0.15) 0%, rgba(250, 248, 245, 0) 70%);
+        top: -100px;
+        right: -80px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .contact-new-section .bg-ambient-glow-contact-2 {
+        position: absolute;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(197, 155, 39, 0.12) 0%, rgba(250, 248, 245, 0) 70%);
+        bottom: -80px;
+        left: -60px;
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .contact-new-section .section-subtitle {
+        color: #9B781E;
+        font-size: 0.85rem;
+        letter-spacing: 2.2px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-bottom: 0.5rem;
+    }
+
+    .contact-new-section .section-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        font-size: clamp(2rem, 4vw, 2.75rem);
+        color: #1A1612;
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2.5rem;
+    }
+
+    .contact-new-section .section-title::after {
+        content: '';
+        position: absolute;
+        width: 65px;
+        height: 3px;
+        background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 100%);
+        border-radius: 2px;
+        bottom: -8px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .contact-card,
+    .feedback-card {
+        background-color: #FFFFFF;
+        border-radius: 24px;
+        border: 1.5px solid rgba(197, 155, 39, 0.25);
+        box-shadow: 0 15px 40px rgba(26, 22, 18, 0.05);
+        padding: 1.8rem 1.8rem;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        z-index: 1;
+    }
+
+    .contact-card::before,
+    .feedback-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 4px;
+        background: linear-gradient(90deg, #DFBA5A 0%, #C59B27 50%, #9B781E 100%);
+        opacity: 0.6;
+    }
+
+    .contact-card:hover,
+    .feedback-card:hover {
+        box-shadow: 0 22px 50px rgba(197, 155, 39, 0.18);
+        border-color: rgba(197, 155, 39, 0.5);
+    }
+
+    .contact-info-item {
+        display: flex;
+        align-items: center;
+        gap: 1.1rem;
+        margin-bottom: 1.1rem;
+        padding: 10px 14px;
+        border-radius: 16px;
+        background: rgba(250, 248, 245, 0.7);
+        border: 1px solid rgba(197, 155, 39, 0.15);
+        transition: all 0.35s ease;
+        text-decoration: none;
+    }
+
+    .contact-info-item:hover {
+        background: #FFFFFF;
+        border-color: rgba(197, 155, 39, 0.4);
+        transform: translateX(6px);
+        box-shadow: 0 6px 18px rgba(197, 155, 39, 0.12);
+    }
+
+    .contact-info-icon {
+        width: 46px;
+        height: 46px;
+        background: linear-gradient(135deg, rgba(223, 186, 90, 0.18) 0%, rgba(197, 155, 39, 0.28) 100%);
+        color: #9B781E;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        font-size: 1.2rem;
+        border: 1px solid rgba(197, 155, 39, 0.3);
+        transition: all 0.35s ease;
+        flex-shrink: 0;
+    }
+
+    .contact-info-item:hover .contact-info-icon {
+        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
+        color: #1A1612;
+        transform: scale(1.1);
+        box-shadow: 0 6px 16px rgba(197, 155, 39, 0.35);
+    }
+
+    .contact-info-text h6 {
+        margin-bottom: 0.1rem;
+        font-weight: 700;
+        color: #1A1612;
+        font-size: 0.98rem;
+        font-family: 'Playfair Display', serif;
+    }
+
+    .contact-info-text p,
+    .contact-info-text a {
+        margin-bottom: 0;
+        color: #5C5449;
+        font-size: 0.88rem;
+        text-decoration: none;
+        transition: color 0.25s ease;
+    }
+
+    .contact-info-item:hover .contact-info-text a {
+        color: #9B781E;
+        font-weight: 600;
+    }
+
+    .map-container {
+        border-radius: 18px;
+        overflow: hidden;
+        height: 140px;
+        margin-top: 1.2rem;
+        border: 1.5px solid rgba(197, 155, 39, 0.25);
+        box-shadow: 0 8px 24px rgba(26, 22, 18, 0.06);
+        position: relative;
+    }
+
+    .map-badge-overlay {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        background: rgba(26, 22, 18, 0.85);
+        backdrop-filter: blur(4px);
+        color: #DFBA5A;
+        font-size: 0.72rem;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid rgba(223, 186, 90, 0.3);
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .star-rating {
+        display: flex;
+        justify-content: center;
+        gap: 0.6rem;
+        margin: 1rem 0 0.8rem 0;
+        color: #E2DDD5;
+        font-size: 1.8rem;
+    }
+
+    .star-rating i {
+        transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+    }
+
+    .star-rating i:hover,
+    .star-rating i.active {
+        color: #FFB800;
+        transform: scale(1.25);
+        filter: drop-shadow(0 3px 10px rgba(255, 184, 0, 0.5));
+    }
+
+    /* Dynamic Rating Feeling Pill Badge */
+    .rating-feeling-wrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 44px;
+    }
+
+    .rating-feeling-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 7px 20px;
+        background: linear-gradient(145deg, #FAF7F2 0%, #F5EFE6 100%);
+        border: 1.5px solid rgba(197, 155, 39, 0.35);
+        border-radius: 50px;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1A1612;
+        box-shadow: 0 4px 14px rgba(26, 22, 18, 0.05);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .rating-emoji {
+        font-size: 1.3rem;
+        line-height: 1;
+        display: inline-block;
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.3);
+    }
+
+    .rating-feeling-pill.bump {
+        transform: scale(1.08);
+    }
+
+    .rating-feeling-pill.bump .rating-emoji {
+        transform: scale(1.3) rotate(-10deg);
+    }
+
+    /* Character Counter Tag */
+    .textarea-wrapper {
+        position: relative;
+    }
+
+    .char-count-tag {
+        position: absolute;
+        bottom: 12px;
+        right: 16px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #8C7E6C;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 2px 8px;
+        border-radius: 12px;
+        border: 1px solid rgba(197, 155, 39, 0.2);
+        pointer-events: none;
+    }
+
+    .feedback-card textarea {
+        border-radius: 16px;
+        border: 1.5px solid rgba(197, 155, 39, 0.28);
+        background: #FAF7F2;
+        padding: 1.1rem 1.2rem;
+        padding-bottom: 2.2rem;
+        resize: none;
+        box-shadow: none;
+        font-size: 0.95rem;
+        color: #1A1612;
+        transition: all 0.35s ease;
+    }
+
+    .feedback-card textarea:focus {
+        border-color: #C59B27;
+        background: #FFFFFF;
+        box-shadow: 0 0 0 4px rgba(197, 155, 39, 0.18);
+        outline: none;
+    }
+
+    .btn-submit-review {
+        background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 50%, #9B781E 100%);
+        color: #1A1612;
+        font-weight: 700;
+        border: none;
+        border-radius: 50px;
+        padding: 0.95rem 2.5rem;
+        width: 100%;
+        transition: all 0.35s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin-top: 1.2rem;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        box-shadow: 0 8px 24px rgba(197, 155, 39, 0.3);
+        cursor: pointer;
+    }
+
+    .btn-submit-review:hover {
+        color: #1A1612;
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px rgba(197, 155, 39, 0.5);
+    }
+
+    .rate-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #1A1612;
+        font-size: 1.85rem;
+    }
+
+    .rate-title i {
+        color: #FFB800;
+        margin-right: 0.4rem;
+        filter: drop-shadow(0 2px 6px rgba(255, 184, 0, 0.4));
+    }
+
+    .select-rating-text {
+        color: #7C7267;
+        font-weight: 600;
+        margin-bottom: 1.2rem;
+        font-size: 0.95rem;
+        letter-spacing: 0.5px;
+    }
+
+    /* Custom Guest Login Modal */
+    .guest-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        backdrop-filter: blur(4px);
+        z-index: 1050;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .guest-modal-overlay.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .guest-modal {
+        background: #fff;
+        border-radius: 16px;
+        padding: 3rem 2.5rem;
+        max-width: 420px;
+        text-align: center;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        transform: translateY(20px);
+        transition: transform 0.3s ease;
+    }
+
+    .guest-modal-overlay.show .guest-modal {
+        transform: translateY(0);
+    }
+
+    .guest-modal-icon {
+        width: 70px;
+        height: 70px;
+        background: #FDF1D5;
+        color: #C49A45;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2rem;
+        margin: 0 auto 1.5rem auto;
+    }
+
+    .guest-modal h4 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: #2D2D2D;
+        margin-bottom: 1rem;
+    }
+
+    .guest-modal p {
+        color: #666;
+        margin-bottom: 2rem;
+        font-family: 'Outfit', sans-serif;
+    }
+
+    .guest-modal .btn-login {
+        background-color: #F4C41B;
+        color: #111;
+        font-weight: 600;
+        border: none;
+        border-radius: 8px;
+        padding: 0.8rem 2rem;
+        width: 100%;
+        transition: all 0.3s;
+        text-decoration: none;
+        display: inline-block;
+    }
+
+    .guest-modal .btn-login:hover {
+        background-color: #dfb215;
+        color: #111;
+    }
+
+    .guest-modal .btn-close-modal {
+        background: transparent;
+        border: none;
+        color: #aaa;
+        font-size: 0.9rem;
+        margin-top: 1rem;
+        text-decoration: underline;
+        transition: color 0.2s;
+    }
+
+    .guest-modal .btn-close-modal:hover {
+        color: #666;
+    }
 </style>
 
 <body>
@@ -1227,7 +1996,7 @@ if (isset($_SESSION['user_id'])) {
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
                                     <a href="collection.php" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
-                                        <span>Explore Sacred Idols</span>
+                                        <span>Explore Collection</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
                                     </a>
                                 </div>
@@ -1254,7 +2023,7 @@ if (isset($_SESSION['user_id'])) {
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
                                     <a href="collection.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Shop Terracotta Decor</span>
+                                        <span>Explore Collection</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
                                     </a>
                                 </div>
@@ -1281,11 +2050,8 @@ if (isset($_SESSION['user_id'])) {
                                 </p>
                                 <div class="hero-buttons-wrapper d-flex align-items-center gap-3 flex-wrap">
                                     <a href="contact.php?type=custom-statue" class="hero-btn-primary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill text-uppercase fw-bold text-decoration-none border-0">
-                                        <span>Commission Custom Statue</span>
+                                        <span>Explore Collection</span>
                                         <i class="fa-solid fa-arrow-right-long"></i>
-                                    </a>
-                                    <a href="aboutus.php" class="hero-btn-secondary d-inline-flex align-items-center justify-content-center gap-2 px-4 py-3 rounded-pill fw-semibold text-decoration-none">
-                                        <span>Read Artisan Process</span>
                                     </a>
                                 </div>
                             </div>
@@ -1353,27 +2119,90 @@ if (isset($_SESSION['user_id'])) {
                         <span>Read Our Story</span><i class="fa-solid fa-arrow-right-long ms-2"></i>
                     </a>
                 </div>
-                <!-- Right Side (Updated Layout) -->
-                <div class="col-12 col-lg-7 d-flex justify-content-center align-items-center mt-5 mt-lg-0">
-                    <div class="story-image-wrapper position-relative" style="width: 100%; max-width: 500px; aspect-ratio: 1/1;">
-                        <!-- Gold Outline -->
-                        <div class="story-outline position-absolute border rounded-4 border-2" style="border-color: #C59B27 !important; top: -15px; right: 15px; width: 90%; height: 90%; z-index: 0;"></div>
-
-                        <!-- Main Back Image -->
-                        <div class="story-img-main position-absolute rounded-4 overflow-hidden shadow-lg" style="top: 0; left: 0; width: 80%; height: 80%; border: 8px solid #FFFFFF; z-index: 1;">
-                            <img src="asset/image/artisan_story.jpg" alt="Artisan Sculpting" class="img-fluid w-100 h-100 object-fit-cover">
-                        </div>
-
-                        <!-- EST Badge -->
-                        <div class="story-badge position-absolute rounded-circle d-flex flex-column justify-content-center align-items-center shadow" style="top: -20px; left: -20px; width: 90px; height: 90px; background-color: #3b2a22; z-index: 2; border: 4px solid #FAF8F5;">
-                            <div class="w-100 h-100 rounded-circle position-absolute" style="border: 1px dashed rgba(223, 186, 90, 0.6); top: 0; left: 0; transform: scale(0.85);"></div>
-                            <span style="color: #DFBA5A; font-size: 0.7rem; font-family: 'Outfit', sans-serif; letter-spacing: 1px; margin-bottom: -2px;">EST.</span>
-                            <span style="color: #FFFFFF; font-size: 1.1rem; font-family: 'Playfair Display', serif; font-weight: 700;">2026</span>
-                        </div>
-
-                        <!-- Small Front Image -->
-                        <div class="story-img-small position-absolute rounded-4 overflow-hidden shadow-lg" style="bottom: 0; right: 0; width: 55%; height: 55%; border: 8px solid #FFFFFF; z-index: 3;">
-                            <img src="asset/image/clay_artwork.jpg" alt="Clay Artwork" class="img-fluid w-100 h-100 object-fit-cover">
+                <!-- Right Side (Animated Asymmetric 4-Card Bento Grid) -->
+                <div class="col-12 col-lg-7 mt-5 mt-lg-0">
+                    <div class="about-card-grid position-relative">
+                        <div class="row g-3 g-md-4 align-items-stretch">
+                            <!-- Card 01: Craftsmanship & Local Support (LARGE CARD) -->
+                            <div class="col-12 col-md-7">
+                                <div class="about-interactive-card about-card-lg float-card-1">
+                                    <div class="shimmer-light"></div>
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="about-card-icon-box">
+                                                <i class="fa-solid fa-hands-holding-circle"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="about-card-title">100% Authentic Handcrafted</h3>
+                                        <p class="about-card-desc">
+                                            Every piece is meticulously hand-sculpted by our local artisans. Your purchase directly supports traditional craftspeople and preserves our rich cultural heritage.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="about-card-pill"><i class="fa-solid fa-crown me-1"></i> Empowering Artisans</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 02: Material & Quality (SMALL CARD - Hidden on mobile) -->
+                            <div class="col-12 col-md-5 d-none d-md-block">
+                                <div class="about-interactive-card about-card-sm float-card-2">
+                                    <div class="shimmer-light"></div>
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="about-card-icon-box">
+                                                <i class="fa-solid fa-seedling"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="about-card-title">Eco-Friendly & Pure</h3>
+                                        <p class="about-card-desc">
+                                            Crafted using premium, natural river clay and organic colors. Completely free from toxic additives, making it safe for your home and the environment.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="about-card-pill"><i class="fa-solid fa-leaf me-1"></i> Organic Materials</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 03: Product Range & Customization (SMALL CARD - Hidden on mobile) -->
+                            <div class="col-12 col-md-5 d-none d-md-block">
+                                <div class="about-interactive-card about-card-sm float-card-3">
+                                    <div class="shimmer-light"></div>
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="about-card-icon-box">
+                                                <i class="fa-solid fa-gem"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="about-card-title">Exclusive Collections</h3>
+                                        <p class="about-card-desc">
+                                            Shop our unique, ready-to-ship terracotta decor and divine idols, or request bespoke, custom-sculpted pieces tailored exactly to your vision.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="about-card-pill"><i class="fa-solid fa-wand-magic-sparkles me-1"></i> Custom Made</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Card 04: Shipping & Trust (LARGE CARD) -->
+                            <div class="col-12 col-md-7">
+                                <div class="about-interactive-card about-card-lg float-card-4">
+                                    <div class="shimmer-light"></div>
+                                    <div>
+                                        <div class="d-flex align-items-center justify-content-between">
+                                            <div class="about-card-icon-box">
+                                                <i class="fa-solid fa-shield-heart"></i>
+                                            </div>
+                                        </div>
+                                        <h3 class="about-card-title">Trusted & Secure Delivery</h3>
+                                        <p class="about-card-desc">
+                                            Enjoy peace of mind with multi-layer protective packaging. We ensure safe, fast, and hassle-free doorstep delivery across India through our trusted partners.
+                                        </p>
+                                    </div>
+                                    <div>
+                                        <span class="about-card-pill"><i class="fa-solid fa-truck-fast me-1"></i> Pan-India Shipping</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1426,8 +2255,13 @@ if (isset($_SESSION['user_id'])) {
                 ?>
                         <div class="category-scroll-item">
                             <a href="collection.php?category=<?php echo $cat['id']; ?>" class="category-btn-card">
-                                <span class="cat-btn-title"><?php echo htmlspecialchars($cat['name']); ?></span>
-                                <span class="cat-btn-count"><?php echo $countText; ?></span>
+                                <div class="cat-btn-content">
+                                    <span class="cat-btn-title"><?php echo htmlspecialchars($cat['name']); ?></span>
+                                    <span class="cat-btn-count"><?php echo $countText; ?></span>
+                                </div>
+                                <div class="cat-btn-arrow">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </div>
                             </a>
                         </div>
                 <?php
@@ -1564,44 +2398,11 @@ if (isset($_SESSION['user_id'])) {
     </section>
 
     <style>
-        .testi-scroll-slider {
-            display: flex;
-            overflow-x: auto;
-            scroll-snap-type: x mandatory;
-            gap: 1.5rem;
-            -ms-overflow-style: none;
-            /* IE/Edge */
-            scrollbar-width: none;
-            /* Firefox */
-            scroll-behavior: smooth;
-            padding-bottom: 15px;
-        }
 
-        .testi-scroll-slider::-webkit-scrollbar {
-            display: none;
-            /* Chrome/Safari */
-        }
-
-        .testi-scroll-item {
-            flex: 0 0 calc(33.333% - 1rem);
-            scroll-snap-align: start;
-        }
-
-        @media (max-width: 991.98px) {
-            .testi-scroll-item {
-                flex: 0 0 calc(50% - 0.75rem);
-            }
-        }
-
-        @media (max-width: 767.98px) {
-            .testi-scroll-item {
-                flex: 0 0 100%;
-            }
-        }
     </style>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section py-5" style="background-color: #FAF8F5;">
+    <section class="testimonials-section py-2" style="background-color: #FAF8F5;">
         <div class="container py-4">
             <div class="text-center mb-5">
                 <div class="badge-custom mb-3"><i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i> Authentic Reviews</div>
@@ -1682,260 +2483,18 @@ if (isset($_SESSION['user_id'])) {
     </section>
 
     <!-- Contact & Feedback Section -->
-    <style>
-        .contact-new-section {
-            background-color: #FDFBF7;
-            font-family: 'Outfit', sans-serif;
-        }
 
-        .contact-new-section .section-subtitle {
-            color: #C49A45;
-            font-size: 0.85rem;
-            letter-spacing: 2px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .contact-new-section .section-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            font-size: 2.5rem;
-            color: #2D2D2D;
-            position: relative;
-            display: inline-block;
-            margin-bottom: 3.5rem;
-        }
-
-        .contact-new-section .section-title::after {
-            content: '';
-            position: absolute;
-            width: 60px;
-            height: 1.5px;
-            background-color: #C49A45;
-            bottom: -5px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .contact-card,
-        .feedback-card {
-            background-color: #fff;
-            border-radius: 1.2rem;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.04);
-            padding: 2.5rem;
-            height: 100%;
-        }
-
-        .contact-info-item {
-            display: flex;
-            align-items: center;
-            gap: 1.2rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .contact-info-icon {
-            width: 48px;
-            height: 48px;
-            background-color: #FDF1D5;
-            color: #000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 12px;
-            font-size: 1.2rem;
-        }
-
-        .contact-info-text h6 {
-            margin-bottom: 0.1rem;
-            font-weight: 500;
-            color: #2D2D2D;
-            font-size: 1.05rem;
-        }
-
-        .contact-info-text p {
-            margin-bottom: 0;
-            color: #717171;
-            font-size: 0.9rem;
-        }
-
-        .map-container {
-            border-radius: 12px;
-            overflow: hidden;
-            height: 200px;
-            margin-top: 1.5rem;
-            border: 1px solid #f0f0f0;
-        }
-
-        .star-rating {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 1.5rem 0;
-            color: #e0e0e0;
-            font-size: 2rem;
-        }
-
-        .star-rating i:hover,
-        .star-rating i.active {
-            color: #F8C31C;
-            cursor: pointer;
-        }
-
-        .feedback-card textarea {
-            border-radius: 8px;
-            border: 1px solid #e8e8e8;
-            padding: 1rem;
-            resize: none;
-            box-shadow: none;
-            font-size: 0.95rem;
-        }
-
-        .feedback-card textarea:focus {
-            border-color: #F8C31C;
-            box-shadow: 0 0 0 0.2rem rgba(248, 195, 28, 0.15);
-            outline: none;
-        }
-
-        .btn-submit-review {
-            background-color: #F4C41B;
-            color: #111;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            padding: 0.9rem 2rem;
-            width: 100%;
-            transition: all 0.3s;
-            margin-top: 1.5rem;
-        }
-
-        .btn-submit-review:hover {
-            background-color: #dfb215;
-            color: #111;
-        }
-
-        .rate-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            color: #2D2D2D;
-            font-size: 1.8rem;
-        }
-
-        .rate-title i {
-            color: #F8C31C;
-            margin-right: 0.5rem;
-        }
-
-        .select-rating-text {
-            color: #555;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        /* Custom Guest Login Modal */
-        .guest-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(4px);
-            z-index: 1050;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .guest-modal-overlay.show {
-            display: flex;
-            opacity: 1;
-        }
-
-        .guest-modal {
-            background: #fff;
-            border-radius: 16px;
-            padding: 3rem 2.5rem;
-            max-width: 420px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
-            transform: translateY(20px);
-            transition: transform 0.3s ease;
-        }
-
-        .guest-modal-overlay.show .guest-modal {
-            transform: translateY(0);
-        }
-
-        .guest-modal-icon {
-            width: 70px;
-            height: 70px;
-            background: #FDF1D5;
-            color: #C49A45;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2rem;
-            margin: 0 auto 1.5rem auto;
-        }
-
-        .guest-modal h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 700;
-            color: #2D2D2D;
-            margin-bottom: 1rem;
-        }
-
-        .guest-modal p {
-            color: #666;
-            margin-bottom: 2rem;
-            font-family: 'Outfit', sans-serif;
-        }
-
-        .guest-modal .btn-login {
-            background-color: #F4C41B;
-            color: #111;
-            font-weight: 600;
-            border: none;
-            border-radius: 8px;
-            padding: 0.8rem 2rem;
-            width: 100%;
-            transition: all 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .guest-modal .btn-login:hover {
-            background-color: #dfb215;
-            color: #111;
-        }
-
-        .guest-modal .btn-close-modal {
-            background: transparent;
-            border: none;
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-            text-decoration: underline;
-            transition: color 0.2s;
-        }
-
-        .guest-modal .btn-close-modal:hover {
-            color: #666;
-        }
-    </style>
-
-    <section class="contact-new-section py-5">
-        <div class="container py-4">
+    <section class="contact-new-section py-3">
+        <div class="bg-ambient-glow-contact"></div>
+        <div class="bg-ambient-glow-contact-2"></div>
+        <div class="container py-4 position-relative z-1">
             <div class="text-center mb-2">
-                <div class="section-subtitle">Get in touch</div>
-                <h2 class="section-title">Contact & Feedback</h2>
+                <div class="section-subtitle"><i class="fa-solid fa-paper-plane me-1"></i> Get in touch</div>
+                <h2 class="section-title">Contact <span style="color: #CBA232;">&</span> Feedback</h2>
             </div>
 
-            <div class="row g-4 align-items-stretch mt-3">
+            <div class="row g-4 align-items-stretch mt-2">
+                <!-- Left Side: Contact Information & Location -->
                 <div class="col-lg-4">
                     <div class="contact-card">
                         <div class="contact-info-item">
@@ -1944,43 +2503,45 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                             <div class="contact-info-text">
                                 <h6>Address</h6>
-                                <p>CCLMS, Contai, India</p>
+                                <p>Harinabari Durga Mondir Chaita Mali, West Bengal 721444</p>
                             </div>
                         </div>
-                        <div class="contact-info-item">
+                        <a href="tel:+912583691235" class="contact-info-item">
                             <div class="contact-info-icon">
                                 <i class="fa-solid fa-phone"></i>
                             </div>
                             <div class="contact-info-text">
                                 <h6>Call Us</h6>
-                                <p>+91 2583691235</p>
+                                <p>+91 6297657671</p>
                             </div>
-                        </div>
-                        <div class="contact-info-item">
+                        </a>
+                        <a href="https://wa.me/913265489526" target="_blank" class="contact-info-item">
                             <div class="contact-info-icon">
                                 <i class="fa-brands fa-whatsapp"></i>
                             </div>
                             <div class="contact-info-text">
                                 <h6>Whatsapp Us</h6>
-                                <p>+91 3265489526</p>
+                                <p>+91 9775085649</p>
                             </div>
-                        </div>
-                        <div class="contact-info-item">
+                        </a>
+                        <a href="mailto:santusau@gmail.com" class="contact-info-item">
                             <div class="contact-info-icon">
                                 <i class="fa-solid fa-envelope"></i>
                             </div>
                             <div class="contact-info-text">
                                 <h6>Email Us</h6>
-                                <p>santusau@gmail.com</p>
+                                <p>siddhaartcreation@gmail.com</p>
                             </div>
-                        </div>
+                        </a>
 
                         <div class="map-container">
+                            <span class="map-badge-overlay"><i class="fa-solid fa-map-pin me-1"></i> Workshop Location</span>
                             <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117926.24135547926!2d87.69741544335937!3d21.776657900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a03264669f9d789%3A0xe985d7da0019672f!2sContai%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                         </div>
                     </div>
                 </div>
 
+                <!-- Right Side: Interactive Review & Rating Card -->
                 <div class="col-lg-8">
                     <div class="feedback-card text-center">
                         <h3 class="rate-title"><i class="fa-solid fa-star"></i> Rate Our Service</h3>
@@ -1995,14 +2556,22 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                             <input type="hidden" name="rating" id="ratingInput" value="<?php echo $existing_rating; ?>">
 
-                            <div class="select-rating-text">
-                                <?php echo $user_has_review ? 'Update your rating' : 'Select Rating'; ?>
+                            <!-- Feeling Rating Pill Badge (Matches user reference) -->
+                            <div class="rating-feeling-wrapper mb-3 mt-2">
+                                <div class="rating-feeling-pill" id="ratingFeelingPill">
+                                    <span class="rating-emoji" id="ratingEmoji">✨</span>
+                                    <span class="rating-feeling-text" id="ratingFeelingText"><?php echo $user_has_review ? 'Update your rating' : 'Select Rating'; ?></span>
+                                </div>
                             </div>
 
-                            <textarea name="message" class="form-control" rows="6" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+                            <div class="textarea-wrapper mb-2">
+                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="5" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+                                <div class="char-count-tag" id="charCountTag"><span id="currentCharCount">0</span>/120</div>
+                            </div>
 
                             <button type="submit" class="btn-submit-review">
-                                <?php echo $user_has_review ? 'Update Review' : 'Submit Review'; ?>
+                                <span><?php echo $user_has_review ? 'Update Review' : 'Submit Review'; ?></span>
+                                <i class="fa-solid fa-paper-plane ms-2"></i>
                             </button>
                         </form>
                     </div>
@@ -2034,6 +2603,57 @@ if (isset($_SESSION['user_id'])) {
             const feedbackForm = document.getElementById('feedbackForm');
 
 
+            const ratingFeelings = {
+                1: {
+                    emoji: '😡',
+                    label: 'Disappointing',
+                    color: '#DC2626',
+                    bg: '#FEE2E2',
+                    border: '#FCA5A5'
+                },
+                2: {
+                    emoji: '😳',
+                    label: 'Average',
+                    color: '#D97706',
+                    bg: '#FEF3C7',
+                    border: '#FDE68A'
+                },
+                3: {
+                    emoji: '🙂',
+                    label: 'Good Experience',
+                    color: '#059669',
+                    bg: '#D1FAE5',
+                    border: '#A7F3D0'
+                },
+                4: {
+                    emoji: '😊',
+                    label: 'Very Satisfied',
+                    color: '#047857',
+                    bg: '#ECFDF5',
+                    border: '#6EE7B7'
+                },
+                5: {
+                    emoji: '🤩',
+                    label: 'Outstanding!',
+                    color: '#B45309',
+                    bg: '#FEF3C7',
+                    border: '#FCD34D'
+                }
+            };
+
+            const ratingEmoji = document.getElementById('ratingEmoji');
+            const ratingFeelingText = document.getElementById('ratingFeelingText');
+            const ratingFeelingPill = document.getElementById('ratingFeelingPill');
+            const reviewInput = document.getElementById('reviewMessageInput');
+            const currentCharCount = document.getElementById('currentCharCount');
+
+            if (reviewInput && currentCharCount) {
+                currentCharCount.textContent = reviewInput.value.length;
+                reviewInput.addEventListener('input', function() {
+                    currentCharCount.textContent = this.value.length;
+                });
+            }
+
             // Initialize stars if existing rating
             highlightStars(ratingInput.value);
 
@@ -2057,12 +2677,40 @@ if (isset($_SESSION['user_id'])) {
 
             function highlightStars(rating) {
                 stars.forEach(star => {
-                    if (star.getAttribute('data-rating') <= rating && rating > 0) {
-                        star.style.color = '#F8C31C';
+                    const starVal = star.getAttribute('data-rating');
+                    if (starVal <= rating && rating > 0) {
+                        star.style.color = '#FFB800';
+                        star.classList.add('active');
                     } else {
-                        star.style.color = '#e0e0e0';
+                        star.style.color = '#E2DDD5';
+                        star.classList.remove('active');
                     }
                 });
+
+                if (ratingFeelings[rating]) {
+                    const feel = ratingFeelings[rating];
+                    if (ratingEmoji) ratingEmoji.textContent = feel.emoji;
+                    if (ratingFeelingText) {
+                        ratingFeelingText.textContent = feel.label;
+                        ratingFeelingText.style.color = feel.color;
+                    }
+                    if (ratingFeelingPill) {
+                        ratingFeelingPill.style.background = feel.bg;
+                        ratingFeelingPill.style.borderColor = feel.border;
+                        ratingFeelingPill.classList.add('bump');
+                        setTimeout(() => ratingFeelingPill.classList.remove('bump'), 300);
+                    }
+                } else {
+                    if (ratingEmoji) ratingEmoji.textContent = '✨';
+                    if (ratingFeelingText) {
+                        ratingFeelingText.textContent = '<?php echo $user_has_review ? "Update your rating" : "Select Rating"; ?>';
+                        ratingFeelingText.style.color = '#1A1612';
+                    }
+                    if (ratingFeelingPill) {
+                        ratingFeelingPill.style.background = 'linear-gradient(145deg, #FAF7F2 0%, #F5EFE6 100%)';
+                        ratingFeelingPill.style.borderColor = 'rgba(197, 155, 39, 0.35)';
+                    }
+                }
             }
 
             // Guest Modal Logic
@@ -2219,10 +2867,19 @@ if (isset($_SESSION['user_id'])) {
                 catSlider.addEventListener('scroll', updateActiveDot);
                 window.addEventListener('resize', updateActiveDot);
 
+                function getCatScrollStep() {
+                    if (catItems && catItems.length > 0) {
+                        const itemWidth = catItems[0].offsetWidth;
+                        const gap = parseInt(window.getComputedStyle(catSlider).gap) || 16;
+                        return itemWidth + gap;
+                    }
+                    return 240;
+                }
+
                 if (catPrev) {
                     catPrev.addEventListener('click', function() {
                         catSlider.scrollBy({
-                            left: -290,
+                            left: -getCatScrollStep(),
                             behavior: 'smooth'
                         });
                     });
@@ -2230,7 +2887,7 @@ if (isset($_SESSION['user_id'])) {
                 if (catNext) {
                     catNext.addEventListener('click', function() {
                         catSlider.scrollBy({
-                            left: 290,
+                            left: getCatScrollStep(),
                             behavior: 'smooth'
                         });
                     });

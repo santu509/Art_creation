@@ -16,7 +16,7 @@ include('nav.php');
   .hero-contact-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.92) 100%);
+    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.62) 100%);
     z-index: 1;
   }
 

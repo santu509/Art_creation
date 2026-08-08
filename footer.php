@@ -262,7 +262,7 @@
 </style>
 
 <!-- Footer Start -->
-<div class="container-fluid footer_main wow fadeIn" data-wow-delay="0.1s">
+<footer class="container-fluid footer_main wow fadeIn" data-wow-delay="0.1s">
     <div class="container">
         <div class="row g-5">
 
@@ -312,10 +312,9 @@
 
                 <!-- Social Media Icons with Tooltips -->
                 <div class="d-flex mt-3">
-                    <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow us on Twitter"><i class="fab fa-twitter"></i></a>
                     <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow us on Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
-                    <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Connect on LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow on Instagram"><i class="fa-brands fa-instagram"></i></a>
                 </div>
             </div>
 
@@ -349,7 +348,7 @@
             </div>
         </div>
     </div>
-</div>
+</footer>
 <!-- Footer End -->
 
 <!-- Floating Scroll To Top Button -->

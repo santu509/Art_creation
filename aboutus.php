@@ -104,7 +104,7 @@
         .hero-overlay {
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(17, 13, 12, 0.6) 0%, rgba(17, 13, 12, 0.9) 100%);
+            background: linear-gradient(180deg, rgba(17, 13, 12, 0.6) 0%, rgba(17, 13, 12, 0.6) 100%);
             z-index: 2;
         }
 
