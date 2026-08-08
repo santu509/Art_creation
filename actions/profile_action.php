@@ -13,7 +13,7 @@ if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
     exit;
 }
 
-require_once('connection.php');
+require_once(__DIR__ . '/../includes/connection.php');
 
 $userId = $_SESSION['user_id'];
 $action = $_REQUEST['action'] ?? '';

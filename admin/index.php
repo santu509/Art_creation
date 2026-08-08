@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../connection.php';
+require_once '../includes/connection.php';
 
 // Redirect if already logged in
 if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true) {
@@ -29,7 +29,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+
     <style>
         :root {
             --bg-page: #FAF8F5;
@@ -352,6 +352,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
                 transform: translate3d(0, 22px, 0) scale(0.97);
                 filter: blur(4px);
             }
+
             100% {
                 opacity: 1;
                 transform: translate3d(0, 0, 0) scale(1);
@@ -365,6 +366,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
                 transform: translate3d(0, 0, 0) scale(1);
                 filter: blur(0);
             }
+
             100% {
                 opacity: 0;
                 transform: translate3d(0, -16px, 0) scale(0.97);
@@ -531,8 +533,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
 
                     <div class="form-group">
                         <div class="form-label-row">
-                            <label class="form-label" for="loginPassword">Password</label>
-                            <a type="button" class="forgot-link" onclick="switchView('resetView')">Forgot Password?</a>
+                            <label class="form-label mb-0" for="loginPassword">Password</label>
                         </div>
                         <div class="input-group-custom">
                             <i class="fa-solid fa-lock input-icon"></i>
@@ -540,6 +541,9 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
                             <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('loginPassword', this)" title="Toggle Password">
                                 <i class="fa-regular fa-eye-slash"></i>
                             </button>
+                        </div>
+                        <div class="d-flex justify-content-end w-100 mt-2">
+                            <a type="button" class="forgot-link text-end" onclick="switchView('resetView')">Forgot Password?</a>
                         </div>
                     </div>
 
@@ -612,7 +616,7 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
         </div>
     </div>
 
-  
+
     <!-- AOS Animation Library JS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>

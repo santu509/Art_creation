@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'connection.php';
+require_once __DIR__ . '/../includes/connection.php';
 global $connect;
 header('Content-Type: application/json');
 

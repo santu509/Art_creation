@@ -1,14 +1,17 @@
 <?php
-include('nav.php');
+require_once('includes/connection.php');
+global $connect;
+include('includes/nav.php');
 
-/** @var mysqli $connect */
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
 
-if (!isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
-  echo "<script>window.location.href='index.php';</script>";
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
   exit;
 }
 
-require_once('connection.php');
 
 $userId = $_SESSION['user_id'];
 $safeuserId = mysqli_real_escape_string($connect, $userId);
@@ -26,230 +29,6 @@ $userImage = !empty($user['image']) ? htmlspecialchars($user['image']) : 'asset/
 $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['created_at'])) : 'Recent Member';
 
 ?>
-
-<style>
-  /* Short Height Top Page Banner for Profile Page */
-  .profile-top-banner {
-    height: 240px;
-    position: relative;
-    overflow: hidden;
-    background: url('asset/image/contact_hero_banner.png') no-repeat center center / cover;
-    margin-top: 0;
-  }
-
-  .profile-top-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.9) 100%);
-  }
-
-  /* Profile Page Styling */
-  .profile-hero-card {
-    background: linear-gradient(135deg, #12110F 0%, #2A241E 100%);
-    border-radius: 24px;
-    color: #F5F2ED;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 15px 35px rgba(18, 17, 15, 0.15);
-  }
-
-  .profile-hero-card::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 350px;
-    height: 350px;
-    background: radial-gradient(circle, rgba(184, 134, 11, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .profile-avatar-wrapper {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: 4px solid #B8860B;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    background-color: #F5F2ED;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  @media (min-width: 768px) {
-    .profile-avatar-wrapper {
-      margin-left: 0;
-    }
-  }
-
-  .profile-avatar-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
-  .profile-avatar-edit-badge {
-    position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 32px;
-    height: 32px;
-    background-color: #B8860B;
-    color: #FFFFFF;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.85rem;
-    border: 2px solid #12110F;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-  }
-
-  .profile-avatar-edit-badge:hover {
-    transform: scale(1.1);
-  }
-
-  .profile-tab-wrapper {
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(58, 53, 48, 0.06);
-    border: 1px solid rgba(58, 53, 48, 0.06);
-    overflow: hidden;
-  }
-
-  .profile-nav-tabs {
-    background-color: #F5F2ED;
-    padding: 8px;
-    border-bottom: 1px solid rgba(58, 53, 48, 0.08);
-    gap: 8px;
-  }
-
-  .profile-nav-tabs .nav-link {
-    color: #5C554E;
-    font-weight: 600;
-    font-size: 0.95rem;
-    border: none;
-    border-radius: 12px;
-    padding: 12px 24px;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .profile-nav-tabs .nav-link i {
-    font-size: 1rem;
-  }
-
-  .profile-nav-tabs .nav-link.active {
-    background-color: #FFFFFF !important;
-    color: #B8860B !important;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-  }
-
-  .profile-nav-tabs .nav-link:hover:not(.active) {
-    color: #3A3530;
-    background-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .info-grid-card {
-    background-color: #FCFBFA;
-    border: 1px solid #E5E1DB;
-    border-radius: 16px;
-    padding: 20px;
-    height: 100%;
-    transition: all 0.3s ease;
-  }
-
-  .info-grid-card:hover {
-    border-color: #C5A880;
-    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.08);
-  }
-
-  .info-label {
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.8px;
-    text-transform: uppercase;
-    color: #8C857E;
-    margin-bottom: 6px;
-  }
-
-  .info-value {
-    font-size: 1rem;
-    font-weight: 600;
-    color: #3A3530;
-    margin: 0;
-    word-break: break-word;
-  }
-
-  .stat-mini-card {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E1DB;
-    border-radius: 16px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    transition: all 0.3s ease;
-  }
-
-  .stat-mini-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(58, 53, 48, 0.08);
-  }
-
-  .stat-icon-circle {
-    width: 50px;
-    height: 50px;
-    border-radius: 14px;
-    background-color: rgba(184, 134, 11, 0.08);
-    color: #B8860B;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.25rem;
-    flex-shrink: 0;
-  }
-
-  .form-control-profile {
-    background-color: #FCFBFA;
-    border: 1px solid #E5E1DB;
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.95rem;
-    color: #3A3530;
-    transition: all 0.3s ease;
-  }
-
-  .form-control-profile:focus {
-    background-color: #FFFFFF;
-    border-color: #C5A880;
-    box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.15);
-    outline: none;
-  }
-
-  .btn-save-profile {
-    background-color: #B8860B;
-    color: #FFFFFF;
-    font-weight: 600;
-    padding: 12px 30px;
-    border-radius: 10px;
-    border: none;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(184, 134, 11, 0.25);
-  }
-
-  .btn-save-profile:hover {
-    background-color: #9A6F09;
-    color: #FFFFFF;
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.35);
-  }
-</style>
 
 <!-- Short Height Full-Width Top Page Banner -->
 <section class="profile-top-banner">
@@ -336,34 +115,6 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
             </div>
           </div>
         </div>
-
-        <!-- Quick Stats / Shortcut Cards -->
-        <h4 class="mb-4 text-dark" style="font-family: 'Playfair Display', serif; font-weight: 600;">Gallery Dashboard</h4>
-        <div class="row g-3">
-          <div class="col-md-4">
-            <div class="stat-mini-card">
-              <div class="stat-icon-circle">
-                <i class="fa-solid fa-palette"></i>
-              </div>
-              <div>
-                <h5 class="mb-0 fw-bold">0 Orders</h5>
-                <small class="text-muted">Artwork Purchases</small>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="stat-mini-card">
-              <div class="stat-icon-circle">
-                <i class="fa-regular fa-heart"></i>
-              </div>
-              <div>
-                <h5 class="mb-0 fw-bold">0 Items</h5>
-                <small class="text-muted">Saved Wishlist</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
 
       <!-- TAB 2: Update Profile Tab -->
@@ -467,7 +218,7 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
 
         const formData = new FormData(this);
 
-        fetch('profile_action.php?action=update_profile', {
+        fetch('actions/profile_action.php?action=update_profile', {
             method: 'POST',
             body: formData
           })
@@ -508,4 +259,4 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
   });
 </script>
 
-<?php include('footer.php'); ?>
+<?php include('includes/footer.php'); ?>

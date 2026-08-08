@@ -1,144 +1,6 @@
 <?php
-include('nav.php');
+include('includes/nav.php');
 ?>
-
-<style>
-  /* Hero Banner Section for Contact Page */
-  .hero-contact-section {
-    height: 52vh !important;
-    min-height: 440px;
-    position: relative;
-    overflow: hidden;
-    background: url('asset/image/contact_hero_banner.png') no-repeat center center / cover;
-    margin-top: 0;
-  }
-
-  .hero-contact-overlay {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(180deg, rgba(26, 22, 18, 0.75) 0%, rgba(18, 15, 12, 0.62) 100%);
-    z-index: 1;
-  }
-
-  .contact-card-info {
-    background-color: #FFFFFF;
-    border: 1px solid #E5E1DB;
-    border-radius: 18px;
-    padding: 26px 20px;
-    transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-    height: 100%;
-    box-shadow: 0 4px 15px rgba(58, 53, 48, 0.03);
-  }
-
-  .contact-card-info:hover {
-    transform: translateY(-5px);
-    border-color: #C5A880;
-    box-shadow: 0 12px 30px rgba(184, 134, 11, 0.12);
-  }
-
-  .contact-icon-box {
-    width: 55px;
-    height: 55px;
-    border-radius: 14px;
-    background-color: rgba(184, 134, 11, 0.08);
-    color: #B8860B;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.35rem;
-    margin-bottom: 18px;
-    transition: all 0.3s ease;
-  }
-
-  .contact-card-info:hover .contact-icon-box {
-    background-color: #B8860B;
-    color: #FFFFFF;
-    transform: scale(1.08);
-  }
-
-  .contact-form-wrapper {
-    background-color: #FFFFFF;
-    border-radius: 20px;
-    border: 1px solid rgba(58, 53, 48, 0.08);
-    box-shadow: 0 10px 30px rgba(58, 53, 48, 0.05);
-    padding: 35px;
-  }
-
-  .form-control-contact {
-    background-color: #FCFBFA;
-    border: 1px solid #E5E1DB;
-    border-radius: 12px;
-    padding: 14px 18px;
-    font-size: 0.98rem;
-    color: #3A3530;
-    transition: all 0.3s ease;
-  }
-
-  .form-control-contact:focus {
-    background-color: #FFFFFF;
-    border-color: #C5A880;
-    box-shadow: 0 0 0 4px rgba(197, 168, 128, 0.15);
-    outline: none;
-  }
-
-  .btn-contact-submit {
-    background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
-    color: #1A1612;
-    font-weight: 700;
-    padding: 14px 36px;
-    border-radius: 12px;
-    border: none;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    box-shadow: 0 6px 20px rgba(184, 134, 11, 0.25);
-  }
-
-  .btn-contact-submit:hover {
-    background: linear-gradient(135deg, #FFF0BD 0%, #DFBA5A 100%);
-    color: #1A1612;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(184, 134, 11, 0.35);
-  }
-
-  .map-frame-wrapper {
-    border-radius: 20px;
-    overflow: hidden;
-    border: 1px solid #E5E1DB;
-    box-shadow: 0 10px 30px rgba(58, 53, 48, 0.06);
-    height: 100%;
-    min-height: 420px;
-  }
-
-  /* Staggered Text Keyframe Animations */
-  .animate-up {
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-  }
-
-  .delay-1 {
-    animation-delay: 0.15s;
-  }
-
-  .delay-2 {
-    animation-delay: 0.3s;
-  }
-
-  .delay-3 {
-    animation-delay: 0.45s;
-  }
-
-  .delay-4 {
-    animation-delay: 0.6s;
-  }
-
-  @keyframes fadeUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-</style>
 
 <!-- Full-Width Hero Banner Section -->
 <section class="hero-contact-section">
@@ -287,25 +149,28 @@ include('nav.php');
       });
     }
   });
-
   function submitContactForm(event) {
     event.preventDefault();
     const formData = new FormData(document.getElementById('contactUsForm'));
 
-    fetch('contact_action.php', {
+    fetch('actions/contact_action.php', {
         method: 'POST',
         body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
+    })
+    .then(response => response.json())
+    .then(data => {
         if (data.status === 'success') {
-          showToast(data.message);
-          document.getElementById('contactUsForm').reset();
+            showToast(data.message, 'success');
+            document.getElementById('contactUsForm').reset();
         } else {
-          showToast(data.message);
+            showToast(data.message, 'error');
         }
-      });
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showToast('Something went wrong. Please try again.', 'error');
+    });
   }
 </script>
 
-<?php include('footer.php'); ?>
+<?php include('includes/footer.php'); ?>

@@ -7,7 +7,7 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     exit();
 }
 
-include_once(__DIR__ . '/../connection.php');
+include_once(__DIR__ . '/../includes/connection.php');
 global $connect;
 // 1. Delete Product
 if (isset($_GET['delete'])) {

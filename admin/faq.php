@@ -548,7 +548,7 @@ $currentPage = "faq_admin.php";
                             </thead>
                             <tbody id="faq-table-body">
                                 <?php
-                                require_once "../connection.php";
+                                require_once "../includes/connection.php";
                                 global $connect;
 
                                 // take the faq from db

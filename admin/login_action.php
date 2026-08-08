@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once(__DIR__ . "/../connection.php");
+require_once(__DIR__ . "/../includes/connection.php");
 /** @var mysqli $connect */
 
 // Handle Logout via GET request

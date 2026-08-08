@@ -3,7 +3,7 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-include_once('connection.php');
+include_once(__DIR__ . '/connection.php');
 global $connect;
 ?>
 <!DOCTYPE html>
@@ -29,1225 +29,13 @@ global $connect;
     <!-- AOS Animation Library CSS -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-    <link rel="icon" type="image/x-icon" href="asset/image/logo.png">
-
-    <style>
-        :root {
-            --bg-color: #e8e7e5d7;
-            --text-color: #3A3530;
-            --accent-color: #B8860B;
-            --accent-light: rgba(184, 134, 11, 0.15);
-            --transition-smooth: all 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        /* Prevent Navbar layout shift when Bootstrap modals open */
-        html {
-            scrollbar-gutter: stable;
-        }
-
-        body {
-            background-color: #F5F0E8;
-            font-family: 'Outfit', sans-serif;
-            padding-top: 0;
-            overflow-x: hidden;
-        }
-
-        body.modal-open {
-            padding-right: 0 !important;
-            overflow: hidden !important;
-        }
-
-        body.modal-open .custom-navbar,
-        body.modal-open .fixed-top,
-        body.modal-open .sticky-top {
-            padding-right: 0 !important;
-            margin-right: auto !important;
-            right: 0 !important;
-        }
-
-        .modal {
-            padding-right: 0 !important;
-        }
-
-        /* Smooth Modal Fade-In & Scale-Up Animations */
-        .modal.fade .modal-dialog {
-            transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease-in-out !important;
-            transform: scale(0.92) translateY(24px) !important;
-            opacity: 0 !important;
-        }
-
-        .modal.show .modal-dialog {
-            transform: scale(1) translateY(0) !important;
-            opacity: 1 !important;
-        }
-
-        .modal-backdrop.fade {
-            transition: opacity 0.2s ease-in-out !important;
-        }
-
-        .modal-backdrop.show {
-            opacity: 0.65 !important;
-        }
-
-        /* Hero Section Demo */
-        .hero-section {
-            background: url('https://images.unsplash.com/photo-1547891654-e66ed7edd96c?q=80&w=2070&auto=format&fit=crop') no-repeat center center/cover;
-            height: 100vh;
-            width: 100%;
-        }
-
-        /* Navbar Initial State (Transparent Floating Over Hero) */
-        .custom-navbar {
-            font-family: 'Outfit', sans-serif;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            width: 100%;
-            max-width: 100%;
-            margin: 0 auto;
-            border-radius: 0px;
-            z-index: 1045;
-            /* padding: 15px 0; */
-            background: linear-gradient(180deg, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-            border: 0px solid transparent;
-            -webkit-backface-visibility: hidden;
-            transition: all 0.4s ease-in-out;
-        }
-
-        /* Nav Links Initial State (White for contrast against dark hero) */
-        .custom-navbar .navbar-nav .nav-link {
-            color: #F5F2ED;
-            font-weight: 500;
-            font-size: 1.02rem;
-            transition: color 0.3s ease;
-        }
-
-        .custom-navbar .navbar-nav .nav-link:hover,
-        .custom-navbar .navbar-nav .nav-link.active {
-            color: #DFBA5A !important;
-        }
-
-        /* Right Side Icons & Auth Buttons Initial State */
-        .custom-navbar .icon-link {
-            color: #F5F2ED;
-            background-color: rgba(255, 255, 255, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            backdrop-filter: blur(4px);
-        }
-
-        .custom-navbar .icon-link:hover {
-            color: #1A1612;
-            background-color: #DFBA5A;
-            border-color: #DFBA5A;
-        }
-
-        .custom-navbar .btn-login {
-            color: #F5F2ED;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            background-color: rgba(255, 255, 255, 0.08);
-            backdrop-filter: blur(4px);
-        }
-
-        .custom-navbar .btn-login:hover {
-            color: #DFBA5A;
-            border-color: #DFBA5A;
-            background-color: rgba(212, 175, 55, 0.15);
-        }
-
-        .custom-navbar .btn-register {
-            color: #1A1612;
-            background: linear-gradient(135deg, #DFBA5A 0%, #C59B27 100%);
-            border: none;
-            box-shadow: 0 4px 15px rgba(197, 155, 39, 0.3);
-        }
-
-        .custom-navbar .btn-register:hover {
-            color: #1A1612;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(197, 155, 39, 0.5);
-        }
-
-        /* Navbar Scrolled State */
-        .custom-navbar.nav-scrolled,
-        .custom-navbar.navbar-scrolled {
-            background-image: none !important;
-            background: #EFEBE4 !important;
-            background-color: #EFEBE4 !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.14);
-            padding: 8px 24px;
-            top: 15px;
-            width: 95%;
-            max-width: 1300px;
-            border-radius: 50px;
-            border: 1.5px solid rgba(184, 134, 11, 0.35);
-        }
-
-        .custom-navbar.nav-scrolled .navbar-nav .nav-link,
-        .custom-navbar.navbar-scrolled .navbar-nav .nav-link {
-            color: #2A241D;
-        }
-
-        .custom-navbar.nav-scrolled .navbar-nav .nav-link:hover,
-        .custom-navbar.nav-scrolled .navbar-nav .nav-link.active,
-        .custom-navbar.navbar-scrolled .navbar-nav .nav-link:hover,
-        .custom-navbar.navbar-scrolled .navbar-nav .nav-link.active {
-            color: #B8860B !important;
-        }
-
-        .custom-navbar.nav-scrolled .icon-link,
-        .custom-navbar.navbar-scrolled .icon-link {
-            color: #2A241D;
-            background-color: rgba(50, 48, 46, 0.05);
-            border: 1px solid rgba(50, 48, 46, 0.08);
-        }
-
-        .custom-navbar.nav-scrolled .icon-link:hover,
-        .custom-navbar.navbar-scrolled .icon-link:hover {
-            color: #B8860B;
-            background-color: rgba(184, 134, 11, 0.12);
-            border-color: rgba(184, 134, 11, 0.25);
-        }
-
-        .custom-navbar.nav-scrolled .btn-login,
-        .custom-navbar.navbar-scrolled .btn-login {
-            color: #2A241D;
-            border: 1px solid transparent;
-            background-color: transparent;
-        }
-
-        .custom-navbar.nav-scrolled .btn-login:hover,
-        .custom-navbar.navbar-scrolled .btn-login:hover {
-            color: #B8860B;
-            background-color: rgba(184, 134, 11, 0.08);
-        }
-
-        .custom-navbar.nav-scrolled .btn-register,
-        .custom-navbar.navbar-scrolled .btn-register {
-            color: #FAF8F5;
-            background: #2A241D;
-            border: 1px solid #2A241D;
-            box-shadow: 0 4px 12px rgba(42, 36, 29, 0.15);
-        }
-
-        .custom-navbar.nav-scrolled .btn-register:hover,
-        .custom-navbar.navbar-scrolled .btn-register:hover {
-            color: #FAF8F5;
-            background: #B8860B;
-            border-color: #B8860B;
-        }
-
-
-        /* Centering navbar elements vertically */
-        .navbar-collapse {
-            align-items: center !important;
-        }
-
-        .navbar-nav {
-            align-items: center !important;
-            margin-bottom: 0 !important;
-        }
-
-        /* Logo Styling */
-        .navbar-brand img {
-            transition: var(--transition-smooth);
-            width: 100px;
-            height: 60px;
-            object-fit: contain;
-        }
-
-        .navbar-scrolled .navbar-brand img {
-            width: 100px !important;
-            height: 55px;
-        }
-
-
-        /* Nav Links Styling - Base (Universal/Mobile defaults) */
-        .navbar-nav .nav-link {
-            color: var(--text-color);
-            font-weight: 500;
-            font-size: 1.02rem;
-            position: relative;
-            transition: color 0.3s ease;
-        }
-
-        .navbar-nav .nav-link:hover,
-        .navbar-nav .nav-link.active {
-            color: var(--accent-color) !important;
-        }
-
-        /* Desktop specific Hover & Active Capsule + Bar styling (screens >= 992px) */
-        @media (min-width: 992px) {
-            .navbar-nav {
-                position: relative;
-                /* Indicator ke bound korar jonno */
-            }
-
-            .navbar-nav .nav-link {
-                padding: 8px 20px !important;
-                margin: 0 4px;
-                border-radius: 30px;
-                position: relative;
-                z-index: 2;
-                /* Text jate indicator er opore thake */
-                transition: color 0.3s ease;
-            }
-
-            .navbar-nav .nav-link:hover,
-            .navbar-nav .nav-link.active {
-                color: var(--accent-color) !important;
-                background-color: transparent !important;
-                /* Purono background hide */
-            }
-
-            .navbar-nav .nav-link::after {
-                display: none;
-                /* Purono static underline hide */
-            }
-
-            /* Notun Smooth Sliding Indicator CSS */
-            .nav-active-indicator {
-                position: absolute;
-                top: 0;
-                left: 0;
-                background-color: rgba(184, 134, 11, 0.18);
-                border: 1px solid rgba(184, 134, 11, 0.28);
-                box-shadow: inset 0 0 12px rgba(184, 134, 11, 0.08);
-                /* Capsule background */
-                border-radius: 30px;
-                z-index: 1;
-                /* Text er niche thakbe */
-                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), width 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
-                opacity: 0;
-                pointer-events: none;
-                /* Mouse er sathe jamela korbe na */
-            }
-
-            /* Sliding Indicator er Underline */
-            .nav-active-indicator::after {
-                content: '';
-                position: absolute;
-                bottom: 8px;
-                left: 50%;
-                transform: translateX(-50%);
-                width: 18px;
-                height: 3.5px;
-                background-color: var(--accent-color);
-                border-radius: 2px;
-            }
-        }
-
-        /* Right Side Icons */
-        .icon-link {
-            color: var(--text-color);
-            font-size: 1.25rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px;
-            /* width: 70px;
-            height: 50px; */
-            border-radius: 50%;
-            background-color: rgba(50, 48, 46, 0.04);
-            transition: var(--transition-smooth);
-        }
-
-        .icon-link:hover {
-            color: var(--accent-color);
-            background-color: var(--accent-light);
-            transform: translateY(-2px);
-        }
-
-        /* Badge Customization */
-        .custom-badge {
-            font-size: 0.65rem;
-            color: var(--bg-color);
-            background-color: var(--accent-color);
-            padding: 3px 6px;
-            border: 1.5px solid var(--bg-color);
-        }
-
-        /* Profile Dropdown Active State */
-        .profile-dropdown-menu .dropdown-item.active,
-        .profile-dropdown-menu .dropdown-item:active {
-            background-color: rgba(184, 134, 11, 0.1) !important;
-            color: #B8860B !important;
-            font-weight: 600;
-        }
-
-        /* Buttons Styling */
-        .btn-login {
-            color: var(--text-color);
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 8px 20px;
-            border-radius: 30px;
-            transition: var(--transition-smooth);
-            border: 1px solid transparent;
-        }
-
-        .btn-login:hover {
-            color: var(--accent-color);
-            background-color: rgba(184, 134, 11, 0.05);
-            border-color: rgba(184, 134, 11, 0.15);
-        }
-
-        .btn-register {
-            color: var(--bg-color);
-            background-color: var(--text-color);
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 8px 22px;
-            border-radius: 30px;
-            border: 1px solid var(--text-color);
-            transition: var(--transition-smooth);
-            box-shadow: 0 4px 12px rgba(58, 53, 48, 0.1);
-        }
-
-        .btn-register:hover {
-            color: var(--bg-color);
-            background-color: var(--accent-color);
-            border-color: var(--accent-color);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(184, 134, 11, 0.2);
-        }
-
-        /* Mobile Menu Toggler */
-        .navbar-toggler {
-            border: 1px solid rgba(58, 53, 48, 0.15);
-            background-color: rgba(58, 53, 48, 0.03);
-            padding: 6px 10px;
-            border-radius: 8px;
-            transition: var(--transition-smooth);
-        }
-
-        .dropdown-toggle::after {
-            border: none;
-        }
-
-        .navbar-toggler:focus {
-            box-shadow: 0 0 0 0.25rem rgba(184, 134, 11, 0.2);
-            border-color: var(--accent-color);
-        }
-
-        .navbar-toggler-icon {
-            filter: invert(18%) sepia(8%) saturate(545%) hue-rotate(342deg) brightness(91%) contrast(85%);
-        }
-
-        /* Mobile View Adjustments */
-        @media (max-width: 991px) {
-            .custom-navbar.navbar-scrolled {
-                border-radius: 40px;
-                width: 95%;
-                top: 10px;
-            }
-
-            .navbar-collapse {
-                background-color: var(--bg-color);
-                padding: 20px;
-                border-radius: 15px;
-                margin-top: 15px;
-                box-shadow: 0 8px 24px rgba(58, 53, 48, 0.08);
-                border: 1px solid rgba(58, 53, 48, 0.05);
-            }
-
-            .navbar-nav .nav-link {
-                margin: 8px 0;
-            }
-
-            .navbar-nav .nav-item .nav-link::after {
-                display: none;
-            }
-
-            .btn-login,
-            .btn-register {
-                width: 100%;
-                text-align: center;
-                margin-left: 0 !important;
-                margin-top: 4px;
-            }
-        }
-
-        /* Toast Notification Container */
-        .toast-container {
-            position: fixed;
-            bottom: 24px;
-            right: 24px;
-            z-index: 9999;
-        }
-
-        .custom-toast {
-            background-color: #12110F;
-            color: #F5F2ED;
-            padding: 14px 24px;
-            border-radius: 8px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            margin-top: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 0.9rem;
-            animation: slideIn 0.3s ease forwards, fadeOut 0.3s ease 4s forwards;
-            border-left: 4px solid #C5A880;
-            min-width: 280px;
-            font-weight: 500;
-        }
-
-        .custom-toast.success {
-            border-left-color: #2ec4b6;
-        }
-
-        .custom-toast.error {
-            border-left-color: #e63946;
-        }
-
-        .custom-toast i {
-            font-size: 1.1rem;
-        }
-
-        .custom-toast.success i {
-            color: #2ec4b6;
-        }
-
-        .custom-toast.error i {
-            color: #e63946;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(120%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateX(0);
-            }
-
-            to {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-        }
-
-        /* Modal Custom Styling */
-        .auth-modal .modal-dialog {
-            max-width: 850px;
-            margin: 1.75rem auto;
-        }
-
-        .auth-modal .modal-content {
-            border: none;
-            border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
-            background-color: transparent;
-        }
-
-        .modal-body-split {
-            display: flex;
-            min-height: 580px;
-            padding: 0;
-        }
-
-        /* Left Pane (Dark) */
-        .modal-split-left {
-            width: 45%;
-            background-color: #342319;
-            color: #F5F2ED;
-            padding: 45px 35px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .modal-split-left::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: radial-gradient(circle at 10% 20%, rgba(184, 134, 11, 0.08) 0%, transparent 60%);
-            pointer-events: none;
-        }
-
-        .modal-split-left .brand-logo {
-            max-height: 48px;
-            width: auto;
-            align-self: flex-start;
-            margin-bottom: 20px;
-            filter: brightness(1.2);
-        }
-
-        .modal-split-left h3 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.1rem;
-            font-weight: 500;
-            line-height: 1.3;
-            margin-top: 20px;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-split-left h3 span {
-            font-style: italic;
-            color: #C5A880;
-        }
-
-        .modal-split-left p.desc {
-            color: #A59E96;
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 35px;
-        }
-
-        .feature-list {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .feature-item {
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-        }
-
-        .feature-icon-circle {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background-color: rgba(184, 134, 11, 0.08);
-            border: 1px solid rgba(184, 134, 11, 0.15);
-            color: #C5A880;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.9rem;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-
-        .feature-text {
-            font-size: 0.85rem;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: #F5F2ED;
-        }
-
-        .feature-subtext {
-            font-size: 0.8rem;
-            color: #A59E96;
-            font-weight: 400;
-            margin-top: 4px;
-            line-height: 1.4;
-        }
-
-        .left-footer {
-            font-size: 0.75rem;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #7D756C;
-            margin-top: 40px;
-            border-top: 1px solid rgba(245, 242, 237, 0.06);
-            padding-top: 15px;
-        }
-
-        /* Right Pane (Light) */
-        .modal-split-right {
-            width: 55%;
-            background-color: #FFFFFF;
-            padding: 45px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-        }
-
-        .modal-close-btn {
-            position: absolute;
-            top: 20px;
-            right: 25px;
-            background: none;
-            border: none;
-            font-size: 1.3rem;
-            color: #A59E96;
-            cursor: pointer;
-            transition: color 0.2s ease;
-            z-index: 10;
-        }
-
-        .modal-close-btn:hover {
-            color: #3A3530;
-        }
-
-        .modal-split-right h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: #2C2724;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .modal-split-right p.subtitle {
-            color: #8C857E;
-            font-size: 0.88rem;
-            margin-bottom: 30px;
-        }
-
-        /* Form controls */
-        .form-group-custom {
-            margin-bottom: 18px;
-            position: relative;
-        }
-
-        .form-label-custom {
-            display: block;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: #5C554E;
-            margin-bottom: 8px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .input-icon-left {
-            position: absolute;
-            left: 15px;
-            color: #A59E96;
-            font-size: 0.9rem;
-        }
-
-        .input-custom {
-            width: 100%;
-            padding: 11px 16px 11px 40px;
-            border: 1px solid #E5E1DB;
-            border-radius: 8px;
-            font-size: 0.92rem;
-            color: #3A3530;
-            background-color: #FCFBFA;
-            transition: all 0.3s ease;
-        }
-
-        .input-custom:focus {
-            outline: none;
-            border-color: #C5A880;
-            box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.12);
-            background-color: #FFFFFF;
-        }
-
-        .input-custom:disabled {
-            background-color: #F5F2ED;
-            color: #8C857E;
-            cursor: not-allowed;
-            border-color: #E5E1DB;
-        }
-
-        /* Eye toggle for password */
-        .password-toggle-btn {
-            position: absolute;
-            right: 15px;
-            background: none;
-            border: none;
-            color: #A59E96;
-            cursor: pointer;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0;
-            height: 100%;
-        }
-
-        .password-toggle-btn:hover {
-            color: #3A3530;
-        }
-
-        /* Forgot Password Link */
-        .forgot-password-link {
-            position: absolute;
-            right: 0;
-            top: 0;
-            font-size: 0.72rem;
-            color: #C5A880;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .forgot-password-link:hover {
-            text-decoration: underline;
-            color: #B8860B;
-        }
-
-        /* Action buttons inside inputs */
-        .btn-input-action {
-            position: absolute;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            background-color: #12110F;
-            color: #F5F2ED;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            z-index: 5;
-            letter-spacing: 0.5px;
-        }
-
-        .btn-input-action:hover {
-            background-color: #B8860B;
-        }
-
-        .btn-input-action:disabled {
-            background-color: #A59E96;
-            cursor: not-allowed;
-        }
-
-        /* Main Action Button */
-        .btn-auth-action {
-            background-color: #d09748;
-            color: #FFFFFF;
-            border: none;
-            width: 100%;
-            padding: 13px;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            margin-top: 15px;
-            box-shadow: 0 4px 15px rgba(197, 168, 128, 0.2);
-        }
-
-        .btn-auth-action:hover {
-            background-color: #B8860B;
-            transform: translateY(-1px);
-            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.25);
-        }
-
-        /* Auth Modals Footer */
-        .auth-footer-text {
-            text-align: center;
-            font-size: 0.82rem;
-            color: #8C857E;
-            margin-top: 25px;
-        }
-
-        .auth-footer-text a {
-            color: #C5A880;
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .auth-footer-text a:hover {
-            text-decoration: underline;
-            color: #B8860B;
-        }
-
-        .modal-sub-links {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            font-size: 0.72rem;
-            color: #A59E96;
-            margin-top: 15px;
-        }
-
-        .modal-sub-links a {
-            color: #A59E96;
-            text-decoration: none;
-        }
-
-        .modal-sub-links a:hover {
-            color: #3A3530;
-        }
-
-        /* OTP Input styling */
-        .otp-inputs-container {
-            display: flex;
-            gap: 8px;
-            justify-content: space-between;
-        }
-
-        .otp-input {
-            width: 42px;
-            height: 42px;
-            border: 1px solid #E5E1DB;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 1.2rem;
-            font-weight: 600;
-            background-color: #FCFBFA;
-            color: #3A3530;
-            transition: all 0.3s ease;
-        }
-
-        .otp-input:focus {
-            outline: none;
-            border-color: #C5A880;
-            box-shadow: 0 0 0 3px rgba(197, 168, 128, 0.12);
-            background-color: #FFFFFF;
-        }
-
-        /* Hidden fields section */
-        .hidden-auth-fields {
-            opacity: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-
-        .hidden-auth-fields.visible {
-            opacity: 1;
-            max-height: 600px;
-            margin-top: 15px;
-        }
-
-        /* Profile picture in Navbar styling (BULLETPROOF CIRCLE FIX) */
-        .profile-container {
-            width: 45px !important;
-            height: 45px !important;
-            padding: 0 !important;
-            /* Button er default padding remove kora holo */
-            border-radius: 50% !important;
-            display: inline-flex !important;
-            align-items: center;
-            justify-content: center;
-            background-color: transparent;
-            border: none !important;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-        }
-
-        /* Lukiye thaka dropdown arrow take puro delete kora holo, jate image squish na hoy */
-        .profile-container.dropdown-toggle::after {
-            display: none !important;
-            content: none !important;
-        }
-
-        .profile-pic {
-            width: 45px !important;
-            height: 45px !important;
-            object-fit: cover !important;
-            border-radius: 50% !important;
-            border: 2px solid #f0b82c !important;
-            box-shadow: 0 4px 15px rgba(246, 234, 176, 0.5) !important;
-            margin-top: 15px !important;
-            flex-shrink: 0 !important;
-            /* Flexbox ke bola holo ei image ke konodin chyapta korbi na */
-        }
-
-        .profile-dropdown-menu {
-            background-color: #F5F2ED;
-            border: 1px solid rgba(58, 53, 48, 0.1);
-            box-shadow: 0 10px 30px rgba(58, 53, 48, 0.1);
-            border-radius: 12px;
-            padding: 10px;
-            min-width: 230px;
-            margin-top: 8px !important;
-        }
-
-        .profile-dropdown-menu .dropdown-header {
-            padding: 10px 15px;
-            border-bottom: 1px solid rgba(58, 53, 48, 0.05);
-            text-align: left;
-        }
-
-        .profile-dropdown-menu .dropdown-item {
-            color: #3A3530;
-            font-size: 0.88rem;
-            padding: 8px 15px;
-            border-radius: 6px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            text-align: left;
-        }
-
-        .profile-dropdown-menu .dropdown-item:hover {
-            background-color: rgba(184, 134, 11, 0.08);
-            color: #B8860B;
-        }
-
-        /* Mobile layout for split modal */
-        @media (max-width: 768px) {
-            .auth-modal .modal-dialog {
-                max-width: 95%;
-                margin: 1rem auto;
-            }
-
-            .modal-body-split {
-                flex-direction: column;
-                min-height: auto;
-            }
-
-            .modal-split-left {
-                display: none;
-            }
-
-            .modal-split-right {
-                width: 100%;
-                padding: 35px 25px;
-            }
-
-            .feature-list {
-                gap: 15px;
-            }
-
-            .modal-split-left h3 {
-                font-size: 1.6rem;
-            }
-        }
-
-        /* Mobile Offcanvas Fixes */
-        @media (max-width: 991px) {
-
-            /* Parent limitation soriye dewar jonno filter nullify kora holo (Left gap fix) */
-            .custom-navbar,
-            .custom-navbar.navbar-scrolled {
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-            }
-
-            /* Offcanvas ke puro screen jure set kora holo (Full width fix) */
-            #navbarNav.offcanvas {
-                background-color: var(--bg-color) !important;
-                height: 100vh !important;
-                z-index: 1055 !important;
-                max-width: 100vw !important;
-                /* 80% er jaygay 100vw kora holo */
-                width: 80vw !important;
-                /* Puro screen nishchit korbe */
-            }
-
-            /* Offcanvas body background fix */
-            #navbarNav .offcanvas-body {
-                background-color: var(--bg-color) !important;
-                overflow-y: auto;
-                z-index: 1056 !important;
-            }
-
-            /* Offcanvas Header background fix */
-            #navbarNav .offcanvas-header {
-                background-color: var(--bg-color) !important;
-                border-bottom: 1px solid rgba(58, 53, 48, 0.1);
-            }
-
-            /* Reduce navbar height and elements size on mobile */
-            .custom-navbar {
-                padding: 7px 0 !important;
-            }
-
-            .navbar-brand img,
-            .navbar-scrolled .navbar-brand img {
-                height: 45px !important;
-                width: auto !important;
-            }
-
-            .profile-container {
-                width: 35px !important;
-                height: 35px !important;
-            }
-
-            /* Offcanvas Link & Button Colors Fix for Mobile */
-            #navbarNav .navbar-nav .nav-link {
-                color: #2A241D !important;
-                font-weight: 600;
-                font-size: 1.1rem;
-                padding: 10px 15px !important;
-            }
-
-            #navbarNav .navbar-nav .nav-link:hover,
-            #navbarNav .navbar-nav .nav-link.active {
-                color: #B8860B !important;
-            }
-
-            #navbarNav .btn-login {
-                color: #2A241D !important;
-                border: 1px solid rgba(42, 36, 29, 0.2) !important;
-                background-color: transparent !important;
-            }
-
-            #navbarNav .btn-login:hover {
-                color: #B8860B !important;
-                background-color: rgba(184, 134, 11, 0.08) !important;
-            }
-
-            #navbarNav .btn-register {
-                color: #FAF8F5 !important;
-                background: #2A241D !important;
-                border-color: #2A241D !important;
-            }
-
-            #navbarNav .btn-register:hover {
-                background: #B8860B !important;
-                border-color: #B8860B !important;
-            }
-
-            /* Modern Sleek Mobile Toggler Button */
-            .custom-toggler {
-                width: 44px;
-                height: 44px;
-                padding: 0 !important;
-                display: inline-flex;
-                align-items: center;
-                justify-content: center;
-                border-radius: 12px !important;
-                background: rgba(255, 255, 255, 0.15) !important;
-                border: 1px solid rgba(212, 175, 55, 0.4) !important;
-                backdrop-filter: blur(8px);
-                -webkit-backdrop-filter: blur(8px);
-                color: #DFBA5A !important;
-                font-size: 1.3rem;
-                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-                transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
-            }
-
-            .custom-toggler:focus,
-            .custom-toggler:active {
-                box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.35) !important;
-                outline: none !important;
-            }
-
-            .custom-navbar.nav-scrolled .custom-toggler,
-            .custom-navbar.navbar-scrolled .custom-toggler {
-                background: transparent !important;
-                border: none !important;
-                border-color: transparent !important;
-                box-shadow: none !important;
-                backdrop-filter: none !important;
-                -webkit-backdrop-filter: none !important;
-                color: #2A241D !important;
-            }
-        }
-
-        /* Mobile Bottom Navigation Bar styling */
-        .mobile-bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background-color: #FFFFFF;
-            height: 63px;
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            border-top: 1px solid rgba(58, 53, 48, 0.16);
-            box-shadow: 0 -4px 15px rgba(58, 53, 48, 0.05);
-            z-index: 1030;
-            padding-bottom: env(safe-area-inset-bottom);
-        }
-
-        .mobile-bottom-nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #8C857E;
-            text-decoration: none;
-            font-size: 0.72rem;
-            font-weight: 500;
-            width: 25%;
-            height: 100%;
-            transition: all 0.2s ease;
-            background: none;
-            border: none;
-            padding: 0;
-        }
-
-        .mobile-bottom-nav-item i {
-            font-size: 1.25rem;
-            margin-bottom: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .mobile-bottom-nav-item:hover,
-        .mobile-bottom-nav-item.active {
-            color: #C59B27 !important;
-            font-weight: 700 !important;
-        }
-
-        .mobile-bottom-nav-item.active i {
-            color: #C59B27 !important;
-            transform: translateY(-2px);
-        }
-
-        .mobile-bottom-nav-item.active span {
-            font-weight: 700 !important;
-        }
-
-        /* Hide on desktop, show only on mobile */
-        @media (min-width: 992px) {
-            .mobile-bottom-nav {
-                display: none !important;
-            }
-        }
-
-        /* Adjust body padding on mobile to not hide content behind the navbar */
-        @media (max-width: 991px) {
-            body {
-                padding-bottom: 45px !important;
-            }
-        }
-
-        /* Staggered Text Keyframe Animations */
-        .animate-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeUp 0.8s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-
-        .delay-1 {
-            animation-delay: 0.15s;
-        }
-
-        .delay-2 {
-            animation-delay: 0.3s;
-        }
-
-        .delay-3 {
-            animation-delay: 0.45s;
-        }
-
-        .delay-4 {
-            animation-delay: 0.6s;
-        }
-
-        @keyframes fadeUp {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-    </style>
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="asset/image/logo.png">
+    <link rel="shortcut icon" type="image/png" href="asset/image/logo.png">
+    <link rel="apple-touch-icon" href="asset/image/logo.png">
+
+    <!-- Master Global Scoped Stylesheet -->
+    <link rel="stylesheet" href="asset/css/style.css">
 </head>
 
 <body>
@@ -1433,7 +221,9 @@ global $connect;
                     <!-- Right Pane -->
                     <div class="modal-split-right">
                         <button type="button" class="modal-close-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
-                        <div>
+
+                        <!-- SIGN IN VIEW -->
+                        <div id="loginModalSignInView">
                             <h2>Sign In</h2>
                             <p class="subtitle">Enter your credentials to login.</p>
 
@@ -1455,18 +245,69 @@ global $connect;
                                             <i class="fa-regular fa-eye"></i>
                                         </button>
                                     </div>
-                                    <a href="#" class="forgot-password-link">Forgot Password?</a>
+                                    <div class="text-end mt-2">
+                                        <a href="#" class="forgot-password-link text-decoration-none" onclick="event.preventDefault(); showLoginView('reset');" style="font-size: 0.82rem; font-weight: 600; color: #B8860B;">Forgot Password?</a>
+                                    </div>
                                 </div>
 
-                                <button type="submit" class="btn-auth-action">
+                                <button type="submit" class="btn-auth-action mt-2">
                                     Sign In <i class="fa-solid fa-arrow-right-long ms-1"></i>
                                 </button>
                             </form>
+
+                            <div class="mt-4">
+                                <p class="auth-footer-text">New to Siddha Art? <a href="#" onclick="switchModals('loginModal', 'registerModal')">Create an account</a></p>
+                            </div>
                         </div>
 
-                        <div>
-                            <p class="auth-footer-text">New to Siddha Art? <a href="#" onclick="switchModals('loginModal', 'registerModal')">Create an account</a></p>
+                        <!-- RESET PASSWORD VIEW (Matching Screenshot) -->
+                        <div id="loginModalResetView" style="display: none;">
+                            <h2>Reset Password</h2>
+                            <p class="subtitle">Update your password directly below.</p>
+
+                            <form id="resetPasswordForm" onsubmit="handleResetPasswordSubmit(event)">
+                                <div class="form-group-custom mb-3">
+                                    <label class="form-label-custom">Email Address</label>
+                                    <div class="input-wrapper">
+                                        <i class="fa-regular fa-envelope input-icon-left"></i>
+                                        <input type="email" id="resetEmail" name="email" class="input-custom" placeholder="name@example.com" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-group-custom mb-3">
+                                    <label class="form-label-custom">New Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fa-solid fa-lock input-icon-left"></i>
+                                        <input type="password" id="resetNewPassword" name="new_password" class="input-custom" placeholder="••••••••" required>
+                                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetNewPassword', this)">
+                                            <i class="fa-regular fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-group-custom mb-3">
+                                    <label class="form-label-custom">Confirm Password</label>
+                                    <div class="input-wrapper">
+                                        <i class="fa-solid fa-shield-halved input-icon-left"></i>
+                                        <input type="password" id="resetConfirmPassword" name="confirm_password" class="input-custom" placeholder="••••••••" required>
+                                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetConfirmPassword', this)">
+                                            <i class="fa-regular fa-eye"></i>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn-auth-action mt-2" id="btnResetSubmit">
+                                    Reset Password <i class="fa-solid fa-rotate-right ms-1"></i>
+                                </button>
+                            </form>
+
+                            <div class="mt-4 text-center">
+                                <a href="#" onclick="event.preventDefault(); showLoginView('signin');" class="text-decoration-none fw-semibold" style="color: #B8860B; font-size: 0.88rem;">
+                                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Sign In
+                                </a>
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -1936,7 +777,7 @@ global $connect;
             formData.append('name', document.getElementById('registerName').value);
             formData.append('email', document.getElementById('registerEmail').value);
 
-            fetch('register.php?action=register', {
+            fetch('actions/register_action.php?action=register', {
                     method: 'POST',
                     body: formData
                 })
@@ -1970,7 +811,7 @@ global $connect;
             const form = document.getElementById('loginForm');
             const formData = new FormData(form);
 
-            fetch('login.php', {
+            fetch('actions/login_action.php', {
                     method: 'POST',
                     body: formData
                 })
@@ -1999,7 +840,7 @@ global $connect;
 
         // Logout handler (AJAX GET)
         function handleLogout() {
-            fetch('login.php?action=logout')
+            fetch('actions/login_action.php?action=logout')
                 .then(res => res.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -2016,6 +857,60 @@ global $connect;
                 .catch(err => {
                     showToast("Logout failed. Please try again.", "error");
                 });
+        }
+
+        // Toggle between Sign In and Reset Password views inside Login Modal
+        function showLoginView(view) {
+            const signInView = document.getElementById('loginModalSignInView');
+            const resetView = document.getElementById('loginModalResetView');
+            if (view === 'reset') {
+                if (signInView) signInView.style.display = 'none';
+                if (resetView) resetView.style.display = 'block';
+            } else {
+                if (resetView) resetView.style.display = 'none';
+                if (signInView) signInView.style.display = 'block';
+            }
+        }
+
+        // Handle Reset Password Submit (AJAX POST)
+        function handleResetPasswordSubmit(event) {
+            event.preventDefault();
+
+            const form = document.getElementById('resetPasswordForm');
+            const formData = new FormData(form);
+            const btn = document.getElementById('btnResetSubmit');
+            const originalText = btn ? btn.innerHTML : 'Reset Password';
+
+            if (btn) {
+                btn.disabled = true;
+                btn.innerHTML = 'Resetting... <i class="fa-solid fa-spinner fa-spin ms-1"></i>';
+            }
+
+            fetch('actions/login_action.php?action=reset_password', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast(data.message, "success");
+                    form.reset();
+                    setTimeout(() => {
+                        showLoginView('signin');
+                    }, 1500);
+                } else {
+                    showToast(data.message, "error");
+                }
+            })
+            .catch(err => {
+                showToast("Password reset failed. Please try again.", "error");
+            })
+            .finally(() => {
+                if (btn) {
+                    btn.disabled = false;
+                    btn.innerHTML = originalText;
+                }
+            });
         }
 
         // Automatic active bottom nav state detection
@@ -2133,7 +1028,7 @@ global $connect;
                 btnElement.style.opacity = '0.7';
             }
 
-            fetch('wishlist_action.php', {
+            fetch('actions/wishlist_action.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'

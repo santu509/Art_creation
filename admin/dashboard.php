@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once '../connection.php';
+require_once '../includes/connection.php';
 global $connect;
 
 // Check admin authentication
