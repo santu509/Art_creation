@@ -300,7 +300,7 @@ if (isset($_SESSION['user_id'])) {
                     while ($cat = mysqli_fetch_assoc($cat_result)) {
                         $currentIcon = $categoryIcons[$iconIdx % count($categoryIcons)];
                         $iconIdx++;
-                        $countText = sprintf("%02d", $cat['product_count']) . ' ' . ($cat['product_count'] == 1 ? 'Item' : 'Items');
+                        $countText = sprintf("%02d", $cat['product_count']) . ' ' . ($cat['product_count'] == 1 ? 'Item Available' : 'Items Available');
                 ?>
                         <div class="category-scroll-item">
                             <a href="collection.php?category=<?php echo encodeId($cat['id']); ?>" class="category-btn-card">
@@ -609,7 +609,7 @@ if (isset($_SESSION['user_id'])) {
                             </div>
 
                             <div class="textarea-wrapper mb-2">
-                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="5" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="10" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
                                 <div class="char-count-tag" id="charCountTag"><span id="currentCharCount">0</span>/120</div>
                             </div>
 

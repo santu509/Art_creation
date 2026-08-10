@@ -4622,7 +4622,6 @@ h6,
 }
 
 .prod-name {
-  font-family: "Playfair Display", serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: #2c2620;
@@ -5546,7 +5545,7 @@ body {
 }
 
 .prod-name {
-  font-family: "Playfair Display", serif;
+  font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
   font-size: 1.2rem;
   font-weight: 700;
   color: #2c2620;
@@ -5559,7 +5558,7 @@ body {
 }
 
 .modern-product-card:hover .prod-name {
-  color: #c59b27;
+  color:#110d0c;
 }
 
 .price-box {
