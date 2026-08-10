@@ -84,7 +84,7 @@ body.modal-open .sticky-top {
   margin: 0 auto;
   border-radius: 0px;
   z-index: 1045;
-  /* padding: 15px 0; */
+  padding: 10px 0;
   background: linear-gradient(
     180deg,
     rgba(0, 0, 0, 0.7) 0%,
@@ -94,6 +94,162 @@ body.modal-open .sticky-top {
   -webkit-backface-visibility: hidden;
   transition: all 0.4s ease-in-out;
 }
+
+/* ==========================================================================
+   CLAUDE-STYLE ANIMATED NAVBAR LOGO COMPONENT (BALANCED HEIGHT)
+   ========================================================================== */
+.navbar-brand {
+  padding: 0;
+  margin-right: 1rem;
+  text-decoration: none;
+}
+
+.navbar-logo-wrapper {
+  position: relative;
+  width: 54px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  padding: 4px;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  cursor: pointer;
+}
+
+/* Base Logo Image (Unclipped, Full Resolution) */
+.navbar-logo-img {
+  height: 38px;
+  width: auto;
+  max-width: 44px;
+  max-height: 38px;
+  object-fit: contain;
+  border-radius: 0 !important; /* Prevents cutting off logo text or graphics */
+  z-index: 3;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease;
+  filter: drop-shadow(0 2px 6px rgba(184, 134, 11, 0.45));
+}
+
+/* Outer Orbiting Rotating Ring (Claude AI Inspired) */
+.logo-orbit-ring {
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  right: -3px;
+  bottom: -3px;
+  border-radius: 50%;
+  border: 1.8px solid transparent;
+  border-top-color: #d09748;
+  border-right-color: rgba(184, 134, 11, 0.35);
+  border-bottom-color: #b8860b;
+  border-left-color: rgba(245, 242, 237, 0.2);
+  animation: logoRingSpin 5s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+  box-shadow: 0 0 12px rgba(208, 151, 72, 0.35);
+}
+
+/* Inner Counter-Rotating Ring */
+.logo-orbit-ring-inner {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  right: 2px;
+  bottom: 2px;
+  border-radius: 50%;
+  border: 1.2px dashed rgba(218, 165, 32, 0.65);
+  animation: logoRingSpinReverse 8s linear infinite;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Ambient Radial Glow Aura */
+.logo-glow-aura {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 44px;
+  height: 44px;
+  background: radial-gradient(
+    circle,
+    rgba(208, 151, 72, 0.45) 0%,
+    rgba(184, 134, 11, 0.15) 60%,
+    transparent 100%
+  );
+  border-radius: 50%;
+  z-index: 0;
+  filter: blur(6px);
+  animation: logoAuraPulse 3s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+/* Hover & Active Interactions */
+.navbar-brand:hover .navbar-logo-wrapper {
+  transform: scale(1.08);
+}
+
+.navbar-brand:hover .navbar-logo-img {
+  transform: scale(1.04);
+  filter: drop-shadow(0 3px 14px rgba(208, 151, 72, 0.8));
+}
+
+.navbar-brand:hover .logo-orbit-ring {
+  animation-duration: 1.8s;
+  border-top-color: #ffffff;
+  border-bottom-color: #d09748;
+  box-shadow: 0 0 16px rgba(208, 151, 72, 0.75);
+}
+
+.navbar-brand:hover .logo-orbit-ring-inner {
+  animation-duration: 3s;
+  opacity: 1;
+  border-color: #f5f2ed;
+}
+
+.navbar-brand:hover .logo-glow-aura {
+  width: 56px;
+  height: 56px;
+  filter: blur(8px);
+  background: radial-gradient(
+    circle,
+    rgba(208, 151, 72, 0.75) 0%,
+    rgba(218, 165, 32, 0.35) 70%,
+    transparent 100%
+  );
+}
+
+/* Keyframe Animations */
+@keyframes logoRingSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes logoRingSpinReverse {
+  0% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes logoAuraPulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.85);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 0.95;
+  }
+}
+
 
 /* Nav Links Initial State (White for contrast against dark hero) */
 .custom-navbar .navbar-nav .nav-link {
@@ -157,7 +313,7 @@ body.modal-open .sticky-top {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 10px 30px rgba(58, 53, 48, 0.14);
-  padding: 8px 24px;
+  padding: 10px 24px;
   top: 15px;
   width: 95%;
   max-width: 1300px;
@@ -6941,3 +7097,166 @@ h6,
   transform: translateY(-3px);
   box-shadow: 0 10px 20px rgba(195, 155, 98, 0.15);
 }
+
+/* ==========================================================================
+   STYLISH ANIMATED PRELOADER
+   ========================================================================== */
+.siddha-preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #1F1B16 0%, #12110F 100%);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), 
+                visibility 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 1;
+    visibility: visible;
+}
+
+.siddha-preloader.preloader-hidden {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.04);
+    pointer-events: none;
+}
+
+.preloader-content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Logo Wrapper & Rotating Rings */
+.preloader-logo-wrapper {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.preloader-logo {
+    width: 75px;
+    height: 75px;
+    object-fit: contain;
+    border-radius: 50%;
+    z-index: 2;
+    filter: drop-shadow(0 0 15px rgba(212, 160, 89, 0.4));
+    animation: preloaderPulse 2.5s infinite ease-in-out;
+}
+
+.preloader-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 2px solid transparent;
+}
+
+.preloader-ring-outer {
+    top: 0;
+    left: 0;
+    width: 130px;
+    height: 130px;
+    border-top-color: #B8860B;
+    border-right-color: rgba(184, 134, 11, 0.2);
+    border-bottom-color: #D09748;
+    border-left-color: rgba(208, 151, 72, 0.2);
+    animation: preloaderSpin 1.8s linear infinite;
+    box-shadow: 0 0 20px rgba(184, 134, 11, 0.15);
+}
+
+.preloader-ring-inner {
+    top: 15px;
+    left: 15px;
+    width: 100px;
+    height: 100px;
+    border-top-color: rgba(245, 242, 237, 0.1);
+    border-right-color: #D09748;
+    border-bottom-color: rgba(245, 242, 237, 0.1);
+    border-left-color: #B8860B;
+    animation: preloaderSpinReverse 1.4s linear infinite;
+}
+
+/* Text Styling */
+.preloader-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    letter-spacing: 4px;
+    color: #F5F2ED;
+    margin: 0 0 6px 0;
+    background: linear-gradient(135deg, #FFF 0%, #D09748 60%, #B8860B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-transform: uppercase;
+}
+
+.preloader-subtitle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    color: #A59E96;
+    letter-spacing: 1.5px;
+    margin: 0;
+    text-transform: uppercase;
+    font-weight: 400;
+}
+
+/* Progress Bar & Percentage */
+.preloader-progress-wrapper {
+    width: 220px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.preloader-progress-bar {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.preloader-progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #B8860B, #D09748, #F5F2ED);
+    border-radius: 10px;
+    transition: width 0.15s ease-out;
+    box-shadow: 0 0 10px rgba(208, 151, 72, 0.7);
+}
+
+.preloader-percent {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #D09748;
+    letter-spacing: 1px;
+}
+
+/* Animations */
+@keyframes preloaderSpin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes preloaderSpinReverse {
+    0% { transform: rotate(360deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes preloaderPulse {
+    0%, 100% { transform: scale(1); filter: drop-shadow(0 0 12px rgba(212, 160, 89, 0.3)); }
+    50% { transform: scale(1.06); filter: drop-shadow(0 0 22px rgba(212, 160, 89, 0.6)); }
+}
+

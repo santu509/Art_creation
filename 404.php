@@ -1,4 +1,5 @@
 <?php
+http_response_code(404);
 $currentPage = '404.php';
 include_once('includes/nav.php');
 ?>
@@ -33,10 +34,7 @@ include_once('includes/nav.php');
             </p>
 
             <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                <a href="collection.php" class="btn-explore-404">
-                    <i class="fa-solid fa-compass me-2"></i> Explore Collections
-                </a>
-                <a href="index.php" class="btn-home-404">
+                <a href="index.php" class="btn-explore-404">
                     <i class="fa-solid fa-house me-2"></i> Back to Home
                 </a>
             </div>
