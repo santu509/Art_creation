@@ -130,28 +130,17 @@ include('includes/nav.php');
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const contactUsForm = document.getElementById('contactUsForm');
-    if (contactUsForm) {
-      contactUsForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const btnSubmit = document.getElementById('btnSubmitContact');
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Sending...';
-
-        setTimeout(() => {
-          btnSubmit.disabled = false;
-          btnSubmit.innerHTML = '<i class="fa-regular fa-paper-plane me-2"></i> Send Message';
-          showToast('Thank you for contacting Siddha Art Creation! We will get back to you shortly.', 'success');
-          contactUsForm.reset();
-        }, 1200);
-      });
-    }
-  });
   function submitContactForm(event) {
     event.preventDefault();
-    const formData = new FormData(document.getElementById('contactUsForm'));
+
+    const form = document.getElementById('contactUsForm');
+    const btnSubmit = document.getElementById('btnSubmitContact');
+    if (!form || !btnSubmit) return;
+
+    btnSubmit.disabled = true;
+    btnSubmit.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i> Sending...';
+
+    const formData = new FormData(form);
 
     fetch('actions/contact_action.php', {
         method: 'POST',
@@ -161,14 +150,18 @@ include('includes/nav.php');
     .then(data => {
         if (data.status === 'success') {
             showToast(data.message, 'success');
-            document.getElementById('contactUsForm').reset();
+            form.reset();
         } else {
-            showToast(data.message, 'error');
+            showToast(data.message || 'Something went wrong. Please try again.', 'error');
         }
     })
     .catch(error => {
         console.error('Error:', error);
         showToast('Something went wrong. Please try again.', 'error');
+    })
+    .finally(() => {
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="fa-regular fa-paper-plane me-2"></i> Send Message';
     });
   }
 </script>

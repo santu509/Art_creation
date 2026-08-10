@@ -689,10 +689,20 @@ body.modal-open .sticky-top {
   font-weight: 600;
 }
 
-.modal-split-right p.subtitle {
+.modal-split-right p.subtitle,
+.modal-split-right .subtitle {
   color: #8c857e;
   font-size: 0.88rem;
   margin-bottom: 30px;
+  letter-spacing: 0 !important;
+  text-transform: none;
+  display: block;
+  padding-bottom: 0;
+}
+
+.modal-split-right p.subtitle::after,
+.modal-split-right .subtitle::after {
+  display: none !important;
 }
 
 /* Form controls */

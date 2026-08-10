@@ -303,7 +303,7 @@ if (isset($_SESSION['user_id'])) {
                         $countText = sprintf("%02d", $cat['product_count']) . ' ' . ($cat['product_count'] == 1 ? 'Item' : 'Items');
                 ?>
                         <div class="category-scroll-item">
-                            <a href="collection.php?category=<?php echo $cat['id']; ?>" class="category-btn-card">
+                            <a href="collection.php?category=<?php echo encodeId($cat['id']); ?>" class="category-btn-card">
                                 <div class="cat-btn-content">
                                     <span class="cat-btn-title"><?php echo htmlspecialchars($cat['name']); ?></span>
                                     <span class="cat-btn-count"><?php echo $countText; ?></span>
@@ -382,7 +382,7 @@ if (isset($_SESSION['user_id'])) {
                 ?>
                         <div class="scroll-item">
                             <div class="modern-product-card">
-                                <a href="product_details.php?id=<?php echo $prod['id']; ?>" class="text-decoration-none d-block flex-grow-1">
+                                <a href="product_details.php?id=<?php echo encodeId($prod['id']); ?>" class="text-decoration-none d-block flex-grow-1">
                                     <?php if (isset($prod['status']) && $prod['status'] == 1): ?>
                                         <span class="badge-available">Available</span>
                                     <?php endif; ?>
@@ -415,7 +415,7 @@ if (isset($_SESSION['user_id'])) {
                                         </div>
                                     </div>
                                 </a>
-                                <a href="product_details.php?id=<?php echo $prod['id']; ?>" class="add-to-cart-btn mt-auto">
+                                <a href="product_details.php?id=<?php echo encodeId($prod['id']); ?>" class="add-to-cart-btn mt-auto">
                                     Explore Product <i class="fa-solid fa-arrow-right ms-1"></i>
                                 </a>
                             </div>
@@ -457,16 +457,15 @@ if (isset($_SESSION['user_id'])) {
 
             <div class="testi-scroll-slider" id="testiScrollSlider">
                 <?php
-                $testi_query = "SELECT f.rating, f.review, u.name, u.image FROM feedback f JOIN users u ON f.customers_id = u.id ORDER BY f.id DESC";
+                $testi_query = "SELECT f.rating, f.review, u.name, u.image FROM feedback f JOIN users u ON f.customers_id = u.id WHERE f.rating >= 3 AND f.rating <= 5 ORDER BY f.id DESC LIMIT 7";
                 $testi_result = mysqli_query($connect, $testi_query);
                 if ($testi_result && mysqli_num_rows($testi_result) > 0) {
                     while ($testi = mysqli_fetch_assoc($testi_result)) {
                         $profile_img = 'asset/image/default-image.jpg';
                         if (!empty($testi['image']) && $testi['image'] !== 'default.png') {
-                            if (strpos($testi['image'], 'uploads/') === 0) {
-                                $profile_img = $testi['image'];
-                            } else {
-                                $profile_img = 'uploads/' . $testi['image'];
+                            $imgPath = (strpos($testi['image'], 'uploads/') === 0) ? $testi['image'] : 'uploads/' . $testi['image'];
+                            if (file_exists($imgPath)) {
+                                $profile_img = $imgPath;
                             }
                         }
 

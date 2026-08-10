@@ -82,7 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $row['id'];
             $_SESSION['user_name'] = $row['name'];
             $_SESSION['user_email'] = $row['email'];
-            $_SESSION['user_image'] = !empty($row['image']) ? $row['image'] : 'asset/image/default-image.jpg';
+            $imgPath = (!empty($row['image']) && file_exists(__DIR__ . '/../' . $row['image'])) ? $row['image'] : 'asset/image/default-image.jpg';
+            $_SESSION['user_image'] = $imgPath;
 
             echo json_encode(['status' => 'success', 'message' => 'Access Granted. Welcome back!']);
         } else {

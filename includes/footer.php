@@ -48,11 +48,11 @@
                 </div>
 
                 <!-- Social Media Icons with Tooltips -->
-                <div class="d-flex mt-3">
+                <!-- <div class="d-flex mt-3">
                     <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow us on Facebook"><i class="fab fa-facebook-f"></i></a>
                     <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Subscribe on YouTube"><i class="fab fa-youtube"></i></a>
                     <a class="btn_foot" href="#" data-bs-toggle="tooltip" data-bs-placement="top" title="Follow on Instagram"><i class="fa-brands fa-instagram"></i></a>
-                </div>
+                </div> -->
             </div>
 
             <!-- Location Map -->

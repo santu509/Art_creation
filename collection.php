@@ -7,6 +7,26 @@ include_once('includes/connection.php');
 global $connect;
 
 // Helper function to query products dynamically
+// Helper function to fetch active user wishlist IDs
+function fetchUserWishlistIds($connect)
+{
+  if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+  }
+  $userWishlistIds = [];
+  $isLoggedIn = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
+  if ($isLoggedIn && isset($_SESSION['user_id'])) {
+    $uId = intval($_SESSION['user_id']);
+    $wlRes = mysqli_query($connect, "SELECT product_id FROM wishlist WHERE user_id = $uId");
+    if ($wlRes) {
+      while ($wlRow = mysqli_fetch_assoc($wlRes)) {
+        $userWishlistIds[] = intval($wlRow['product_id']);
+      }
+    }
+  }
+  return $userWishlistIds;
+}
+
 // Helper function to query products dynamically with limit and page offset
 function fetchProductsData($connect, $category = 0, $search = '', $sort = 'newest', $page = 1, $limit = 8)
 {
@@ -101,7 +121,7 @@ function renderPaginationHTML($currentPage, $totalPages)
 }
 
 // Helper function to render Product Cards HTML & Modals
-function renderProductCardsHTML($productsResult, $search = '')
+function renderProductCardsHTML($productsResult, $search = '', $userWishlistIds = [])
 {
   ob_start();
   if ($productsResult && mysqli_num_rows($productsResult) > 0) {
@@ -110,6 +130,9 @@ function renderProductCardsHTML($productsResult, $search = '')
       $price = floatval($product['price']);
       $discount = floatval($product['discount_percentage']);
       $finalPrice = ($discount > 0) ? $price - ($price * ($discount / 100)) : $price;
+      $isWishlisted = in_array(intval($product['id']), $userWishlistIds);
+      $iconClass = $isWishlisted ? 'fa-solid fa-heart text-danger' : 'fa-regular fa-heart';
+      $titleText = $isWishlisted ? 'Remove from Wishlist' : 'Add to Wishlist';
   ?>
       <div class="col-sm-6 col-md-4 col-lg-3">
         <div class="modern-product-card animate-up delay-3">
@@ -123,7 +146,7 @@ function renderProductCardsHTML($productsResult, $search = '')
                 </span>
               <?php endif; ?>
               <div class="action-buttons">
-                <div class="action-btn btn-wishlist" title="Add to Wishlist" data-product-id="<?= $product['id'] ?>" onclick="toggleWishlist(<?= $product['id'] ?>, this)"><i class="fa-regular fa-heart"></i></div>
+                <div class="action-btn btn-wishlist" title="<?= $titleText ?>" data-product-id="<?= $product['id'] ?>" onclick="toggleWishlist(<?= $product['id'] ?>, this)"><i class="<?= $iconClass ?>"></i></div>
               </div>
             </div>
             <div class="card-info">
@@ -139,7 +162,7 @@ function renderProductCardsHTML($productsResult, $search = '')
               </div>
             </div>
           </div>
-          <a href="product_details.php?id=<?= $product['id'] ?>" class="add-to-cart-btn mt-3 mt-auto text-decoration-none">
+          <a href="product_details.php?id=<?= encodeId($product['id']) ?>" class="add-to-cart-btn mt-3 mt-auto text-decoration-none">
             Explore Product <i class="fa-solid fa-arrow-right ms-1"></i>
           </a>
         </div>
@@ -173,13 +196,14 @@ function renderProductCardsHTML($productsResult, $search = '')
 if (isset($_GET['ajax']) && $_GET['ajax'] == 1) {
   header('Content-Type: application/json');
 
-  $category = isset($_GET['category']) ? intval($_GET['category']) : 0;
+  $category = isset($_GET['category']) ? decodeId($_GET['category']) : 0;
   $search = isset($_GET['search']) ? $_GET['search'] : '';
   $sort = isset($_GET['sort']) ? $_GET['sort'] : 'newest';
   $page = isset($_GET['page']) ? intval($_GET['page']) : 1;
 
+  $userWishlistIds = fetchUserWishlistIds($connect);
   $data = fetchProductsData($connect, $category, $search, $sort, $page, 8);
-  $htmlContent = renderProductCardsHTML($data['result'], $search);
+  $htmlContent = renderProductCardsHTML($data['result'], $search, $userWishlistIds);
   $paginationContent = renderPaginationHTML($data['page'], $data['totalPages']);
 
   echo json_encode([
@@ -204,9 +228,10 @@ $categoriesQuery = "SELECT * FROM categories WHERE status = 1 ORDER BY name ASC"
 $categoriesResult = mysqli_query($connect, $categoriesQuery);
 
 // Read category GET parameter if provided from index.php or direct link
-$selectedCategory = isset($_GET['category']) ? intval($_GET['category']) : 0;
+$selectedCategory = isset($_GET['category']) ? decodeId($_GET['category']) : 0;
 
 // Fetch initial products list (Default 8 per page for desktop)
+$userWishlistIds = fetchUserWishlistIds($connect);
 $initialData = fetchProductsData($connect, $selectedCategory, '', 'newest', 1, 8);
 $initialProducts = $initialData['result'];
 $totalProducts = $initialData['total'];
@@ -310,7 +335,7 @@ $initialPaginationHTML = renderPaginationHTML($initialData['page'], $initialData
 
   <!-- Dynamic Products Grid Container -->
   <div class="row g-4" id="products-grid-container">
-    <?= renderProductCardsHTML($initialProducts); ?>
+    <?= renderProductCardsHTML($initialProducts, '', $userWishlistIds); ?>
   </div>
 
   <!-- Dynamic Desktop Pagination Container (Hidden on Mobile) -->
@@ -357,6 +382,9 @@ $initialPaginationHTML = renderPaginationHTML($initialData['page'], $initialData
             const countStr = String(data.total).padStart(2, '0');
             counterElement.textContent = `${countStr} Artworks`;
           }
+
+          // Sync wishlist heart icon states across JS and DOM
+          if (window.syncWishlistUI) window.syncWishlistUI();
         }
         if (gridContainer) gridContainer.style.opacity = '1';
       })

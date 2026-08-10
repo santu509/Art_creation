@@ -47,9 +47,31 @@ global $connect;
             <?php
             $currentPage = basename($_SERVER['PHP_SELF']);
             $isLoggedIn = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
-            $userName = $isLoggedIn ? $_SESSION['user_name'] : '';
-            $userEmail = $isLoggedIn ? $_SESSION['user_email'] : '';
-            $userImage = ($isLoggedIn && !empty($_SESSION['user_image'])) ? $_SESSION['user_image'] : 'asset/image/default-image.jpg';
+            $userName = $isLoggedIn ? ($_SESSION['user_name'] ?? '') : '';
+            $userEmail = $isLoggedIn ? ($_SESSION['user_email'] ?? '') : '';
+            $userImage = 'asset/image/default-image.jpg';
+
+            if ($isLoggedIn && isset($_SESSION['user_id'])) {
+                $uId = intval($_SESSION['user_id']);
+                $uRes = mysqli_query($connect, "SELECT name, email, image FROM users WHERE id = $uId");
+                if ($uRes && $uRow = mysqli_fetch_assoc($uRes)) {
+                    $userName = !empty($uRow['name']) ? $uRow['name'] : $userName;
+                    $userEmail = !empty($uRow['email']) ? $uRow['email'] : $userEmail;
+                    $_SESSION['user_name'] = $userName;
+                    $_SESSION['user_email'] = $userEmail;
+                    if (!empty($uRow['image'])) {
+                        $_SESSION['user_image'] = $uRow['image'];
+                    }
+                }
+            }
+
+            if ($isLoggedIn && !empty($_SESSION['user_image'])) {
+                $imgPath = $_SESSION['user_image'];
+                $absDiskPath = __DIR__ . '/../' . $imgPath;
+                if (file_exists($imgPath) || file_exists($absDiskPath)) {
+                    $userImage = $imgPath;
+                }
+            }
 
             // Fetch initial wishlist count & item IDs for active user
             $initialWishlistCount = 0;
@@ -75,7 +97,7 @@ global $connect;
             <?php if ($isLoggedIn): ?>
                 <div class="dropdown d-block d-lg-none ms-auto me-3" id="mobileProfileDropdown">
                     <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="mobileProfileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="mobileNavProfilePic">
+                        <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="mobileNavProfilePic" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu" aria-labelledby="mobileProfileMenuLink">
                         <li class="dropdown-header">
@@ -153,7 +175,7 @@ global $connect;
                         <?php if ($isLoggedIn): ?>
                             <div class="dropdown d-none d-lg-block" id="profileDropdown">
                                 <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic">
+                                    <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu" aria-labelledby="profileMenuLink">
                                     <li class="dropdown-header">
@@ -225,7 +247,7 @@ global $connect;
                         <!-- SIGN IN VIEW -->
                         <div id="loginModalSignInView">
                             <h2>Sign In</h2>
-                            <p class="subtitle">Enter your credentials to login.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Enter your credentials to login.</p>
 
                             <form id="loginForm" onsubmit="handleLoginSubmit(event)">
                                 <div class="form-group-custom">
@@ -263,7 +285,7 @@ global $connect;
                         <!-- RESET PASSWORD VIEW (Matching Screenshot) -->
                         <div id="loginModalResetView" style="display: none;">
                             <h2>Reset Password</h2>
-                            <p class="subtitle">Update your password directly below.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Update your password directly below.</p>
 
                             <form id="resetPasswordForm" onsubmit="handleResetPasswordSubmit(event)">
                                 <div class="form-group-custom mb-3">
@@ -357,7 +379,7 @@ global $connect;
                         <button type="button" class="modal-close-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         <div>
                             <h2>Create Account</h2>
-                            <p class="subtitle">Begin your seamless shopping experience today.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Begin your seamless shopping experience today.</p>
 
                             <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
                                 <!-- Name and Email -->
@@ -414,10 +436,10 @@ global $connect;
                                     </div>
 
                                     <div class="form-group-custom">
-                                        <label class="form-label-custom">Phone Number</label>
+                                        <label class="form-label-custom">Phone Number <span class="text-danger">*</span></label>
                                         <div class="input-wrapper">
                                             <i class="fa-solid fa-phone input-icon-left"></i>
-                                            <input type="tel" id="registerPhone" name="phone" class="input-custom" placeholder="+1 (555) 000-0000">
+                                            <input type="tel" id="registerPhone" name="phone" class="input-custom" placeholder="+1 (555) 000-0000" required>
                                         </div>
                                     </div>
 
@@ -644,7 +666,7 @@ global $connect;
                 btnSend.innerText = "Sending...";
             }
 
-            fetch('register.php?action=send_otp', {
+            fetch('actions/register_action.php?action=send_otp', {
                     method: 'POST',
                     body: formData
                 })
@@ -723,7 +745,7 @@ global $connect;
             btnConfirm.disabled = true;
             btnConfirm.innerText = "Confirming...";
 
-            fetch('register.php?action=verify_otp', {
+            fetch('actions/register_action.php?action=verify_otp', {
                     method: 'POST',
                     body: formData
                 })
@@ -1007,7 +1029,23 @@ global $connect;
         // GLOBAL WISHLIST JS ENGINE
         // =========================================================
         window.isUserLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
-        window.userWishlistIds = <?php echo json_encode($userWishlistIds); ?>;
+        window.userWishlistIds = <?php echo json_encode(array_map('intval', $userWishlistIds)); ?>;
+
+        window.syncWishlistUI = function() {
+            if (Array.isArray(window.userWishlistIds)) {
+                document.querySelectorAll('[data-product-id]').forEach(btn => {
+                    const pid = parseInt(btn.getAttribute('data-product-id'));
+                    const icon = btn.querySelector('i');
+                    if (window.userWishlistIds.includes(pid)) {
+                        if (icon) icon.className = 'fa-solid fa-heart text-danger';
+                        btn.setAttribute('title', 'Remove from Wishlist');
+                    } else {
+                        if (icon) icon.className = 'fa-regular fa-heart';
+                        btn.setAttribute('title', 'Add to Wishlist');
+                    }
+                });
+            }
+        };
 
         function toggleWishlist(productId, btnElement) {
             if (!window.isUserLoggedIn) {
@@ -1064,22 +1102,18 @@ global $connect;
                             }
                         }
 
-                        // Update icon across ALL buttons on the page for this product_id
-                        const allMatchingBtns = document.querySelectorAll(`[data-product-id="${productId}"]`);
-                        allMatchingBtns.forEach(btn => {
-                            const icon = btn.querySelector('i');
-                            if (data.action === 'added') {
-                                if (icon) {
-                                    icon.className = 'fa-solid fa-heart text-danger';
-                                }
-                                btn.setAttribute('title', 'Remove from Wishlist');
-                            } else if (data.action === 'removed') {
-                                if (icon) {
-                                    icon.className = 'fa-regular fa-heart';
-                                }
-                                btn.setAttribute('title', 'Add to Wishlist');
+                        // Maintain JS array tracking
+                        const numericPid = parseInt(productId);
+                        if (data.action === 'added') {
+                            if (!window.userWishlistIds.includes(numericPid)) {
+                                window.userWishlistIds.push(numericPid);
                             }
-                        });
+                        } else if (data.action === 'removed') {
+                            window.userWishlistIds = window.userWishlistIds.filter(id => id !== numericPid);
+                        }
+
+                        // Sync UI across all buttons
+                        window.syncWishlistUI();
 
                         showToast(data.message, data.action === 'added' ? 'success' : 'info');
                     } else {
@@ -1097,17 +1131,6 @@ global $connect;
 
         // Auto-highlight active wishlist hearts on DOM Load
         document.addEventListener('DOMContentLoaded', function() {
-            if (Array.isArray(window.userWishlistIds) && window.userWishlistIds.length > 0) {
-                window.userWishlistIds.forEach(id => {
-                    const btns = document.querySelectorAll(`[data-product-id="${id}"]`);
-                    btns.forEach(btn => {
-                        const icon = btn.querySelector('i');
-                        if (icon) {
-                            icon.className = 'fa-solid fa-heart text-danger';
-                        }
-                        btn.setAttribute('title', 'Remove from Wishlist');
-                    });
-                });
-            }
+            window.syncWishlistUI();
         });
     </script>
