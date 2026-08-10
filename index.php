@@ -28,7 +28,7 @@ if (isset($_SESSION['user_id'])) {
         <div id="siddhaHeroCarousel" class="carousel slide carousel-fade hero-carousel" data-bs-ride="carousel" data-bs-interval="6000">
             <div class="carousel-inner">
                 <!-- Slide 1 -->
-                <div class="carousel-item active position-relative" style="background-image: url('asset/image/hero_banner_1.png');">
+                <div class="carousel-item active position-relative" style="background-image: url('asset/image/banner-1.png');">
                     <div class="position-absolute top-0 start-0 w-100 h-100 z-1 hero-overlay"></div>
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
@@ -55,7 +55,7 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <!-- Slide 2 -->
-                <div class="carousel-item position-relative" style="background-image: url('asset/image/hero_banner_2.png');">
+                <div class="carousel-item position-relative" style="background-image: url('asset/image/banner-2.png');">
                     <div class="position-absolute top-0 start-0 w-100 h-100 z-1 hero-overlay"></div>
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
@@ -82,7 +82,7 @@ if (isset($_SESSION['user_id'])) {
                 </div>
 
                 <!-- Slide 3 -->
-                <div class="carousel-item position-relative" style="background-image: url('asset/image/hero_banner_3.png');">
+                <div class="carousel-item position-relative" style="background-image: url('asset/image/banner-3.png');">
                     <div class="position-absolute top-0 start-0 w-100 h-100 z-1 hero-overlay"></div>
                     <div class="container hero-content-container position-relative z-2 h-100 d-flex align-items-center">
                         <div class="row align-items-center w-100">
@@ -447,7 +447,7 @@ if (isset($_SESSION['user_id'])) {
     </section>
 
     <!-- Testimonials Section -->
-    <section class="testimonials-section py-2" style="background-color: #FAF8F5;">
+    <section class="testimonials-section py-2" style="background-color: #faf9f9;">
         <div class="container py-4">
             <div class="text-center mb-5">
                 <div class="badge-custom mb-3"><i class="fa-solid fa-star me-1" style="color: #DFBA5A;"></i> Authentic Reviews</div>
@@ -548,7 +548,7 @@ if (isset($_SESSION['user_id'])) {
                             </div>
                             <div class="contact-info-text">
                                 <h6>Address</h6>
-                                <p>Harinabari Durga Mondir Chaita Mali, West Bengal 721444</p>
+                                <p>Uttar Nischinta, Analberia, West Bengal, 721444</p>
                             </div>
                         </div>
                         <a href="tel:+912583691235" class="contact-info-item">
@@ -581,7 +581,7 @@ if (isset($_SESSION['user_id'])) {
 
                         <div class="map-container">
                             <span class="map-badge-overlay"><i class="fa-solid fa-map-pin me-1"></i> Workshop Location</span>
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d117926.24135547926!2d87.69741544335937!3d21.776657900000005!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a03264669f9d789%3A0xe985d7da0019672f!2sContai%2C%20West%20Bengal!5e0!3m2!1sen!2sin!4v1700000000000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4380.527850166815!2d87.70801892531237!3d21.926086417003113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90060397891%3A0x89e04d62228802ea!2sSiddha%20art%20creation!5e0!3m2!1sen!2sin!4v1786337047288!5m2!1sen!2sin"  width="100%" height="200"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                         </div>
                     </div>
                 </div>

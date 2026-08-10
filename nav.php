@@ -12,7 +12,7 @@ global $connect;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidda Art Creation</title>
+    <title>Siddha Art Creation</title>
     <!-- Bootstrap 5 CSS -->
     <link href="asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->

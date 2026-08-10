@@ -35,7 +35,7 @@
                 </div>
                 <div class="col-lg-6 text-center" data-aos="fade-left" data-aos-duration="1200" data-aos-delay="200">
                     <div class="img-wrapper mx-auto">
-                        <img src="asset/image/about-pic.png" alt="Artisan making pottery" class="img-fluid discover-img">
+                        <img src="asset/image/banner-2.png" alt="Artisan making pottery" class="img-fluid discover-img">
                     </div>
                 </div>
             </div>
@@ -95,7 +95,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="100">
                     <div class="craft-card">
                         <div class="craft-img-container">
-                            <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?q=80&w=600&auto=format&fit=crop" alt="Handmade Pottery">
+                            <img src="asset/image/about-pic.png" alt="Handmade Pottery">
                             <div class="craft-img-overlay"></div>
                             <div class="craft-card-icon-wrap">
                                 <i class="fa-solid fa-jug-detergent"></i>
@@ -104,7 +104,7 @@
                         <div class="craft-card-body">
                             <h4>Handmade Pottery</h4>
                             <p>Explore our collection of wheel-thrown and hand-built ceramics, each glazed and fired with its own unique character.</p>
-                            <a href="#" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
+                            <a href="collection.php" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
                         </div>
                     </div>
                 </div>
@@ -112,16 +112,16 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="200">
                     <div class="craft-card">
                         <div class="craft-img-container">
-                            <img src="https://images.unsplash.com/photo-1544816155-12df9643f363?q=80&w=600&auto=format&fit=crop" alt="Textile Arts">
+                            <img src="asset/image/artisan_story.jpg" alt="Textile Arts">
                             <div class="craft-img-overlay"></div>
                             <div class="craft-card-icon-wrap">
                                 <i class="fa-solid fa-scroll"></i>
                             </div>
                         </div>
                         <div class="craft-card-body">
-                            <h4>Textile Arts</h4>
-                            <p>From intricate block printing to traditional hand weaving, our curated textiles are rich in texture and historical culture.</p>
-                            <a href="#" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
+                            <h4>HANDCRAFTED MURTIS</h4>
+                            <p>Discover our exquisitely crafted murtis, where traditional artistry and devotion breathe life into every intricate detail.</p>
+                            <a href="collection.php" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
                         </div>
                     </div>
                 </div>
@@ -129,7 +129,7 @@
                 <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-duration="1200" data-aos-delay="300">
                     <div class="craft-card">
                         <div class="craft-img-container">
-                            <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?q=80&w=600&auto=format&fit=crop" alt="Artisan Jewelry">
+                            <img src="asset/image/jewllary.png" alt="Artisan Jewelry">
                             <div class="craft-img-overlay"></div>
                             <div class="craft-card-icon-wrap">
                                 <i class="fa-solid fa-hammer"></i>
@@ -138,7 +138,7 @@
                         <div class="craft-card-body">
                             <h4>Artisan Jewelry</h4>
                             <p>Discover intricate designs and exceptional quality craftsmanship in our custom-made, wearable jewelry pieces.</p>
-                            <a href="#" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
+                            <a href="collection.php" class="craft-explore">Explore Collection <i class="fa-solid fa-arrow-right-long"></i></a>
                         </div>
                     </div>
                 </div>

@@ -34,7 +34,7 @@ include('includes/nav.php');
           <i class="fa-solid fa-location-dot"></i>
         </div>
         <h5 class="fw-bold text-dark mb-2" style="font-family: 'Playfair Display', serif;">Visit Our Workshop</h5>
-        <p class="text-muted small mb-0">Harinabari Durga Mondir Chaita Mali, West Bengal 721444</p>
+        <p class="text-muted small mb-0">Uttar Nischinta, Analberia, West Bengal, 721444</p>
       </div>
     </div>
 
@@ -122,7 +122,7 @@ include('includes/nav.php');
     <!-- Embedded Interactive Map -->
     <div class="col-lg-6">
       <div class="map-frame-wrapper">
-        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d29608.737075876234!2d87.67248027431641!3d21.931009200000027!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90034ab0659%3A0xc1da4d48e4b096db!2sHarinabari%20Durga%20Mondir!5e0!3m2!1sen!2sin!4v1784434843070!5m2!1sen!2sin" width="100%" height="100%" style="border:0; min-height: 420px;" allowfullscreen loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+       <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4380.527850166815!2d87.70801892531237!3d21.926086417003113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90060397891%3A0x89e04d62228802ea!2sSiddha%20art%20creation!5e0!3m2!1sen!2sin!4v1786337047288!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
       </div>
     </div>
   </div>
