@@ -14,6 +14,7 @@ $currentPage = "dashboard.php";
 
 // Initialize Variables
 $total_product = 0;
+$total_categories = 0;
 $total_users = 0;
 $new_messages = 0;
 
@@ -23,7 +24,13 @@ if ($total_product_query) {
     $total_product = (int)mysqli_fetch_assoc($total_product_query)['total'];
 }
 
-// 2. Get Total Registered Users
+// 2. Get Total Categories
+$cat_query = mysqli_query($connect, "SELECT COUNT(*) AS total_cat FROM categories");
+if ($cat_query) {
+    $total_categories = (int)mysqli_fetch_assoc($cat_query)['total_cat'];
+}
+
+// 3. Get Total Registered Users
 $users_query = mysqli_query($connect, "SELECT COUNT(*) as total_users FROM users");
 if ($users_query) {
     $total_users = (int)mysqli_fetch_assoc($users_query)['total_users'];
@@ -42,8 +49,10 @@ if ($msg_query) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Siddha Art Creation Admin</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../asset/image/logo.png">
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="../asset/image/logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../asset/image/logo.png">
+    <link rel="apple-touch-icon" href="../asset/image/logo.png">
     <!-- Bootstrap 5 CSS -->
     <link href="../asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet" onerror="this.onerror=null;this.href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css';">
     <!-- FontAwesome Icons -->
@@ -145,6 +154,15 @@ if ($msg_query) {
                         </div>
                     </div>
 
+                    <div class="col-12 col-sm-6 col-xl-3">
+                        <div class="stat-card">
+                            <div class="stat-icon-box">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </div>
+                            <div class="stat-value"><?php echo $total_categories; ?></div>
+                            <div class="stat-label">Total Categories</div>
+                        </div>
+                    </div>
 
                     <div class="col-12 col-sm-6 col-xl-3">
                         <div class="stat-card">

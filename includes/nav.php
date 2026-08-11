@@ -5,6 +5,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
 include_once(__DIR__ . '/connection.php');
 global $connect;
+
+// Dynamic Base URL Calculation for relative asset resolution (CSS, JS, Images, Links)
+$scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+$dir = dirname($_SERVER['SCRIPT_NAME']);
+$dir = str_replace('\\', '/', $dir);
+$appBaseUrl = $scheme . '://' . $host . rtrim($dir, '/') . '/';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -12,7 +19,8 @@ global $connect;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sidda Art Creation</title>
+    <base href="<?php echo htmlspecialchars($appBaseUrl, ENT_QUOTES, 'UTF-8'); ?>">
+    <title>Siddha Art Creation</title>
     <!-- Bootstrap 5 CSS -->
     <link href="asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -40,6 +48,27 @@ global $connect;
 
 <body>
 
+    <!-- Stylish Animated Luxury Preloader -->
+    <div id="siddhaPreloader" class="siddha-preloader">
+        <div class="preloader-content">
+            <div class="preloader-logo-wrapper">
+                <div class="preloader-ring preloader-ring-outer"></div>
+                <div class="preloader-ring preloader-ring-inner"></div>
+                <img src="asset/image/logo.png" alt="Siddha Art Creation" class="preloader-logo">
+            </div>
+            <div class="preloader-text-wrapper mt-4">
+                <h2 class="preloader-title">SIDDHA ART CREATION</h2>
+                <p class="preloader-subtitle">Crafting Timeless Art & Elegance</p>
+            </div>
+            <div class="preloader-progress-wrapper mt-3">
+                <div class="preloader-progress-bar">
+                    <div class="preloader-progress-fill" id="preloaderProgressFill"></div>
+                </div>
+                <span class="preloader-percent" id="preloaderPercent">0%</span>
+            </div>
+        </div>
+    </div>
+
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg custom-navbar fixed-top" id="mainNavbar">
         <div class="container px-lg-4">
@@ -47,9 +76,31 @@ global $connect;
             <?php
             $currentPage = basename($_SERVER['PHP_SELF']);
             $isLoggedIn = isset($_SESSION['is_logged_in']) && $_SESSION['is_logged_in'] === true;
-            $userName = $isLoggedIn ? $_SESSION['user_name'] : '';
-            $userEmail = $isLoggedIn ? $_SESSION['user_email'] : '';
-            $userImage = ($isLoggedIn && !empty($_SESSION['user_image'])) ? $_SESSION['user_image'] : 'asset/image/default-image.jpg';
+            $userName = $isLoggedIn ? ($_SESSION['user_name'] ?? '') : '';
+            $userEmail = $isLoggedIn ? ($_SESSION['user_email'] ?? '') : '';
+            $userImage = 'asset/image/default-image.jpg';
+
+            if ($isLoggedIn && isset($_SESSION['user_id'])) {
+                $uId = intval($_SESSION['user_id']);
+                $uRes = mysqli_query($connect, "SELECT name, email, image FROM users WHERE id = $uId");
+                if ($uRes && $uRow = mysqli_fetch_assoc($uRes)) {
+                    $userName = !empty($uRow['name']) ? $uRow['name'] : $userName;
+                    $userEmail = !empty($uRow['email']) ? $uRow['email'] : $userEmail;
+                    $_SESSION['user_name'] = $userName;
+                    $_SESSION['user_email'] = $userEmail;
+                    if (!empty($uRow['image'])) {
+                        $_SESSION['user_image'] = $uRow['image'];
+                    }
+                }
+            }
+
+            if ($isLoggedIn && !empty($_SESSION['user_image'])) {
+                $imgPath = $_SESSION['user_image'];
+                $absDiskPath = __DIR__ . '/../' . $imgPath;
+                if (file_exists($imgPath) || file_exists($absDiskPath)) {
+                    $userImage = $imgPath;
+                }
+            }
 
             // Fetch initial wishlist count & item IDs for active user
             $initialWishlistCount = 0;
@@ -66,16 +117,21 @@ global $connect;
             }
             ?>
 
-            <!-- Left Side: Logo -->
-            <a class="navbar-brand d-flex align-items-center" href="index.php">
-                <img src="asset/image/logo.png" alt="Logo">
+            <!-- Left Side: Animated Luxury Brand Logo (Claude AI Style) -->
+            <a class="navbar-brand d-flex align-items-center" href="index.php" title="Siddha Art Creation">
+                <div class="navbar-logo-wrapper">
+                    <div class="logo-orbit-ring"></div>
+                    <div class="logo-orbit-ring-inner"></div>
+                    <div class="logo-glow-aura"></div>
+                    <img src="asset/image/logo.png" alt="Siddha Art Creation Logo" class="navbar-logo-img">
+                </div>
             </a>
 
             <!-- Mobile Profile Dropdown (Only visible on Mobile when Logged In) -->
             <?php if ($isLoggedIn): ?>
                 <div class="dropdown d-block d-lg-none ms-auto me-3" id="mobileProfileDropdown">
                     <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="mobileProfileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="mobileNavProfilePic">
+                        <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="mobileNavProfilePic" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu" aria-labelledby="mobileProfileMenuLink">
                         <li class="dropdown-header">
@@ -103,7 +159,12 @@ global $connect;
             <div class="offcanvas offcanvas-lg offcanvas-start" tabindex="-1" id="navbarNav" aria-labelledby="navbarNavLabel" style="background-color: #F5F2ED;">
                 <!-- Header for mobile menu only -->
                 <div class="offcanvas-header d-lg-none">
-                    <img src="asset/image/logo.png" alt="Logo" style="max-height: 45px;">
+                    <div class="navbar-logo-wrapper">
+                        <div class="logo-orbit-ring"></div>
+                        <div class="logo-orbit-ring-inner"></div>
+                        <div class="logo-glow-aura"></div>
+                        <img src="asset/image/logo.png" alt="Siddha Art Creation" class="navbar-logo-img">
+                    </div>
                     <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close" style="filter: brightness(0.2);"></button>
                 </div>
 
@@ -153,7 +214,7 @@ global $connect;
                         <?php if ($isLoggedIn): ?>
                             <div class="dropdown d-none d-lg-block" id="profileDropdown">
                                 <button class="profile-container text-decoration-none dropdown-toggle border-0" type="button" id="profileMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic">
+                                    <img src="<?php echo htmlspecialchars($userImage); ?>" alt="Profile" class="profile-pic" id="navProfilePic" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-end profile-dropdown-menu" aria-labelledby="profileMenuLink">
                                     <li class="dropdown-header">
@@ -225,7 +286,7 @@ global $connect;
                         <!-- SIGN IN VIEW -->
                         <div id="loginModalSignInView">
                             <h2>Sign In</h2>
-                            <p class="subtitle">Enter your credentials to login.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Enter your credentials to login.</p>
 
                             <form id="loginForm" onsubmit="handleLoginSubmit(event)">
                                 <div class="form-group-custom">
@@ -260,49 +321,72 @@ global $connect;
                             </div>
                         </div>
 
-                        <!-- RESET PASSWORD VIEW (Matching Screenshot) -->
+                        <!-- RESET PASSWORD VIEW (Matching Screenshot with OTP) -->
                         <div id="loginModalResetView" style="display: none;">
                             <h2>Reset Password</h2>
-                            <p class="subtitle">Update your password directly below.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Verify OTP sent to your email to reset your password.</p>
 
                             <form id="resetPasswordForm" onsubmit="handleResetPasswordSubmit(event)">
                                 <div class="form-group-custom mb-3">
                                     <label class="form-label-custom">Email Address</label>
-                                    <div class="input-wrapper">
+                                    <div class="input-wrapper position-relative">
                                         <i class="fa-regular fa-envelope input-icon-left"></i>
-                                        <input type="email" id="resetEmail" name="email" class="input-custom" placeholder="name@example.com" required>
+                                        <input type="email" id="resetEmail" name="email" class="input-custom" placeholder="name@example.com" required style="padding-right: 100px;">
+                                        <button type="button" class="btn-input-action" id="btnSendResetOtp" onclick="handleSendResetOtp()">Send OTP</button>
                                     </div>
                                 </div>
 
-                                <div class="form-group-custom mb-3">
-                                    <label class="form-label-custom">New Password</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-lock input-icon-left"></i>
-                                        <input type="password" id="resetNewPassword" name="new_password" class="input-custom" placeholder="••••••••" required>
-                                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetNewPassword', this)">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
-                                    </div>
-                                </div>
+                                <!-- OTP & New Password Fields (Hidden initially) -->
+                                <div id="resetOtpSection" style="display: none; margin-top: 20px;">
+                                    <div class="form-group-custom mb-3">
+                                        <label class="form-label-custom">Enter 6-Digit OTP</label>
+                                        <div class="otp-inputs-container mb-3">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, 'resetOtp2')" id="resetOtp1">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, 'resetOtp3')" id="resetOtp2">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, 'resetOtp4')" id="resetOtp3">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, 'resetOtp5')" id="resetOtp4">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, 'resetOtp6')" id="resetOtp5">
+                                            <input type="text" class="otp-input" maxlength="1" onkeyup="moveOtpFocus(this, null)" id="resetOtp6">
+                                        </div>
 
-                                <div class="form-group-custom mb-3">
-                                    <label class="form-label-custom">Confirm Password</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-shield-halved input-icon-left"></i>
-                                        <input type="password" id="resetConfirmPassword" name="confirm_password" class="input-custom" placeholder="••••••••" required>
-                                        <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetConfirmPassword', this)">
-                                            <i class="fa-regular fa-eye"></i>
-                                        </button>
+                                        <div class="text-center mb-3" id="resetOtpTimerWrapper">
+                                            <span id="resetOtpTimerText" style="font-size: 0.82rem; color: #8C857E;">
+                                                Resend OTP in <strong id="resetOtpCountdown">05:00</strong>
+                                            </span>
+                                            <button type="button" class="btn btn-link text-decoration-none p-0" id="btnResetResendOtp" onclick="handleSendResetOtp()" style="display: none; font-size: 0.82rem; color: #B8860B; font-weight: 600;">Resend OTP</button>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <button type="submit" class="btn-auth-action mt-2" id="btnResetSubmit">
-                                    Reset Password <i class="fa-solid fa-rotate-right ms-1"></i>
-                                </button>
+                                    <div class="form-group-custom mb-3">
+                                        <label class="form-label-custom">New Password</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa-solid fa-lock input-icon-left"></i>
+                                            <input type="password" id="resetNewPassword" name="new_password" class="input-custom" placeholder="••••••••">
+                                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetNewPassword', this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group-custom mb-3">
+                                        <label class="form-label-custom">Confirm Password</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa-solid fa-shield-halved input-icon-left"></i>
+                                            <input type="password" id="resetConfirmPassword" name="confirm_password" class="input-custom" placeholder="••••••••">
+                                            <button type="button" class="password-toggle-btn" onclick="togglePasswordVisibility('resetConfirmPassword', this)">
+                                                <i class="fa-regular fa-eye"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn-auth-action mt-2" id="btnResetSubmit">
+                                        Reset Password <i class="fa-solid fa-rotate-right ms-1"></i>
+                                    </button>
+                                </div>
                             </form>
 
                             <div class="mt-4 text-center">
-                                <a href="#" onclick="event.preventDefault(); showLoginView('signin');" class="text-decoration-none fw-semibold" style="color: #B8860B; font-size: 0.88rem;">
+                                <a href="#" onclick="event.preventDefault(); resetResetPasswordForm(); showLoginView('signin');" class="text-decoration-none fw-semibold" style="color: #B8860B; font-size: 0.88rem;">
                                     <i class="fa-solid fa-arrow-left me-1"></i> Back to Sign In
                                 </a>
                             </div>
@@ -357,7 +441,7 @@ global $connect;
                         <button type="button" class="modal-close-btn" data-bs-dismiss="modal"><i class="fa-solid fa-xmark"></i></button>
                         <div>
                             <h2>Create Account</h2>
-                            <p class="subtitle">Begin your seamless shopping experience today.</p>
+                            <p class="subtitle" style="letter-spacing: 0px !important;">Begin your seamless shopping experience today.</p>
 
                             <form id="registerForm" onsubmit="handleRegisterSubmit(event)">
                                 <!-- Name and Email -->
@@ -414,10 +498,10 @@ global $connect;
                                     </div>
 
                                     <div class="form-group-custom">
-                                        <label class="form-label-custom">Phone Number</label>
+                                        <label class="form-label-custom">Phone Number <span class="text-danger">*</span></label>
                                         <div class="input-wrapper">
                                             <i class="fa-solid fa-phone input-icon-left"></i>
-                                            <input type="tel" id="registerPhone" name="phone" class="input-custom" placeholder="+1 (555) 000-0000">
+                                            <input type="tel" id="registerPhone" name="phone" class="input-custom" placeholder="+1 (555) 000-0000" required>
                                         </div>
                                     </div>
 
@@ -644,7 +728,7 @@ global $connect;
                 btnSend.innerText = "Sending...";
             }
 
-            fetch('register.php?action=send_otp', {
+            fetch('actions/register_action.php?action=send_otp', {
                     method: 'POST',
                     body: formData
                 })
@@ -723,7 +807,7 @@ global $connect;
             btnConfirm.disabled = true;
             btnConfirm.innerText = "Confirming...";
 
-            fetch('register.php?action=verify_otp', {
+            fetch('actions/register_action.php?action=verify_otp', {
                     method: 'POST',
                     body: formData
                 })
@@ -859,6 +943,32 @@ global $connect;
                 });
         }
 
+        let resetOtpTimerInterval = null;
+
+        // Reset the Reset Password Form to Initial State
+        function resetResetPasswordForm() {
+            const form = document.getElementById('resetPasswordForm');
+            if (form) form.reset();
+
+            const resetEmail = document.getElementById('resetEmail');
+            if (resetEmail) resetEmail.readOnly = false;
+
+            const btnSend = document.getElementById('btnSendResetOtp');
+            if (btnSend) {
+                btnSend.style.display = "inline-block";
+                btnSend.disabled = false;
+                btnSend.innerText = "Send OTP";
+            }
+
+            const resetOtpSection = document.getElementById('resetOtpSection');
+            if (resetOtpSection) resetOtpSection.style.display = "none";
+
+            if (resetOtpTimerInterval) {
+                clearInterval(resetOtpTimerInterval);
+                resetOtpTimerInterval = null;
+            }
+        }
+
         // Toggle between Sign In and Reset Password views inside Login Modal
         function showLoginView(view) {
             const signInView = document.getElementById('loginModalSignInView');
@@ -869,22 +979,179 @@ global $connect;
             } else {
                 if (resetView) resetView.style.display = 'none';
                 if (signInView) signInView.style.display = 'block';
+                resetResetPasswordForm();
             }
         }
 
-        // Handle Reset Password Submit (AJAX POST)
+        // Send OTP handler for Reset Password
+        function handleSendResetOtp() {
+            const emailInput = document.getElementById('resetEmail');
+            const email = emailInput ? emailInput.value.trim() : '';
+            const btnSend = document.getElementById('btnSendResetOtp');
+            const btnResend = document.getElementById('btnResetResendOtp');
+
+            if (!email) {
+                showToast("Please enter your email address.", "error");
+                return;
+            }
+
+            if (btnSend) {
+                btnSend.disabled = true;
+                btnSend.innerText = "Sending...";
+            }
+            if (btnResend) {
+                btnResend.disabled = true;
+                btnResend.innerText = "Sending...";
+            }
+
+            const formData = new FormData();
+            formData.append('email', email);
+
+            fetch('actions/login_action.php?action=send_reset_otp', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showToast(data.message, "success");
+
+                    const resetOtpSection = document.getElementById('resetOtpSection');
+                    if (resetOtpSection) {
+                        resetOtpSection.style.display = "block";
+                    }
+
+                    if (emailInput) emailInput.readOnly = true;
+                    if (btnSend) btnSend.style.display = "none";
+                    if (btnResend) {
+                        btnResend.innerText = "Resend OTP";
+                        btnResend.disabled = false;
+                    }
+
+                    ['resetOtp1','resetOtp2','resetOtp3','resetOtp4','resetOtp5','resetOtp6'].forEach(id => {
+                        const input = document.getElementById(id);
+                        if (input) input.value = "";
+                    });
+
+                    startResetOtpTimer(300);
+
+                    setTimeout(() => {
+                        const firstOtp = document.getElementById('resetOtp1');
+                        if (firstOtp) firstOtp.focus();
+                    }, 200);
+                } else {
+                    showToast(data.message, "error");
+                    if (btnSend) {
+                        btnSend.disabled = false;
+                        btnSend.innerText = "Send OTP";
+                    }
+                    if (btnResend) {
+                        btnResend.innerText = "Resend OTP";
+                        btnResend.disabled = false;
+                    }
+                }
+            })
+            .catch(err => {
+                showToast("Failed to send OTP. Please try again.", "error");
+                if (btnSend) {
+                    btnSend.disabled = false;
+                    btnSend.innerText = "Send OTP";
+                }
+                if (btnResend) {
+                    btnResend.innerText = "Resend OTP";
+                    btnResend.disabled = false;
+                }
+            });
+        }
+
+        // Timer Countdown for Reset Password Resend OTP (5 min = 300 seconds)
+        function startResetOtpTimer(durationSeconds) {
+            if (resetOtpTimerInterval) {
+                clearInterval(resetOtpTimerInterval);
+            }
+
+            const timerText = document.getElementById('resetOtpTimerText');
+            const resendBtn = document.getElementById('btnResetResendOtp');
+            const countdownDisplay = document.getElementById('resetOtpCountdown');
+
+            if (timerText) timerText.style.display = "inline";
+            if (resendBtn) resendBtn.style.setProperty('display', 'none', 'important');
+
+            let timeRemaining = durationSeconds;
+
+            function updateTimerDisplay() {
+                if (countdownDisplay) {
+                    const minutes = Math.floor(timeRemaining / 60);
+                    const seconds = timeRemaining % 60;
+                    countdownDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                }
+            }
+
+            updateTimerDisplay();
+
+            resetOtpTimerInterval = setInterval(() => {
+                timeRemaining--;
+                if (timeRemaining <= 0) {
+                    clearInterval(resetOtpTimerInterval);
+                    if (timerText) timerText.style.display = "none";
+                    if (resendBtn) resendBtn.style.setProperty('display', 'inline-block', 'important');
+                } else {
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+
+        // Handle Reset Password Submit (AJAX POST with OTP verification)
         function handleResetPasswordSubmit(event) {
             event.preventDefault();
 
-            const form = document.getElementById('resetPasswordForm');
-            const formData = new FormData(form);
+            const emailInput = document.getElementById('resetEmail');
+            const email = emailInput ? emailInput.value.trim() : '';
+            const otp1 = document.getElementById('resetOtp1') ? document.getElementById('resetOtp1').value.trim() : '';
+            const otp2 = document.getElementById('resetOtp2') ? document.getElementById('resetOtp2').value.trim() : '';
+            const otp3 = document.getElementById('resetOtp3') ? document.getElementById('resetOtp3').value.trim() : '';
+            const otp4 = document.getElementById('resetOtp4') ? document.getElementById('resetOtp4').value.trim() : '';
+            const otp5 = document.getElementById('resetOtp5') ? document.getElementById('resetOtp5').value.trim() : '';
+            const otp6 = document.getElementById('resetOtp6') ? document.getElementById('resetOtp6').value.trim() : '';
+            const fullOtp = otp1 + otp2 + otp3 + otp4 + otp5 + otp6;
+
+            const newPassword = document.getElementById('resetNewPassword') ? document.getElementById('resetNewPassword').value : '';
+            const confirmPassword = document.getElementById('resetConfirmPassword') ? document.getElementById('resetConfirmPassword').value : '';
+
+            if (!email) {
+                showToast("Please enter your email address.", "error");
+                return;
+            }
+            if (fullOtp.length < 6) {
+                showToast("Please enter the complete 6-digit OTP.", "error");
+                return;
+            }
+            if (!newPassword || !confirmPassword) {
+                showToast("Please enter and confirm your new password.", "error");
+                return;
+            }
+            if (newPassword !== confirmPassword) {
+                showToast("Passwords do not match. Please re-enter.", "error");
+                return;
+            }
+            if (newPassword.length < 6) {
+                showToast("Password must be at least 6 characters long.", "error");
+                return;
+            }
+
             const btn = document.getElementById('btnResetSubmit');
-            const originalText = btn ? btn.innerHTML : 'Reset Password';
+            const originalText = btn ? btn.innerHTML : 'Reset Password <i class="fa-solid fa-rotate-right ms-1"></i>';
 
             if (btn) {
                 btn.disabled = true;
                 btn.innerHTML = 'Resetting... <i class="fa-solid fa-spinner fa-spin ms-1"></i>';
             }
+
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('otp', fullOtp);
+            formData.append('new_password', newPassword);
+            formData.append('confirm_password', confirmPassword);
 
             fetch('actions/login_action.php?action=reset_password', {
                 method: 'POST',
@@ -894,7 +1161,7 @@ global $connect;
             .then(data => {
                 if (data.status === 'success') {
                     showToast(data.message, "success");
-                    form.reset();
+                    resetResetPasswordForm();
                     setTimeout(() => {
                         showLoginView('signin');
                     }, 1500);
@@ -1007,7 +1274,23 @@ global $connect;
         // GLOBAL WISHLIST JS ENGINE
         // =========================================================
         window.isUserLoggedIn = <?php echo $isLoggedIn ? 'true' : 'false'; ?>;
-        window.userWishlistIds = <?php echo json_encode($userWishlistIds); ?>;
+        window.userWishlistIds = <?php echo json_encode(array_map('intval', $userWishlistIds)); ?>;
+
+        window.syncWishlistUI = function() {
+            if (Array.isArray(window.userWishlistIds)) {
+                document.querySelectorAll('[data-product-id]').forEach(btn => {
+                    const pid = parseInt(btn.getAttribute('data-product-id'));
+                    const icon = btn.querySelector('i');
+                    if (window.userWishlistIds.includes(pid)) {
+                        if (icon) icon.className = 'fa-solid fa-heart text-danger';
+                        btn.setAttribute('title', 'Remove from Wishlist');
+                    } else {
+                        if (icon) icon.className = 'fa-regular fa-heart';
+                        btn.setAttribute('title', 'Add to Wishlist');
+                    }
+                });
+            }
+        };
 
         function toggleWishlist(productId, btnElement) {
             if (!window.isUserLoggedIn) {
@@ -1064,22 +1347,18 @@ global $connect;
                             }
                         }
 
-                        // Update icon across ALL buttons on the page for this product_id
-                        const allMatchingBtns = document.querySelectorAll(`[data-product-id="${productId}"]`);
-                        allMatchingBtns.forEach(btn => {
-                            const icon = btn.querySelector('i');
-                            if (data.action === 'added') {
-                                if (icon) {
-                                    icon.className = 'fa-solid fa-heart text-danger';
-                                }
-                                btn.setAttribute('title', 'Remove from Wishlist');
-                            } else if (data.action === 'removed') {
-                                if (icon) {
-                                    icon.className = 'fa-regular fa-heart';
-                                }
-                                btn.setAttribute('title', 'Add to Wishlist');
+                        // Maintain JS array tracking
+                        const numericPid = parseInt(productId);
+                        if (data.action === 'added') {
+                            if (!window.userWishlistIds.includes(numericPid)) {
+                                window.userWishlistIds.push(numericPid);
                             }
-                        });
+                        } else if (data.action === 'removed') {
+                            window.userWishlistIds = window.userWishlistIds.filter(id => id !== numericPid);
+                        }
+
+                        // Sync UI across all buttons
+                        window.syncWishlistUI();
 
                         showToast(data.message, data.action === 'added' ? 'success' : 'info');
                     } else {
@@ -1097,17 +1376,103 @@ global $connect;
 
         // Auto-highlight active wishlist hearts on DOM Load
         document.addEventListener('DOMContentLoaded', function() {
-            if (Array.isArray(window.userWishlistIds) && window.userWishlistIds.length > 0) {
-                window.userWishlistIds.forEach(id => {
-                    const btns = document.querySelectorAll(`[data-product-id="${id}"]`);
-                    btns.forEach(btn => {
-                        const icon = btn.querySelector('i');
-                        if (icon) {
-                            icon.className = 'fa-solid fa-heart text-danger';
-                        }
-                        btn.setAttribute('title', 'Remove from Wishlist');
-                    });
-                });
-            }
+            window.syncWishlistUI();
         });
+
+        // Stylish Animated Luxury Preloader Logic
+        (function() {
+            let loadedAssets = 0;
+            let totalAssets = 1;
+            let currentProgress = 0;
+            let targetProgress = 0;
+            let isComplete = false;
+
+            const preloader = document.getElementById('siddhaPreloader');
+            const progressFill = document.getElementById('preloaderProgressFill');
+            const percentText = document.getElementById('preloaderPercent');
+
+            function updateProgressUI(pct) {
+                const rounded = Math.min(100, Math.max(0, Math.round(pct)));
+                if (progressFill) progressFill.style.width = rounded + '%';
+                if (percentText) percentText.innerText = rounded + '%';
+            }
+
+            // Smooth animation loop for progress bar
+            const animInterval = setInterval(function() {
+                if (currentProgress < targetProgress) {
+                    currentProgress += Math.max(1, (targetProgress - currentProgress) * 0.2);
+                    updateProgressUI(currentProgress);
+                }
+                if (currentProgress >= 99.5 && isComplete) {
+                    clearInterval(animInterval);
+                    updateProgressUI(100);
+                    setTimeout(hidePreloader, 250);
+                }
+            }, 25);
+
+            function hidePreloader() {
+                if (!preloader || preloader.classList.contains('preloader-hidden')) return;
+                preloader.classList.add('preloader-hidden');
+                setTimeout(function() {
+                    if (preloader.parentNode) preloader.parentNode.removeChild(preloader);
+                }, 650);
+            }
+
+            // Track images and document loading state
+            function initAssetTracker() {
+                const images = Array.from(document.images);
+                totalAssets = images.length + 1;
+
+                if (document.readyState === 'complete') {
+                    loadedAssets++;
+                }
+
+                if (images.length === 0) {
+                    targetProgress = 100;
+                    isComplete = true;
+                } else {
+                    images.forEach(function(img) {
+                        if (img.complete) {
+                            loadedAssets++;
+                            calculateTarget();
+                        } else {
+                            img.addEventListener('load', onAssetLoaded);
+                            img.addEventListener('error', onAssetLoaded);
+                        }
+                    });
+                }
+
+                calculateTarget();
+            }
+
+            function onAssetLoaded() {
+                loadedAssets++;
+                calculateTarget();
+            }
+
+            function calculateTarget() {
+                targetProgress = Math.min(95, Math.round((loadedAssets / totalAssets) * 100));
+            }
+
+            // Document and window completion listeners
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', function() {
+                    initAssetTracker();
+                });
+            } else {
+                initAssetTracker();
+            }
+
+            window.addEventListener('load', function() {
+                targetProgress = 100;
+                isComplete = true;
+            });
+
+            // Fallback safety timeout (max 3 seconds)
+            setTimeout(function() {
+                targetProgress = 100;
+                isComplete = true;
+                setTimeout(hidePreloader, 350);
+            }, 3000);
+        })();
     </script>

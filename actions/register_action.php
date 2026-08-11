@@ -7,17 +7,17 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/PHPMailer/src/Exception.php';
-require 'vendor/PHPMailer/src/PHPMailer.php';
-require 'vendor/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/SMTP.php';
 
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'siddhaartcreation@gmail.com');
-define('SMTP_PASS', 'ejvs frll todh hcif');
-define('SMTP_SECURE', 'tls');
-define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
-define('SMTP_FROM_NAME', 'Sidda Art Creation');
+if (!defined('SMTP_HOST')) define('SMTP_HOST', 'smtp.gmail.com');
+if (!defined('SMTP_PORT')) define('SMTP_PORT', 587);
+if (!defined('SMTP_USER')) define('SMTP_USER', 'siddhaartcreation@gmail.com');
+if (!defined('SMTP_PASS')) define('SMTP_PASS', 'ejvs frll todh hcif');
+if (!defined('SMTP_SECURE')) define('SMTP_SECURE', 'tls');
+if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
+if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', 'Sidda Art Creation');
 
 header('Content-Type: application/json');
 
@@ -121,8 +121,9 @@ function handleSendOtp($connect)
 
         $mail->send();
         echo json_encode(['status' => 'success', 'message' => 'A 6-digit OTP code has been sent to your email!']);
-    } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => "Mailer Error: {$mail->ErrorInfo}"]);
+    } catch (\Throwable $e) {
+        $errMsg = $mail->ErrorInfo ?: $e->getMessage();
+        echo json_encode(['status' => 'error', 'message' => "Mailer Error: {$errMsg}"]);
     }
 }
 
@@ -169,6 +170,20 @@ function handleRegister($connect)
         exit;
     }
 
+    if (empty($phone)) {
+        echo json_encode(['status' => 'error', 'message' => 'Please put your phone number for better service']);
+        exit;
+    }
+
+    // Check if phone number already exists
+    $safePhone = mysqli_real_escape_string($connect, $phone);
+    $sqlCheckPhone = "SELECT id FROM users WHERE phone = '$safePhone'";
+    $resCheckPhone = mysqli_query($connect, $sqlCheckPhone);
+    if ($resCheckPhone && mysqli_num_rows($resCheckPhone) > 0) {
+        echo json_encode(['status' => 'error', 'message' => 'This phone number is already registered with another account.']);
+        exit;
+    }
+
     // Default image path
     $imagePath = "asset/image/default-image.jpg";
 
@@ -180,16 +195,16 @@ function handleRegister($connect)
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 
         if (in_array($fileExtension, $allowedExtensions)) {
-            $uploadFileDir = 'uploads/';
-            if (!is_dir($uploadFileDir)) {
-                mkdir($uploadFileDir, 0755, true);
+            $uploadDirOnDisk = __DIR__ . '/../uploads/';
+            if (!is_dir($uploadDirOnDisk)) {
+                mkdir($uploadDirOnDisk, 0755, true);
             }
 
             $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-            $dest_path = $uploadFileDir . $newFileName;
+            $dest_path = $uploadDirOnDisk . $newFileName;
 
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $imagePath = $dest_path;
+                $imagePath = 'uploads/' . $newFileName;
             }
         }
     }

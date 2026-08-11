@@ -2,12 +2,17 @@
 # APACHE SERVER CONFIGURATION - SIDDHA ART CREATION
 # ===================================================
 
-# Seamless 404 Error Handler (Preserves requested URL)
-ErrorDocument 404 /Art_creation/404.php
+# Disable directory listing for security
+Options -Indexes
+
+# Custom 404 Error Document (Root Domain Live Server & Local Server Support)
+ErrorDocument 404 /404.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
     
-    # Disable directory listing for security
-    Options -Indexes
+    # Send non-existent files or directories dynamically to 404.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ 404.php [L]
 </IfModule>

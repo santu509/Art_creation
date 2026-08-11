@@ -7,18 +7,18 @@ require_once __DIR__ . '/../includes/connection.php';
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
-require 'vendor/PHPMailer/src/Exception.php';
-require 'vendor/PHPMailer/src/PHPMailer.php';
-require 'vendor/PHPMailer/src/SMTP.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/Exception.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/PHPMailer.php';
+require_once __DIR__ . '/../vendor/PHPMailer/src/SMTP.php';
 
 // SMTP Configuration
-define('SMTP_HOST', 'smtp.gmail.com');
-define('SMTP_PORT', 587);
-define('SMTP_USER', 'siddhaartcreation@gmail.com'); //owner gmail
-define('SMTP_PASS', 'ejvs frll todh hcif'); // owner app password
-define('SMTP_SECURE', 'tls');
-define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
-define('SMTP_FROM_NAME', 'Siddha Art Creation');
+if (!defined('SMTP_HOST')) define('SMTP_HOST', 'smtp.gmail.com');
+if (!defined('SMTP_PORT')) define('SMTP_PORT', 587);
+if (!defined('SMTP_USER')) define('SMTP_USER', 'siddhaartcreation@gmail.com'); //owner gmail
+if (!defined('SMTP_PASS')) define('SMTP_PASS', 'ejvs frll todh hcif'); // owner app password
+if (!defined('SMTP_SECURE')) define('SMTP_SECURE', 'tls');
+if (!defined('SMTP_FROM_EMAIL')) define('SMTP_FROM_EMAIL', 'siddhaartcreation@gmail.com');
+if (!defined('SMTP_FROM_NAME')) define('SMTP_FROM_NAME', 'Siddha Art Creation');
 
 header('Content-Type: application/json');
 
@@ -95,12 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'status' => 'success',
         'message' => 'Thank you! Your message has been sent successfully. Please check your email.'
       ]);
-    } catch (Exception $e) {
-      // Data database e save hoyeche, kintu mail jete issue hole
+    } catch (\Throwable $e) {
+      // Message saved to database, but mail sending failed
       echo json_encode([
-        'status' => 'success',
-        'message' => 'Message saved, but failed to send confirmation email.',
-        'error' => $mail->ErrorInfo
+        'status' => 'error',
+        'message' => 'Message saved in database, but failed to send email: ' . ($mail->ErrorInfo ?: $e->getMessage())
       ]);
     }
   } else {

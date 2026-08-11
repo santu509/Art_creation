@@ -6,7 +6,7 @@ global $connect;
 // ---------------------------------------------------------
 // 1. BACKEND FETCH & DATA PREPARATION
 // ---------------------------------------------------------
-$productId = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$productId = isset($_GET['id']) ? decodeId($_GET['id']) : (isset($_POST['id']) ? decodeId($_POST['id']) : 0);
 $product = null;
 
 if ($productId > 0) {
@@ -147,7 +147,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
             <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none text-muted"><i class="fa-solid fa-house me-1"></i> Home</a></li>
             <li class="breadcrumb-item"><a href="collection.php" class="text-decoration-none text-muted">Collections</a></li>
             <?php if (!empty($product['category_name'])): ?>
-                <li class="breadcrumb-item"><a href="collection.php?category=<?= intval($product['category_id']) ?>" class="text-decoration-none text-muted"><?= htmlspecialchars($product['category_name']) ?></a></li>
+                <li class="breadcrumb-item"><a href="collection.php?category=<?= encodeId($product['category_id']) ?>" class="text-decoration-none text-muted"><?= htmlspecialchars($product['category_name']) ?></a></li>
             <?php endif; ?>
             <li class="breadcrumb-item active text-gold fw-semibold" aria-current="page"><?= htmlspecialchars($product['name']) ?></li>
         </ol>
@@ -320,7 +320,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                 <h3 class="related-section-title mb-1">More From This Collection</h3>
                 <p class="text-muted small mb-0">Explore other handcrafted creations you might love.</p>
             </div>
-            <a href="collection.php?category=<?= $catId ?>" class="btn btn-gold-outline rounded-pill px-3 py-2 text-decoration-none text-nowrap flex-shrink-0" style="font-size: 0.85rem;">
+            <a href="collection.php?category=<?= encodeId($catId) ?>" class="btn btn-gold-outline rounded-pill px-3 py-2 text-decoration-none text-nowrap flex-shrink-0" style="font-size: 0.85rem;">
                 View Category <i class="fa-solid fa-arrow-right ms-1"></i>
             </a>
         </div>
@@ -362,7 +362,7 @@ $relatedResult = mysqli_query($connect, $relatedQuery);
                                     </div>
                                 </div>
                             </div>
-                            <a href="product_details.php?id=<?= $rel['id'] ?>" class="add-to-cart-btn mt-3 mt-auto text-decoration-none">
+                            <a href="product_details.php?id=<?= encodeId($rel['id']) ?>" class="add-to-cart-btn mt-3 mt-auto text-decoration-none">
                                 Explore Product <i class="fa-solid fa-arrow-right ms-1"></i>
                             </a>
                         </div>

@@ -7,7 +7,6 @@ if (!isset($_SESSION['admin_logged_in']) || $_SESSION['admin_logged_in'] !== tru
     header("Location: index.php");
     exit();
 }
-include_once('includes/sidebar.php');
 ?>
 <?php
 $pageTitle = "FAQ Management";
@@ -20,6 +19,11 @@ $currentPage = "faq_admin.php";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> | Siddha Art Creation Admin</title>
+
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="../asset/image/logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../asset/image/logo.png">
+    <link rel="apple-touch-icon" href="../asset/image/logo.png">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
@@ -476,6 +480,9 @@ $currentPage = "faq_admin.php";
 
 <body>
     <div class="admin-layout-wrapper">
+        <!-- Dynamic Sidebar Inclusion -->
+        <?php include_once 'includes/sidebar.php'; ?>
+
         <!-- Main Content Area -->
         <main class="admin-main-content">
             <!-- Topbar Inclusion -->

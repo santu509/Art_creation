@@ -1,16 +1,15 @@
 <?php
-require_once('includes/connection.php');
-global $connect;
-include('includes/nav.php');
-
 if (session_status() === PHP_SESSION_NONE) {
   session_start();
 }
-
-if (!isset($_SESSION['user_id'])) {
-  header("Location: login.php");
-  exit;
+require_once('includes/connection.php');
+global $connect;
+if (!isset($_SESSION['user_id']) || !isset($_SESSION['is_logged_in']) || $_SESSION['is_logged_in'] !== true) {
+  header("Location: index.php");
+  exit();
 }
+
+include('includes/nav.php');
 
 
 $userId = $_SESSION['user_id'];
@@ -25,7 +24,7 @@ $user = mysqli_fetch_assoc($run);
 $userName = htmlspecialchars($user['name'] ?? $_SESSION['user_name'] ?? 'Art Patron');
 $userEmail = htmlspecialchars($user['email'] ?? $_SESSION['user_email'] ?? '');
 $userPhone = htmlspecialchars($user['phone'] ?? '');
-$userImage = !empty($user['image']) ? htmlspecialchars($user['image']) : 'asset/image/default-image.jpg';
+$userImage = (!empty($user['image']) && file_exists($user['image'])) ? htmlspecialchars($user['image']) : 'asset/image/default-image.jpg';
 $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['created_at'])) : 'Recent Member';
 
 ?>
@@ -43,7 +42,7 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
 
       <div class="col-12 col-md-auto d-flex justify-content-center mb-3 mb-md-0">
         <div class="profile-avatar-wrapper">
-          <img src="<?php echo $userImage; ?>" alt="<?php echo $userName; ?>" class="profile-avatar-img" id="heroDisplayAvatar">
+          <img src="<?php echo $userImage; ?>" alt="<?php echo $userName; ?>" class="profile-avatar-img" id="heroDisplayAvatar" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
           <label for="quickAvatarInput" class="profile-avatar-edit-badge" title="Change Avatar">
             <i class="fa-solid fa-camera"></i>
           </label>
@@ -135,7 +134,7 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
               <div class="col-12 mb-3">
                 <label class="form-label fw-semibold text-dark">Profile Picture</label>
                 <div class="d-flex align-items-center gap-3">
-                  <img src="<?php echo $userImage; ?>" id="editFormAvatarPreview" class="rounded-circle border border-2 border-warning" width="70" height="70" style="object-fit: cover; border-color: #B8860B !important;">
+                  <img src="<?php echo $userImage; ?>" id="editFormAvatarPreview" class="rounded-circle border border-2 border-warning" width="70" height="70" style="object-fit: cover; border-color: #B8860B !important;" onerror="this.onerror=null; this.src='asset/image/default-image.jpg';">
                   <div>
                     <input type="file" class="form-control form-control-profile" id="profileImageInput" name="image" accept="image/*" onchange="previewProfileImage(this)">
                     <small class="text-muted">Allowed formats: JPG, PNG, WEBP (Max 2MB)</small>
@@ -238,11 +237,13 @@ $createdAt = !empty($user['created_at']) ? date("F j, Y", strtotime($user['creat
               document.getElementById('gridPhone').innerText = newPhone ? newPhone : 'Not Provided';
 
               if (data.image) {
-                document.getElementById('heroDisplayAvatar').src = data.image;
+                const imgUrl = data.image + '?v=' + new Date().getTime();
+                document.getElementById('heroDisplayAvatar').src = imgUrl;
+                document.getElementById('editFormAvatarPreview').src = imgUrl;
                 const navPic = document.getElementById('navProfilePic');
                 const mobileNavPic = document.getElementById('mobileNavProfilePic');
-                if (navPic) navPic.src = data.image;
-                if (mobileNavPic) mobileNavPic.src = data.image;
+                if (navPic) navPic.src = imgUrl;
+                if (mobileNavPic) mobileNavPic.src = imgUrl;
               }
             } else {
               showToast(data.message, 'error');

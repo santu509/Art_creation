@@ -23,11 +23,11 @@ $userId = intval($_SESSION['user_id']);
 // Retrieve product_id from POST or JSON payload
 $productId = 0;
 if (isset($_POST['product_id'])) {
-    $productId = intval($_POST['product_id']);
+    $productId = decodeId($_POST['product_id']);
 } else {
     $inputData = json_decode(file_get_contents('php://input'), true);
     if (isset($inputData['product_id'])) {
-        $productId = intval($inputData['product_id']);
+        $productId = decodeId($inputData['product_id']);
     }
 }
 

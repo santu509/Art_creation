@@ -51,7 +51,7 @@ function getUserDetails($connect, $userId)
 
     if ($result && mysqli_num_rows($result) > 0) {
         $user = mysqli_fetch_assoc($result);
-        $user['image'] = !empty($user['image']) ? $user['image'] : 'asset/image/default-image.jpg';
+        $user['image'] = (!empty($user['image']) && file_exists(__DIR__ . '/../' . $user['image'])) ? $user['image'] : 'asset/image/default-image.jpg';
         $user['created_at_formatted'] = !empty($user['created_at']) ? date("F j, Y", strtotime($user['created_at'])) : 'N/A';
 
         echo json_encode(['status' => 'success', 'data' => $user]);
@@ -108,15 +108,15 @@ function updateProfileDetails($connect, $userId, $postData, $filesData)
         $allowedExtensions = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
 
         if (in_array($fileExtension, $allowedExtensions)) {
-            $uploadFileDir = 'uploads/';
-            if (!is_dir($uploadFileDir)) {
-                mkdir($uploadFileDir, 0755, true);
+            $uploadDirOnDisk = __DIR__ . '/../uploads/';
+            if (!is_dir($uploadDirOnDisk)) {
+                mkdir($uploadDirOnDisk, 0755, true);
             }
             $newFileName = md5(time() . $fileName) . '.' . $fileExtension;
-            $destPath = $uploadFileDir . $newFileName;
+            $destPath = $uploadDirOnDisk . $newFileName;
 
             if (move_uploaded_file($fileTmpPath, $destPath)) {
-                $imagePath = $destPath; // Database e save korar jonno notun path
+                $imagePath = 'uploads/' . $newFileName; // Relative path for DB & session
                 $newImageSaved = true; // Flag true korlam
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to upload profile image.']);
@@ -138,8 +138,9 @@ function updateProfileDetails($connect, $userId, $postData, $filesData)
 
         // 6. DELETE OLD IMAGE (Jodi notun chobi upload hoy ar puronota default na hoy)
         if ($newImageSaved && $oldImagePath !== 'asset/image/default-image.jpg') {
-            if (file_exists($oldImagePath)) {
-                unlink($oldImagePath);
+            $oldImageDiskPath = __DIR__ . '/../' . $oldImagePath;
+            if (file_exists($oldImageDiskPath)) {
+                @unlink($oldImageDiskPath);
             }
         }
 

@@ -110,7 +110,7 @@ if ($isLoggedIn && $userId > 0) {
                         <!-- Product Information Box -->
                         <div class="wishlist-info-box">
                             <span class="wishlist-cat-tag"><?= htmlspecialchars($catName) ?></span>
-                            <a href="product_details.php?id=<?= $prod['id'] ?>" class="wishlist-prod-title" title="<?= htmlspecialchars($prod['name']) ?>">
+                            <a href="product_details.php?id=<?= encodeId($prod['id']) ?>" class="wishlist-prod-title" title="<?= htmlspecialchars($prod['name']) ?>">
                                 <?= htmlspecialchars($prod['name']) ?>
                             </a>
                             <div class="wishlist-price-wrap">
@@ -123,7 +123,7 @@ if ($isLoggedIn && $userId > 0) {
 
                         <!-- Action Buttons Box -->
                         <div class="wishlist-actions-box">
-                            <a href="product_details.php?id=<?= $prod['id'] ?>" class="btn-explore-artwork">
+                            <a href="product_details.php?id=<?= encodeId($prod['id']) ?>" class="btn-explore-artwork">
                                 Explore Artwork <i class="fa-solid fa-arrow-right ms-1"></i>
                             </a>
                             <button type="button" class="btn-trash-row" title="Remove from Wishlist" onclick="removeFromWishlistPage(<?= $prod['id'] ?>)">

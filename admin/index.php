@@ -18,8 +18,10 @@ if (isset($_SESSION['admin_logged_in']) && $_SESSION['admin_logged_in'] === true
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - Siddha Art Creation</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../asset/image/logo.png">
+    <!-- Favicon Icon -->
+    <link rel="icon" type="image/png" href="../asset/image/logo.png">
+    <link rel="shortcut icon" type="image/x-icon" href="../asset/image/logo.png">
+    <link rel="apple-touch-icon" href="../asset/image/logo.png">
     <!-- Bootstrap 5 CSS -->
     <link href="../asset/bootstrap-5.3.7-dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- FontAwesome Icons -->
