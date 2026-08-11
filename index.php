@@ -580,7 +580,7 @@ if (isset($_SESSION['user_id'])) {
 
                         <div class="map-container">
                             <span class="map-badge-overlay"><i class="fa-solid fa-map-pin me-1"></i> Workshop Location</span>
-                         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4380.527850166815!2d87.70801892531237!3d21.926086417003113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90060397891%3A0x89e04d62228802ea!2sSiddha%20art%20creation!5e0!3m2!1sen!2sin!4v1786337047288!5m2!1sen!2sin"  width="100%" height="200"  style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4380.527850166815!2d87.70801892531237!3d21.926086417003113!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a02d90060397891%3A0x89e04d62228802ea!2sSiddha%20art%20creation!5e0!3m2!1sen!2sin!4v1786337047288!5m2!1sen!2sin" width="100%" height="200" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
                         </div>
                     </div>
                 </div>
@@ -609,8 +609,8 @@ if (isset($_SESSION['user_id'])) {
                             </div>
 
                             <div class="textarea-wrapper mb-2">
-                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="5" placeholder="Write your review..." minlength="30" maxlength="120" required><?php echo htmlspecialchars($existing_review); ?></textarea>
-                                <div class="char-count-tag" id="charCountTag"><span id="currentCharCount">0</span>/120</div>
+                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="5" placeholder="Write your review..." minlength="50" maxlength="180" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+                                <div class="char-count-tag" id="charCountTag"><span id="currentCharCount">0</span>/180</div>
                             </div>
 
                             <button type="submit" class="btn-submit-review">
