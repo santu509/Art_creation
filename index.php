@@ -609,7 +609,7 @@ if (isset($_SESSION['user_id'])) {
                             </div>
 
                             <div class="textarea-wrapper mb-2">
-                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="5" placeholder="Write your review..." minlength="50" maxlength="180" required><?php echo htmlspecialchars($existing_review); ?></textarea>
+                                <textarea name="message" id="reviewMessageInput" class="form-control" rows="10" placeholder="Write your review..." minlength="50" maxlength="180" required><?php echo htmlspecialchars($existing_review); ?></textarea>
                                 <div class="char-count-tag" id="charCountTag"><span id="currentCharCount">0</span>/180</div>
                             </div>
 
