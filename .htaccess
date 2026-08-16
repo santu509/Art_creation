@@ -2,17 +2,11 @@
 # APACHE SERVER CONFIGURATION - SIDDHA ART CREATION
 # ===================================================
 
-# Disable directory listing for security
 Options -Indexes
-
-# Custom 404 Error Document (Root Domain Live Server & Local Server Support)
-ErrorDocument 404 /404.php
 
 <IfModule mod_rewrite.c>
     RewriteEngine On
-    
-    # Send non-existent files or directories dynamically to 404.php
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^ 404.php [L]
+    RewriteRule ^(.*)$ 404.php [L]
 </IfModule>

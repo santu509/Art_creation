@@ -1,7 +1,18 @@
 <?php
+
 http_response_code(404);
+
+
+$base_path = dirname($_SERVER['SCRIPT_NAME']);
+$base_path = str_replace('\\', '/', $base_path); 
+if ($base_path === '/') {
+    $base_path = ''; // 
+}
+
 $currentPage = '404.php';
-include_once('includes/nav.php');
+
+
+include_once(__DIR__ . '/includes/nav.php');
 ?>
 
 <!-- ==========================================
@@ -14,7 +25,8 @@ include_once('includes/nav.php');
     <!-- 100% Full-Width Edge-to-Edge Panoramic 404 Hero Banner -->
     <div class="banner-404-hero w-100">
         <div class="banner-404-illustration-wrapper">
-            <img src="asset/image/artisan_404_hd_banner.png" alt="404 Artwork Not Found Banner" class="banner-404-img">
+           
+            <img src="<?= $base_path ?>/asset/image/artisan_404_hd_banner.png" alt="404 Artwork Not Found Banner" class="banner-404-img">
         </div>
     </div>
 
@@ -34,7 +46,8 @@ include_once('includes/nav.php');
             </p>
 
             <div class="d-flex align-items-center justify-content-center gap-3 flex-wrap">
-                <a href="index.php" class="btn-explore-404">
+               
+                <a href="<?= $base_path ?>/index.php" class="btn-explore-404">
                     <i class="fa-solid fa-house me-2"></i> Back to Home
                 </a>
             </div>
@@ -42,4 +55,7 @@ include_once('includes/nav.php');
     </div>
 </main>
 
-<?php include_once('includes/footer.php'); ?>
+<?php 
+
+include_once(__DIR__ . '/includes/footer.php'); 
+?>
